@@ -1,16 +1,16 @@
 services:
   - type: web
-    name: travel-guruji
+    name: travel-guruji-sih
     runtime: node
     plan: free
-    region: singapore
-    buildCommand: npm install && npm run build && cd backend && npm install
+    region: oregon
+    buildCommand: npm install && npm --prefix backend install && npm run build
     startCommand: node backend/server.js
     envVars:
+      - key: NODE_VERSION
+        value: 20.18.0
       - key: NODE_ENV
         value: production
-      - key: PORT
-        value: 10000
       - key: MONGODB_URI
         value: mongodb+srv://apcfriend123_db_user:Sounava2005@travelguruji.2lvhyea.mongodb.net/?appName=TravelGuruji
       - key: JWT_SECRET
