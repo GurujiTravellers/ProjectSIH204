@@ -34,44 +34,92 @@ function Planner() {
   const localExperiencesFromUrl = searchParams.get("localExperiences") || "";
   const localExperienceFromUrl = searchParams.get("localExperience") || "";
 
-  const [savedPlannerDraft] = useState(() => {
+  const savedDraftObj = useMemo(() => {
+    if (location.state?.formData) {
+      return location.state;
+    }
     try {
       const savedDraft = sessionStorage.getItem("travelGurujiPlannerDraft");
       if (!savedDraft) return null;
       const parsedDraft = JSON.parse(savedDraft);
-      return parsedDraft && typeof parsedDraft === "object" ? parsedDraft : null;
+      if (parsedDraft && typeof parsedDraft === "object") {
+        return parsedDraft;
+      }
     } catch (error) {
       console.error("Planner draft loading failed:", error);
-      return null;
     }
-  });
+    return null;
+  }, [location.state]);
+
+  const draftFormData =
+    savedDraftObj?.formData ||
+    (savedDraftObj?.destination ? savedDraftObj : null);
 
   const initialDestination =
-    savedPlannerDraft?.formData?.destination || destinationFromUrl;
+    draftFormData?.destination || destinationFromUrl || "";
 
   const initialHotel =
-    savedPlannerDraft?.formData?.hotel || hotelFromUrl;
+    draftFormData?.hotel || hotelFromUrl || "";
+
+  const [selectedLocalExperiences, setSelectedLocalExperiences] = useState(() => {
+    if (Array.isArray(savedDraftObj?.selectedLocalExperiences)) {
+      return savedDraftObj.selectedLocalExperiences;
+    }
+    if (Array.isArray(savedDraftObj)) {
+      return savedDraftObj;
+    }
+    if (localExperiencesFromUrl) {
+      try {
+        const parsed = JSON.parse(decodeURIComponent(localExperiencesFromUrl));
+        return Array.isArray(parsed) ? parsed : [];
+      } catch {
+        try {
+          const parsed = JSON.parse(localExperiencesFromUrl);
+          return Array.isArray(parsed) ? parsed : [];
+        } catch {
+          // Ignore invalid JSON
+        }
+      }
+    }
+    if (localExperienceFromUrl) {
+      try {
+        return [JSON.parse(decodeURIComponent(localExperienceFromUrl))];
+      } catch {
+        // Ignore invalid JSON
+      }
+    }
+    return [];
+  });
+
+  const [selectedHotel, setSelectedHotel] = useState(() => {
+    if (!initialHotel) return null;
+    return (
+      hotels.find(
+        (hotel) => normalize(hotel.name) === normalize(initialHotel)
+      ) || null
+    );
+  });
 
   const [formData, setFormData] = useState({
-    origin: savedPlannerDraft?.formData?.origin || "New Delhi",
+    origin: draftFormData?.origin || "New Delhi",
     destination: initialDestination,
-    startDate: savedPlannerDraft?.formData?.startDate || "",
-    endDate: savedPlannerDraft?.formData?.endDate || "",
-    days: savedPlannerDraft?.formData?.days || "3",
+    startDate: draftFormData?.startDate || "",
+    endDate: draftFormData?.endDate || "",
+    days: draftFormData?.days || "3",
     hotel: initialHotel,
-    tripType: savedPlannerDraft?.formData?.tripType || "Friends",
-    adults: savedPlannerDraft?.formData?.adults || "2",
-    children: savedPlannerDraft?.formData?.children || "0",
-    persons: savedPlannerDraft?.formData?.persons || "2",
-    budget: savedPlannerDraft?.formData?.budget || "30000",
-    stayPref: savedPlannerDraft?.formData?.stayPref || "Mid-Range",
-    transportMode: savedPlannerDraft?.formData?.transportMode || "Flexible",
-    foodPref: savedPlannerDraft?.formData?.foodPref || "Flexible",
-    walkingPref: savedPlannerDraft?.formData?.walkingPref || "Moderate",
-    tripStyle: savedPlannerDraft?.formData?.tripStyle || "Balanced",
-    lateNightPref: savedPlannerDraft?.formData?.lateNightPref || "Avoid Late Night",
-    safetyPref: savedPlannerDraft?.formData?.safetyPref || "Standard",
-    interests: savedPlannerDraft?.formData?.interests || [
+    tripType: draftFormData?.tripType || "Friends",
+    adults: draftFormData?.adults || "2",
+    children: draftFormData?.children || "0",
+    persons: draftFormData?.persons || "2",
+    budget: draftFormData?.budget || "30000",
+    stayPref: draftFormData?.stayPref || "Mid-Range",
+    transportMode: draftFormData?.transportMode || "Flexible",
+    foodPref: draftFormData?.foodPref || "Flexible",
+    walkingPref: draftFormData?.walkingPref || "Moderate",
+    tripStyle: draftFormData?.tripStyle || "Balanced",
+    lateNightPref: draftFormData?.lateNightPref || "Avoid Late Night",
+    safetyPref: draftFormData?.safetyPref || "Standard",
+    interests: draftFormData?.interests || [
       "Culture & Heritage",
       "Nature & Scenic",
     ],
@@ -105,6 +153,24 @@ function Planner() {
     }
   }, [formData, selectedLocalExperiences]);
 
+  // Synchronize draft when arriving from login redirect
+  useEffect(() => {
+    if (draftFormData) {
+      setFormData((prev) => ({
+        ...prev,
+        ...draftFormData,
+        destination: draftFormData.destination || prev.destination,
+        hotel: draftFormData.hotel || prev.hotel,
+      }));
+      if (draftFormData.hotel) {
+        const found = hotels.find(
+          (h) => normalize(h.name) === normalize(draftFormData.hotel)
+        );
+        if (found) setSelectedHotel(found);
+      }
+    }
+  }, [draftFormData]);
+
   const disasterAlertForDest = useMemo(() => {
     if (!formData.destination || !disasterAlerts.length) return null;
     const dLower = formData.destination.toLowerCase().trim();
@@ -115,44 +181,6 @@ function Planner() {
         a.destination.toLowerCase().includes(dLower)
     );
   }, [formData.destination, disasterAlerts]);
-
-  const [selectedHotel, setSelectedHotel] = useState(() => {
-    const initialHotelName = savedPlannerDraft?.formData?.hotel || hotelFromUrl;
-    if (!initialHotelName) return null;
-    return (
-      hotels.find(
-        (hotel) => normalize(hotel.name) === normalize(initialHotelName)
-      ) || null
-    );
-  });
-
-  const [selectedLocalExperiences] = useState(() => {
-    if (Array.isArray(savedPlannerDraft?.selectedLocalExperiences)) {
-      return savedPlannerDraft.selectedLocalExperiences;
-    }
-    if (localExperiencesFromUrl) {
-      try {
-        const parsed = JSON.parse(decodeURIComponent(localExperiencesFromUrl));
-        return Array.isArray(parsed) ? parsed : [];
-      } catch (err) {
-        void err;
-        try {
-          const parsed = JSON.parse(localExperiencesFromUrl);
-          return Array.isArray(parsed) ? parsed : [];
-        } catch {
-          // Ignore invalid JSON
-        }
-      }
-    }
-    if (localExperienceFromUrl) {
-      try {
-        return [JSON.parse(decodeURIComponent(localExperienceFromUrl))];
-      } catch {
-        // Ignore invalid JSON
-      }
-    }
-    return [];
-  });
 
   const destinationSearch = normalize(formData.destination);
   const hotelSearch = normalize(formData.hotel);
@@ -523,6 +551,60 @@ function Planner() {
             Open Student Planner ➔
           </Link>
         </div>
+
+        {/* PREVIOUS DRAFT RESTORATION BANNER */}
+        {savedDraftObj && (
+          <div
+            style={{
+              background: "linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(5, 150, 105, 0.25) 100%)",
+              border: "1.5px solid rgba(16, 185, 129, 0.5)",
+              borderRadius: "14px",
+              padding: "14px 20px",
+              marginBottom: "24px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              flexWrap: "wrap",
+              gap: "12px",
+              backdropFilter: "blur(10px)",
+              boxShadow: "0 4px 18px rgba(16, 185, 129, 0.15)",
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+              <span style={{ fontSize: "22px" }}>✅</span>
+              <div>
+                <strong style={{ color: "#10b981", fontSize: "14px", display: "block" }}>
+                  Previous Trip Plan Parameters Restored
+                </strong>
+                <span style={{ color: "rgba(255, 255, 255, 0.9)", fontSize: "13px" }}>
+                  Your destination ({formData.destination || "selected"}), dates, and budget ({formData.budget ? `₹${Number(formData.budget).toLocaleString("en-IN")}` : "configured"}) have been loaded.
+                </span>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                try {
+                  sessionStorage.removeItem("travelGurujiPlannerDraft");
+                } catch {
+                  // Ignore
+                }
+                window.location.reload();
+              }}
+              style={{
+                background: "transparent",
+                border: "1px solid rgba(255, 255, 255, 0.3)",
+                color: "#e2e8f0",
+                fontSize: "12px",
+                padding: "6px 12px",
+                borderRadius: "8px",
+                cursor: "pointer",
+              }}
+            >
+              Start Fresh ↺
+            </button>
+          </div>
+        )}
 
         <form className="planner-form" onSubmit={handleSubmit}>
           {/* STEP 1: JOURNEY ESSENTIALS */}

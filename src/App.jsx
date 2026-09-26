@@ -11,6 +11,7 @@ import Footer from "./components/Footer";
 import PageLoader from "./components/PageLoader";
 import ToastContainer, { showToast } from "./components/Toast";
 import FloatingEmergencyButton from "./components/FloatingEmergencyButton";
+import ErrorBoundary from "./components/ErrorBoundary";
 
 // Core home page loaded eagerly for instant first paint
 import Home from "./pages/Home";
@@ -99,8 +100,9 @@ function App() {
 
       <Navbar />
 
-      <Suspense fallback={<PageLoader />}>
-        <Routes>
+      <ErrorBoundary>
+        <Suspense fallback={<PageLoader />}>
+          <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/destinations" element={<Destinations />} />
           <Route path="/destinations/:id" element={<DestinationDetails />} />
@@ -274,6 +276,7 @@ function App() {
           />
         </Routes>
       </Suspense>
+    </ErrorBoundary>
 
       <Footer />
     </>

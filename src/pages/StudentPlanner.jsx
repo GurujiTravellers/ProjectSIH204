@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import destinations from "../data/destinations";
 import { SUPPORTED_ORIGINS, MAJOR_ORIGINS } from "../services/plannerService";
 import { getActiveDisasterAlerts } from "../services/emergencyApi";
@@ -32,8 +32,12 @@ const STUDENT_BUDGET_PRESETS = [
 
 function StudentPlanner() {
   const navigate = useNavigate();
+  const location = useLocation();
 
-  const [formData, setFormData] = useState(() => {
+  const savedStudentDraft = useMemo(() => {
+    if (location.state?.formData) {
+      return location.state.formData;
+    }
     try {
       const saved = sessionStorage.getItem("travelGurujiStudentPlannerDraft");
       if (saved) {
@@ -43,6 +47,11 @@ function StudentPlanner() {
     } catch {
       // Ignore
     }
+    return null;
+  }, [location.state]);
+
+  const [formData, setFormData] = useState(() => {
+    if (savedStudentDraft) return savedStudentDraft;
     return {
       origin: "Delhi",
       destination: "Manali",
@@ -214,6 +223,60 @@ function StudentPlanner() {
             </span>
           </div>
         </div>
+
+        {/* PREVIOUS DRAFT RESTORATION BANNER */}
+        {savedStudentDraft && (
+          <div
+            style={{
+              background: "linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(5, 150, 105, 0.25) 100%)",
+              border: "1.5px solid rgba(16, 185, 129, 0.5)",
+              borderRadius: "14px",
+              padding: "14px 20px",
+              marginBottom: "24px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              flexWrap: "wrap",
+              gap: "12px",
+              backdropFilter: "blur(10px)",
+              boxShadow: "0 4px 18px rgba(16, 185, 129, 0.15)",
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+              <span style={{ fontSize: "22px" }}>✅</span>
+              <div>
+                <strong style={{ color: "#10b981", fontSize: "14px", display: "block" }}>
+                  Previous Student Trip Plan Parameters Restored
+                </strong>
+                <span style={{ color: "rgba(255, 255, 255, 0.9)", fontSize: "13px" }}>
+                  Your route to {formData.destination || "selected destination"}, {formData.studentsCount || "4"} student group, and ₹{formData.budgetPerHead || "3600"}/head budget have been loaded.
+                </span>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                try {
+                  sessionStorage.removeItem("travelGurujiStudentPlannerDraft");
+                } catch {
+                  // Ignore
+                }
+                window.location.reload();
+              }}
+              style={{
+                background: "transparent",
+                border: "1px solid rgba(255, 255, 255, 0.3)",
+                color: "#e2e8f0",
+                fontSize: "12px",
+                padding: "6px 12px",
+                borderRadius: "8px",
+                cursor: "pointer",
+              }}
+            >
+              Start Fresh ↺
+            </button>
+          </div>
+        )}
 
         {/* PLANNER FORM */}
         <form onSubmit={handleGeneratePlan} className="student-planner-card">
