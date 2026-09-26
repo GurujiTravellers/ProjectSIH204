@@ -67,16 +67,17 @@ app.get("/api/health", (req, res) => {
 const distPath = path.join(__dirname, "../dist");
 app.use(express.static(distPath));
 
-// Fallback all non-API GET routes to React SPA index.html
-app.get("*", (req, res) => {
-  if (!req.path.startsWith("/api")) {
+// Fallback all non-API GET routes to React SPA index.html (Express 5 compatible)
+app.use((req, res, next) => {
+  if (req.method === "GET" && !req.path.startsWith("/api")) {
     const indexPath = path.join(distPath, "index.html");
-    res.sendFile(indexPath, (err) => {
+    return res.sendFile(indexPath, (err) => {
       if (err) {
         res.status(200).send("Travel Guruji API is running. Build the frontend with 'npm run build' to display the web application.");
       }
     });
   }
+  next();
 });
 
 app.listen(PORT, "0.0.0.0", () => {
