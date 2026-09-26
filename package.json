@@ -8,6 +8,8 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
+    "start": "node backend/server.js",
+    "build:all": "npm run build && cd backend && npm install",
     "server:node": "node backend/server.js",
     "server:python": "python python_service/server.py",
     "server": "node backend/server.js"
