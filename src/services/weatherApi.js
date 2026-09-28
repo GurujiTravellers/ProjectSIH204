@@ -1,3 +1,5 @@
+import { getApiBaseUrl } from "../config/apiConfig";
+
 const OPEN_METEO_GEOCODING_URL =
   "https://geocoding-api.open-meteo.com/v1/search";
 
@@ -780,9 +782,78 @@ async function getWeatherForecast(
   return result;
 }
 
+/**
+ * Fetch all destinations with synchronized real-time weather & natural disasters
+ */
+async function fetchLiveSyncedDestinations(filters = {}) {
+  try {
+    const params = new URLSearchParams();
+    if (filters.tier) params.append("tier", filters.tier);
+    if (filters.search) params.append("search", filters.search);
+    if (filters.state) params.append("state", filters.state);
+
+    const query = params.toString() ? `?${params.toString()}` : "";
+    const res = await fetch(`${getApiBaseUrl()}/weather/destinations${query}`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return await res.json();
+  } catch (err) {
+    console.warn("fetchLiveSyncedDestinations error:", err.message);
+    return { success: false, destinations: [], count: 0 };
+  }
+}
+
+/**
+ * Fetch current background synchronization status & statistics
+ */
+async function fetchWeatherSyncStatus() {
+  try {
+    const res = await fetch(`${getApiBaseUrl()}/weather/live-sync-status`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return await res.json();
+  } catch (err) {
+    console.warn("fetchWeatherSyncStatus error:", err.message);
+    return { success: false, isAutoSyncRunning: false };
+  }
+}
+
+/**
+ * Trigger immediate real-time sync with satellite, seismic, and hydrology feeds
+ */
+async function forceWeatherSync() {
+  try {
+    const res = await fetch(`${getApiBaseUrl()}/weather/sync-now`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return await res.json();
+  } catch (err) {
+    console.warn("forceWeatherSync error:", err.message);
+    return { success: false, message: err.message };
+  }
+}
+
+/**
+ * Fetch detailed live weather, disaster status, and 7-day forecast for a single destination
+ */
+async function fetchDestinationLiveWeather(destinationName) {
+  try {
+    const res = await fetch(`${getApiBaseUrl()}/weather/destination/${encodeURIComponent(destinationName)}`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return await res.json();
+  } catch (err) {
+    console.warn("fetchDestinationLiveWeather error:", err.message);
+    return null;
+  }
+}
+
 export {
   getLocation,
   getWeatherForecast,
   getWeatherSummary,
   computeReliefTelemetry,
+  fetchLiveSyncedDestinations,
+  fetchWeatherSyncStatus,
+  forceWeatherSync,
+  fetchDestinationLiveWeather,
 };

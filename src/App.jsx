@@ -36,6 +36,7 @@ const MyTrips = lazy(() => import("./pages/MyTrips"));
 const WomenSafety = lazy(() => import("./pages/WomenSafety"));
 const ProtectedBooking = lazy(() => import("./pages/ProtectedBooking"));
 const EmergencyHub = lazy(() => import("./pages/EmergencyHub"));
+const Weather = lazy(() => import("./pages/Weather"));
 const Login = lazy(() => import("./pages/Login"));
 const Register = lazy(() => import("./pages/Register"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
@@ -246,6 +247,7 @@ function App() {
           <Route path="/protected-booking" element={<ProtectedBooking />} />
           <Route path="/emergency" element={<EmergencyHub />} />
           <Route path="/emergency-hub" element={<EmergencyHub />} />
+          <Route path="/weather" element={<Weather />} />
           <Route path="/local-experiences" element={<LocalExperiences />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />

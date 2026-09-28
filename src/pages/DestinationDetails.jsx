@@ -349,7 +349,12 @@ function DestinationDetails() {
             </div>
 
             {weatherGlance && (
-              <div className="details-meta-card details-meta-weather">
+              <Link
+                to={`/weather?dest=${encodeURIComponent(destination.name)}`}
+                className="details-meta-card details-meta-weather"
+                style={{ textDecoration: "none", cursor: "pointer" }}
+                title="Click to view live weather & natural disaster telemetry"
+              >
                 <div className="details-meta-icon">
                   {weatherGlance.mode === "live"
                     ? weatherGlance.forecast?.[0]?.weatherIcon || "☀️"
@@ -357,8 +362,9 @@ function DestinationDetails() {
                 </div>
 
                 <div>
-                  <span>
+                  <span style={{ display: "flex", alignItems: "center", gap: "6px" }}>
                     {weatherGlance.mode === "live" ? "Current Weather" : "Seasonal Weather"}
+                    <span style={{ fontSize: "10px", color: "#0284c7", fontWeight: "700" }}>• View Radar ↗</span>
                   </span>
 
                   <strong>
@@ -367,7 +373,7 @@ function DestinationDetails() {
                       : `${weatherGlance.seasonal?.avgTempMin}°C – ${weatherGlance.seasonal?.avgTempMax}°C • ${weatherGlance.seasonal?.dominantCondition}`}
                   </strong>
                 </div>
-              </div>
+              </Link>
             )}
 
           </div>

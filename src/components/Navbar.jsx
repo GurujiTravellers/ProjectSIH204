@@ -300,6 +300,10 @@ function Navbar() {
             Plan Trip
           </NavLink>
 
+          <NavLink to="/weather" className={({ isActive }) => (isActive ? "nav-link active" : "nav-link")}>
+            Weather & Radar
+          </NavLink>
+
           {user && (
             <>
               <NavLink to="/my-bookings" className={({ isActive }) => (isActive ? "nav-link active" : "nav-link")}>
@@ -480,6 +484,10 @@ function Navbar() {
 
               <NavLink to="/safety" className={({ isActive }) => (isActive ? "mobile-nav-item active" : "mobile-nav-item")}>
                 <span className="mobile-icon">🛡️</span> Women Safety Hub
+              </NavLink>
+
+              <NavLink to="/weather" className={({ isActive }) => (isActive ? "mobile-nav-item active" : "mobile-nav-item")}>
+                <span className="mobile-icon">🌦️</span> Weather & Disaster Radar
               </NavLink>
 
               <NavLink to="/emergency-hub" className={({ isActive }) => (isActive ? "mobile-nav-item active" : "mobile-nav-item")}>

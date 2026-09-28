@@ -218,14 +218,14 @@ async function fetchIndiaUSGSEarthquakes() {
         continue;
       }
 
-      // Must be confirmed inside India
-      const isConfirmedIndia = indianStateKeywords.some((k) => placeLower.includes(k));
+      const nearest = findNearestIndiaLocation(lat, lon);
+      if (!nearest) continue;
+
+      // Must be confirmed inside India or within 250 km of destination network
+      const isConfirmedIndia = indianStateKeywords.some((k) => placeLower.includes(k)) || nearest.distanceKm <= 250;
       if (!isConfirmedIndia) {
         continue;
       }
-
-      const nearest = findNearestIndiaLocation(lat, lon);
-      if (!nearest) continue;
 
       let alertTier = "GREEN";
       let severity = "NORMAL";

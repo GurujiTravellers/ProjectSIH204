@@ -17,6 +17,7 @@ const transportRoutes = require("./routes/transportRoutes");
 const paymentRoutes = require("./routes/paymentRoutes");
 const intelligenceRoutes = require("./routes/intelligenceRoutes");
 const emergencyRoutes = require("./routes/emergencyRoutes");
+const { startRealtimeSyncScheduler } = require("./services/realtimeWeatherSyncService");
 
 const app = express();
 
@@ -24,6 +25,8 @@ const PORT =
   process.env.PORT || 5000;
 
 connectDB();
+// Start automated background synchronization for real-time weather & natural disaster database
+startRealtimeSyncScheduler();
 
 app.use(
   cors({

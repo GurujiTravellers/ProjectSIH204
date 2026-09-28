@@ -38,6 +38,17 @@ export default function FloatingEmergencyButton() {
             <strong>Traveler Safety Hub</strong>
           </div>
           <Link
+            to="/weather"
+            className="tg-sos-menu-item"
+            onClick={() => setIsOpen(false)}
+          >
+            <span className="item-icon">🌦️</span>
+            <div>
+              <span className="item-title">Weather & Disaster Radar</span>
+              <small>Realtime Database Telemetry</small>
+            </div>
+          </Link>
+          <Link
             to="/emergency-hub"
             className="tg-sos-menu-item"
             onClick={() => setIsOpen(false)}

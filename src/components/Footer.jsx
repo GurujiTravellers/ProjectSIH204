@@ -49,6 +49,9 @@ function Footer() {
 
         <div>
           <h4>Safety & Crisis</h4>
+          <Link to="/weather" style={{ color: "#38bdf8", fontWeight: "700" }}>
+            🌦️ Weather & Disaster Radar
+          </Link>
           <Link to="/emergency" style={{ color: "#ef4444", fontWeight: "700" }}>
             🚨 Disaster & Emergency Hub
           </Link>
