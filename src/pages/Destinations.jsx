@@ -3,6 +3,7 @@ import DestinationCard from "../components/DestinationCard";
 import { GridSkeleton } from "../components/CardSkeleton";
 import { getDestinations } from "../services/api";
 import { getActiveDisasterAlerts } from "../services/emergencyApi";
+import { useRealtimeDisaster } from "../context/RealtimeDisasterContext";
 import staticDestinations from "../data/destinations";
 
 const CATEGORIES = [
@@ -23,30 +24,34 @@ function Destinations() {
   const [selectedSafety, setSelectedSafety] = useState("All");
   const [sortBy, setSortBy] = useState("featured");
   const [disasterAlertsMap, setDisasterAlertsMap] = useState({});
+  const { destinations: liveSyncedDestinations } = useRealtimeDisaster();
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+  // Continuously sync destination alerts from realtime database
+  useEffect(() => {
+    if (liveSyncedDestinations && liveSyncedDestinations.length > 0) {
+      const map = {};
+      liveSyncedDestinations.forEach((d) => {
+        if (d.name) {
+          map[d.name.toLowerCase().trim()] = {
+            alertTier: d.disaster?.alertTier,
+            severity: d.disaster?.severity,
+            badgeLabel: d.disaster?.badgeLabel,
+            title: d.disaster?.title,
+            movementStatus: d.disaster?.movementStatus,
+            colorCode: d.disaster?.colorCode,
+            hazardType: d.disaster?.hazardType,
+          };
+        }
+      });
+      setDisasterAlertsMap(map);
+    }
+  }, [liveSyncedDestinations]);
+
   useEffect(() => {
     loadDestinations();
-
-    async function loadAlerts() {
-      try {
-        const res = await getActiveDisasterAlerts();
-        if (res && Array.isArray(res.alerts)) {
-          const map = {};
-          res.alerts.forEach((a) => {
-            if (a.destination) {
-              map[a.destination.toLowerCase().trim()] = a;
-            }
-          });
-          setDisasterAlertsMap(map);
-        }
-      } catch (err) {
-        console.warn("Could not load disaster alerts for destinations:", err);
-      }
-    }
-    loadAlerts();
   }, []);
 
   const loadDestinations = async () => {

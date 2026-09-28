@@ -4,6 +4,7 @@ const {
   getSyncStatus,
   syncDatabaseNow,
   getDestinationByName,
+  registerSseClient,
 } = require("../services/realtimeWeatherSyncService");
 
 const router = express.Router();
@@ -50,6 +51,20 @@ router.get("/live-sync-status", (req, res) => {
   } catch (error) {
     console.error("Sync status error:", error);
     res.status(500).json({ success: false, message: "Error fetching sync status" });
+  }
+});
+
+/**
+ * 2.5 REAL-TIME SERVER-SENT EVENTS (SSE) STREAM
+ * GET /api/weather/live-stream
+ * Continuously pushes updates whenever background sync runs or disasters are detected
+ */
+router.get("/live-stream", (req, res) => {
+  try {
+    registerSseClient(res);
+  } catch (error) {
+    console.error("SSE stream error:", error);
+    res.status(500).end();
   }
 });
 

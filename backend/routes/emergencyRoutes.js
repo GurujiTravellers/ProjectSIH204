@@ -9,6 +9,10 @@ const {
   getAtRiskDistrictsData,
   TOURIST_DESTINATIONS,
 } = require("../services/realDisasterService");
+const {
+  getAllRealtimeAlerts,
+  registerSseClient,
+} = require("../services/realtimeWeatherSyncService");
 
 const router = express.Router();
 
@@ -35,6 +39,19 @@ router.get("/districts-at-risk", async (req, res) => {
 });
 
 /**
+ * 0.5 REALTIME DISASTER EVENT STREAM (SSE)
+ * GET /api/emergency/live-stream
+ */
+router.get("/live-stream", (req, res) => {
+  try {
+    registerSseClient(res);
+  } catch (error) {
+    console.error("Emergency SSE stream error:", error);
+    res.status(500).end();
+  }
+});
+
+/**
  * 1. GET ALL ACTIVE REAL-TIME DISASTER & ROUTE ALERTS
  * GET /api/emergency/alerts
  */
@@ -42,7 +59,7 @@ router.get("/alerts", async (req, res) => {
   try {
     const { destination, severity } = req.query;
 
-    const alerts = await getAllRealDisasterAlerts(destination, severity);
+    const alerts = getAllRealtimeAlerts(destination, severity);
 
     const redCount = alerts.filter((a) => a.alertTier === "RED").length;
     const yellowCount = alerts.filter((a) => a.alertTier === "YELLOW").length;
@@ -61,6 +78,7 @@ router.get("/alerts", async (req, res) => {
         total: alerts.length,
       },
       dataSources: [
+        "Global Disaster Alert & Coordination System (GDACS - UN & EC)",
         "USGS Live Global Seismic Network (US Geological Survey)",
         "NASA Earth Observatory Natural Event Tracker (EONET Satellite)",
         "Open-Meteo European Flood Awareness & Global Hydrology Radar",
@@ -89,8 +107,8 @@ router.get("/destination/:name", async (req, res) => {
     const destinationName = req.params.name.trim();
     const destLower = destinationName.toLowerCase();
 
-    // Find active alert from live real-time feeds & verified directives
-    const realAlerts = await getAllRealDisasterAlerts();
+    // Find active alert from unified continuous real-time disaster database
+    const realAlerts = getAllRealtimeAlerts();
     const activeAlert = realAlerts.find(
       (a) =>
         a.destination.toLowerCase() === destLower ||
@@ -187,8 +205,8 @@ router.post("/replan", async (req, res) => {
     const { origin = "Origin", destination = "Destination", bookingReference = null } = req.body;
     const destLower = (destination || "").toLowerCase().trim();
 
-    // Check if destination has active disaster alert from live real-time feeds
-    const realAlerts = await getAllRealDisasterAlerts();
+    // Check if destination has active disaster alert from unified continuous real-time disaster database
+    const realAlerts = getAllRealtimeAlerts();
     const activeAlert = realAlerts.find(
       (a) =>
         a.destination.toLowerCase() === destLower ||

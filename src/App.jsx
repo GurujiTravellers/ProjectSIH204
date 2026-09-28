@@ -12,6 +12,7 @@ import PageLoader from "./components/PageLoader";
 import ToastContainer, { showToast } from "./components/Toast";
 import FloatingEmergencyButton from "./components/FloatingEmergencyButton";
 import ErrorBoundary from "./components/ErrorBoundary";
+import { RealtimeDisasterProvider } from "./context/RealtimeDisasterContext";
 
 // Core home page loaded eagerly for instant first paint
 import Home from "./pages/Home";
@@ -94,7 +95,7 @@ function ProtectedRoute({
 
 function App() {
   return (
-    <>
+    <RealtimeDisasterProvider>
       <ScrollToTop />
       <ToastContainer />
       <FloatingEmergencyButton />
@@ -281,7 +282,7 @@ function App() {
     </ErrorBoundary>
 
       <Footer />
-    </>
+    </RealtimeDisasterProvider>
   );
 }
 

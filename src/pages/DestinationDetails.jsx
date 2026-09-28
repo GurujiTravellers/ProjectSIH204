@@ -5,6 +5,7 @@ import destinations from "../data/destinations";
 import hotels from "../data/hotels";
 import localBusinessData from "../data/localBusinessData";
 import { getWeatherForecast } from "../services/weatherApi";
+import { useRealtimeDisaster } from "../context/RealtimeDisasterContext";
 
 const localCategories = [
   { key: "food", label: "Restaurants & Food", icon: "🍴" },
@@ -37,6 +38,12 @@ function DestinationDetails() {
       : null;
 
   const [weatherGlance, setWeatherGlance] = useState(null);
+  const { destinations: syncedDestinations } = useRealtimeDisaster();
+  const liveDisasterInfo = destination?.name && syncedDestinations
+    ? syncedDestinations.find(
+        (d) => d.name.toLowerCase() === destination.name.toLowerCase()
+      )
+    : null;
 
   useEffect(() => {
     if (!destination?.name) return;
@@ -276,6 +283,83 @@ function DestinationDetails() {
             {destination.description}
           </p>
 
+          {/* REALTIME NATURAL DISASTER WARNING BANNER */}
+          {liveDisasterInfo && (liveDisasterInfo.disaster?.alertTier === "RED" || liveDisasterInfo.disaster?.alertTier === "YELLOW") && (
+            <div
+              style={{
+                background: liveDisasterInfo.disaster.alertTier === "RED" ? "#fef2f2" : "#fffbeb",
+                border: `2px solid ${liveDisasterInfo.disaster.alertTier === "RED" ? "#ef4444" : "#eab308"}`,
+                borderRadius: "14px",
+                padding: "16px 20px",
+                margin: "20px 0 24px",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                flexWrap: "wrap",
+                gap: "12px",
+              }}
+            >
+              <div>
+                <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap", marginBottom: "4px" }}>
+                  <span
+                    style={{
+                      background: liveDisasterInfo.disaster.colorCode,
+                      color: "#ffffff",
+                      fontSize: "11px",
+                      fontWeight: "800",
+                      padding: "2px 8px",
+                      borderRadius: "4px",
+                      textTransform: "uppercase",
+                    }}
+                  >
+                    {liveDisasterInfo.disaster.badgeLabel}
+                  </span>
+                  <strong style={{ fontSize: "15px", color: liveDisasterInfo.disaster.alertTier === "RED" ? "#991b1b" : "#92400e" }}>
+                    {liveDisasterInfo.disaster.title}
+                  </strong>
+                </div>
+                <p style={{ margin: "4px 0", fontSize: "13px", color: "#334155" }}>
+                  {liveDisasterInfo.disaster.description}
+                </p>
+                <div style={{ fontSize: "12px", color: "#64748b" }}>
+                  Corridor: <strong>{liveDisasterInfo.corridor}</strong> • Status: <strong>{liveDisasterInfo.disaster.movementStatus}</strong>
+                </div>
+              </div>
+
+              <div style={{ display: "flex", gap: "8px" }}>
+                <Link
+                  to={`/weather?dest=${encodeURIComponent(destination.name)}`}
+                  style={{
+                    background: "#0f172a",
+                    color: "#ffffff",
+                    textDecoration: "none",
+                    padding: "8px 14px",
+                    borderRadius: "8px",
+                    fontSize: "12px",
+                    fontWeight: "700",
+                  }}
+                >
+                  🌦️ Live Radar & Forecast
+                </Link>
+                {liveDisasterInfo.disaster.alertTier === "RED" && (
+                  <Link
+                    to={`/emergency-hub?dest=${encodeURIComponent(destination.name)}&tab=REPLAN`}
+                    style={{
+                      background: "#dc2626",
+                      color: "#ffffff",
+                      textDecoration: "none",
+                      padding: "8px 14px",
+                      borderRadius: "8px",
+                      fontSize: "12px",
+                      fontWeight: "700",
+                    }}
+                  >
+                    🚨 Evacuation Replan
+                  </Link>
+                )}
+              </div>
+            </div>
+          )}
 
           {/* INFORMATION CARDS */}
 

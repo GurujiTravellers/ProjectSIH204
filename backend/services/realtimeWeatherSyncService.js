@@ -1,16 +1,21 @@
 /**
  * Realtime Automated Disaster & Weather Sync Service - Travel_Guruji
  * 
- * Automatically synchronizes real-time meteorological radar telemetry and 
- * live natural disaster feeds (USGS Seismic Network, NASA EONET, Open-Meteo, NDMA/IMD)
- * across all 55 destinations & travel origins in India.
+ * Continuously synchronizes real-time natural disaster and meteorological radar data
+ * across all 55 destinations & travel hubs in India.
+ * 
+ * Data Sources (Live Feeds):
+ * 1. GDACS (Global Disaster Alert and Coordination System - United Nations & European Commission)
+ * 2. USGS Live Seismic Network (US Geological Survey)
+ * 3. NASA Earth Observatory Natural Event Tracker (EONET Satellite)
+ * 4. Open-Meteo European Flood & Real-Time Hydrology Radar
+ * 5. National Disaster Management Authority (NDMA) & IMD Ground Directives
  * 
  * Features:
- * 1. Background automated worker polling every 60 seconds (like a real database daemon).
- * 2. Instant real-time disaster detection (Earthquake, Landslide, Cyclone, Flash Flood, Blizzard).
- * 3. 4-Tier Automated Safety Classification (🔴 RED, 🟡 YELLOW, 🟢 RAIN ALERT, 🟢 NORMAL).
- * 4. Dual caching & persistent JSON database backup (backend/data/liveWeatherDisasterDb.json).
- * 5. On-demand force-sync API endpoint for immediate synchronization.
+ * - 60-second automated continuous polling loop (daemon mode).
+ * - Realtime Server-Sent Events (SSE) stream for instant client updates without page reload.
+ * - Single source of truth for /weather and /emergency routes.
+ * - Local file persistence (backend/data/liveWeatherDisasterDb.json).
  */
 
 const fs = require("fs");
@@ -23,7 +28,10 @@ const {
 } = require("./realDisasterService");
 
 const DB_FILE_PATH = path.join(__dirname, "../data/liveWeatherDisasterDb.json");
-const SYNC_INTERVAL_MS = 60 * 1000; // Poll every 60 seconds
+const SYNC_INTERVAL_MS = 60 * 1000; // Continuous poll every 60 seconds
+
+// Active SSE client connections
+const sseClients = new Set();
 
 // Weather code description & icon lookup (WMO standards)
 function mapWeatherCode(code) {
@@ -59,6 +67,7 @@ let liveDatabase = {
     normalClear: 0,
   },
   dataSources: [
+    "Global Disaster Alert & Coordination System (GDACS - UN & EC)",
     "USGS Live Indian Subcontinent Seismic Network",
     "NASA Earth Observatory (EONET Satellite Tracking)",
     "Open-Meteo European Flood & Real-Time Hydrology Radar",
@@ -71,11 +80,108 @@ let liveDatabase = {
 let syncTimerId = null;
 
 /**
- * 1. Fetch real-time earthquakes in India from USGS
+ * 1. Fetch live GDACS events (Global Disaster Alert and Coordination System)
+ * Real-time Cyclones, Floods, Earthquakes, Droughts & Volcanoes in India and neighboring waters
+ */
+async function fetchLiveGDACSEvents() {
+  try {
+    const url = "https://www.gdacs.org/xml/rss.xml";
+    const res = await fetch(url, { signal: AbortSignal.timeout(12000) });
+    if (!res.ok) throw new Error(`GDACS HTTP ${res.status}`);
+    const xml = await res.text();
+
+    const items = xml.match(/<item>[\s\S]*?<\/item>/g) || [];
+    const gdacsEvents = [];
+
+    for (const item of items) {
+      const latMatch = item.match(/<geo:lat>([\d.-]+)<\/geo:lat>/);
+      const lonMatch = item.match(/<geo:long>([\d.-]+)<\/geo:long>/);
+      if (!latMatch || !lonMatch) continue;
+
+      const lat = parseFloat(latMatch[1]);
+      const lon = parseFloat(lonMatch[1]);
+
+      // India & surrounding maritime buffer (lat 6.0 to 37.5, lon 65.0 to 98.0)
+      if (lat < 6.0 || lat > 37.5 || lon < 65.0 || lon > 98.0) continue;
+
+      const titleMatch = item.match(/<title>([\s\S]*?)<\/title>/);
+      const title = (titleMatch ? titleMatch[1] : "Natural Disaster Alert").trim();
+      const descMatch = item.match(/<description>([\s\S]*?)<\/description>/);
+      const description = descMatch ? descMatch[1].replace(/<[^>]+>/g, "").trim() : "";
+      const alertLevelMatch = item.match(/<gdacs:alertlevel>([\s\S]*?)<\/gdacs:alertlevel>/);
+      const alertLevel = (alertLevelMatch ? alertLevelMatch[1] : "Green").trim();
+      const eventTypeMatch = item.match(/<gdacs:eventtype>([\s\S]*?)<\/gdacs:eventtype>/);
+      const eventType = (eventTypeMatch ? eventTypeMatch[1] : "GEN").trim();
+      const pubDateMatch = item.match(/<pubDate>([\s\S]*?)<\/pubDate>/);
+      const pubDate = pubDateMatch ? new Date(pubDateMatch[1]).toISOString() : new Date().toISOString();
+      const linkMatch = item.match(/<link>([\s\S]*?)<\/link>/);
+      const link = linkMatch ? linkMatch[1].trim() : "https://www.gdacs.org";
+
+      const nearest = findNearestIndiaLocation(lat, lon);
+      if (!nearest) continue;
+
+      let hazardName = "Natural Disaster Event";
+      let icon = "⚠️";
+      if (eventType === "TC") { hazardName = "Tropical Cyclone / Maritime Storm"; icon = "🌀"; }
+      else if (eventType === "FL") { hazardName = "Flash Flood & River Inundation"; icon = "🌊"; }
+      else if (eventType === "EQ") { hazardName = "Seismic Earthquake"; icon = "🌋"; }
+      else if (eventType === "DR") { hazardName = "Drought Warning"; icon = "☀️"; }
+      else if (eventType === "VO") { hazardName = "Volcanic Activity"; icon = "🌋"; }
+      else if (eventType === "WF") { hazardName = "Wildfire / Forest Fire"; icon = "🔥"; }
+
+      const isHighLevel = alertLevel.toLowerCase() === "red" || alertLevel.toLowerCase() === "orange";
+      const alertTier = isHighLevel && nearest.distanceKm < 150 ? "RED" : "YELLOW";
+      const isDisasterZone = alertTier === "RED";
+
+      gdacsEvents.push({
+        id: `GDACS-${eventType}-${Math.round(lat * 100)}-${Math.round(lon * 100)}`,
+        alertTier,
+        severity: alertTier === "RED" ? "CRITICAL" : "WARNING",
+        isDisasterZone,
+        isDisaster: isDisasterZone,
+        isModerateAdvisory: !isDisasterZone,
+        isNormal: false,
+        colorCode: alertTier === "RED" ? "#ef4444" : "#eab308",
+        badgeLabel: alertTier === "RED"
+          ? `🔴 Disaster Zone (${hazardName})`
+          : `🟡 Yellow Alert (${hazardName} Advisory)`,
+        movementStatus: alertTier === "RED"
+          ? "TRAVEL HAZARDOUS / ROUTES SUSPENDED"
+          : "MOVEMENT POSSIBLE WITH CAUTION",
+        movementFeasible: alertTier !== "RED",
+        isRealLiveIncident: true,
+        source: "Global Disaster Alert and Coordination System (GDACS - UN & EC)",
+        sourceIcon: icon,
+        sourceUrl: link,
+        disasterType: hazardName,
+        title: `${title} (${nearest.name} Sector)`,
+        destination: nearest.name,
+        region: `${nearest.state} • GDACS Live Coordination Grid`,
+        coordinates: { lat, lon },
+        distanceToNearestHub: `${nearest.distanceKm} km from ${nearest.name}`,
+        affectedCorridors: `${nearest.corridor} (~${nearest.distanceKm} km radius)`,
+        status: alertTier === "RED" ? "CLOSED_TO_TOURISTS" : "RESTRICTED",
+        issuedAt: pubDate,
+        validUntil: new Date(Date.now() + 48 * 3600000).toISOString(),
+        description: description || `Live disaster notification tracked by GDACS sensors. Location: ${lat.toFixed(2)}°N, ${lon.toFixed(2)}°E (~${nearest.distanceKm} km from ${nearest.name}).`,
+        evacuationAdvice: alertTier === "RED"
+          ? `Evacuate low-lying or exposed areas along ${nearest.corridor}. Contact district emergency center 1077.`
+          : `Exercise caution while traveling across ${nearest.corridor}. Avoid waterlogged routes or coastal zones.`,
+      });
+    }
+
+    return gdacsEvents;
+  } catch (err) {
+    console.warn("[WeatherSync] GDACS fetch warning:", err.message);
+    return [];
+  }
+}
+
+/**
+ * 2. Fetch real-time earthquakes in India from USGS
  */
 async function fetchLiveUSGSEarthquakes() {
   try {
-    // Bounding box for Indian Subcontinent: lat 6.0 to 37.5, lon 67.0 to 98.0
     const url =
       "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&minmagnitude=2.2&minlatitude=6.0&maxlatitude=37.5&minlongitude=67.0&maxlongitude=98.0&limit=40";
     const res = await fetch(url, { signal: AbortSignal.timeout(10000) });
@@ -97,7 +203,6 @@ async function fetchLiveUSGSEarthquakes() {
       const mag = p.mag || 0;
       const placeLower = (p.place || "").toLowerCase();
 
-      // Exclude confirmed far foreign events
       if (foreignExclusions.some((c) => placeLower.includes(c))) {
         continue;
       }
@@ -105,7 +210,6 @@ async function fetchLiveUSGSEarthquakes() {
       const nearest = findNearestIndiaLocation(lat, lon);
       if (!nearest) continue;
 
-      // Event must be within 250km of Indian destination network or explicitly India
       if (nearest.distanceKm > 250 && !placeLower.includes("india")) {
         continue;
       }
@@ -154,6 +258,8 @@ async function fetchLiveUSGSEarthquakes() {
         movementFeasible,
         isRealLiveIncident: true,
         source: "USGS Live Indian Subcontinent Seismic Network",
+        sourceIcon: "🌐",
+        sourceUrl: p.url || `https://earthquake.usgs.gov/earthquakes/eventpage/${f.id}`,
         disasterType: "Earthquake / Seismic Tremor",
         title: p.title || `M ${mag.toFixed(1)} Seismic Tremor near ${nearest.name}`,
         magnitude: `M ${mag.toFixed(1)}`,
@@ -181,7 +287,7 @@ async function fetchLiveUSGSEarthquakes() {
 }
 
 /**
- * 2. Fetch live NASA EONET events in the Indian Subcontinent
+ * 3. Fetch live NASA EONET events in the Indian Subcontinent
  */
 async function fetchLiveNASAEvents() {
   try {
@@ -200,7 +306,6 @@ async function fetchLiveNASAEvents() {
       const lon = coords[0];
       const lat = coords[1];
 
-      // India bounding box
       const isWithinIndiaBox = lat >= 6.5 && lat <= 36.5 && lon >= 65.0 && lon <= 98.0;
       if (!isWithinIndiaBox) continue;
 
@@ -229,6 +334,8 @@ async function fetchLiveNASAEvents() {
         movementFeasible: alertTier !== "RED",
         isRealLiveIncident: true,
         source: "NASA Earth Observatory (EONET Satellite Tracking)",
+        sourceIcon: "🔭",
+        sourceUrl: e.sources?.[0]?.url || `https://eonet.gsfc.nasa.gov/api/v3/events/${e.id}`,
         disasterType: cat,
         title: `${e.title} (Indian Subcontinent)`,
         destination: nearest ? nearest.name : "Indian Coastal Waters",
@@ -250,7 +357,7 @@ async function fetchLiveNASAEvents() {
 }
 
 /**
- * 3. Batch fetch real-time Open-Meteo weather telemetry for all locations
+ * 4. Batch fetch real-time Open-Meteo weather telemetry for all locations
  */
 async function fetchAllLocationsWeather() {
   try {
@@ -298,7 +405,7 @@ async function fetchAllLocationsWeather() {
 }
 
 /**
- * 4. Master Sync Function: Unifies Weather Telemetry with Natural Disasters
+ * 5. Master Sync Function: Unifies Weather Telemetry with All Real-Time Disasters
  */
 async function syncDatabaseNow() {
   if (liveDatabase.isSyncing) {
@@ -311,9 +418,10 @@ async function syncDatabaseNow() {
   console.log(`[WeatherSync] 🔄 Starting automated sync cycle #${liveDatabase.syncCount + 1}...`);
 
   try {
-    const [usgsEvents, nasaEvents, weatherMap] = await Promise.all([
+    const [usgsEvents, nasaEvents, gdacsEvents, weatherMap] = await Promise.all([
       fetchLiveUSGSEarthquakes(),
       fetchLiveNASAEvents(),
+      fetchLiveGDACSEvents(),
       fetchAllLocationsWeather(),
     ]);
 
@@ -361,6 +469,7 @@ async function syncDatabaseNow() {
       let advice = `Monitored live via Open-Meteo satellite. Enjoy your journey with standard schedule.`;
       let activeThreat = null;
       let activeBulletinId = null;
+      let sourceName = "Open-Meteo Satellite & National Disaster Network";
 
       // Rule A: Real-time severe weather thresholds
       if (liveW.precipitation >= 30.0 || liveW.windGusts >= 70.0 || liveW.temperature >= 46.0) {
@@ -378,6 +487,7 @@ async function syncDatabaseNow() {
         title = `CRITICAL ALERT: Severe Weather Disruption in ${name}`;
         description = `Extreme telemetry recorded: Precipitation ${liveW.precipitation} mm/h, Gusts ${liveW.windGusts} km/h. Highway corridor ${info.corridor} has high risk of flooding or landslides.`;
         advice = "Stay indoors in safe masonry accommodations. Follow local administration orders.";
+        sourceName = "Open-Meteo Severe Weather & Hydrology Radar";
       } else if (
         liveW.precipitation >= 15.0 ||
         liveW.windGusts >= 48.0 ||
@@ -398,6 +508,7 @@ async function syncDatabaseNow() {
         title = `WEATHER ADVISORY: Caution Advised in ${name}`;
         description = `Advisory conditions: Rain ${liveW.precipitation} mm/h, Gusts ${liveW.windGusts} km/h, Temp ${liveW.temperature}°C. Movement is operational with speed restrictions.`;
         advice = "Drive cautiously, avoid night driving, keep vehicle headlights on.";
+        sourceName = "Open-Meteo Severe Weather & Hydrology Radar";
       } else if (liveW.precipitation >= 1.0) {
         alertTier = "GREEN";
         severity = "GREEN_ALERT";
@@ -413,6 +524,7 @@ async function syncDatabaseNow() {
         title = `Rain Alert: Standard Rainfall in ${name} (${liveW.precipitation} mm/h)`;
         description = `Intermittent rain showers (${liveW.precipitation} mm/h). Temperature: ${liveW.temperature}°C. No landslides or route blockages reported.`;
         advice = "Carry an umbrella. All transit, trains, and arterial highways are operating on time.";
+        sourceName = "Open-Meteo Satellite Radar";
       }
 
       // Rule B: Overlay verified ground directives (Manali Landslide, Puri Cyclone, Rohtang gate, Rishikesh spate)
@@ -435,9 +547,32 @@ async function syncDatabaseNow() {
         advice = matchingDirective.evacuationAdvice || matchingDirective.movementAdvice || advice;
         activeThreat = matchingDirective.disasterType;
         activeBulletinId = matchingDirective.id;
+        sourceName = matchingDirective.source || "NDMA / IMD Ground Directives";
       }
 
-      // Rule C: Overlay live USGS earthquakes if elevated
+      // Rule C: Overlay live GDACS events (Global Disaster Alert and Coordination System)
+      const gdacs = gdacsEvents.find((g) => g.destination.toLowerCase() === key);
+      if (gdacs && (gdacs.alertTier === "RED" || (gdacs.alertTier === "YELLOW" && alertTier !== "RED"))) {
+        alertTier = gdacs.alertTier;
+        severity = gdacs.severity;
+        isDisasterZone = gdacs.isDisasterZone;
+        isModerateAdvisory = gdacs.isModerateAdvisory;
+        isNormal = false;
+        status = gdacs.status;
+        colorCode = gdacs.colorCode;
+        badgeLabel = gdacs.badgeLabel;
+        movementStatus = gdacs.movementStatus;
+        movementFeasible = gdacs.movementFeasible;
+        hazardType = gdacs.disasterType;
+        title = gdacs.title;
+        description = gdacs.description;
+        advice = gdacs.evacuationAdvice || advice;
+        activeThreat = gdacs.disasterType;
+        activeBulletinId = gdacs.id;
+        sourceName = "GDACS (United Nations & European Commission)";
+      }
+
+      // Rule D: Overlay live USGS earthquakes if elevated
       const quake = usgsEvents.find((q) => q.destination.toLowerCase() === key);
       if (quake && (quake.alertTier === "RED" || (quake.alertTier === "YELLOW" && alertTier !== "RED"))) {
         alertTier = quake.alertTier;
@@ -456,9 +591,10 @@ async function syncDatabaseNow() {
         advice = quake.evacuationAdvice || advice;
         activeThreat = quake.disasterType;
         activeBulletinId = quake.id;
+        sourceName = "USGS Live Indian Subcontinent Seismic Network";
       }
 
-      // Rule D: Overlay live NASA events if elevated
+      // Rule E: Overlay live NASA events if elevated
       const storm = nasaEvents.find((s) => s.destination.toLowerCase() === key);
       if (storm && (storm.alertTier === "RED" || (storm.alertTier === "YELLOW" && alertTier !== "RED"))) {
         alertTier = storm.alertTier;
@@ -477,6 +613,7 @@ async function syncDatabaseNow() {
         advice = storm.evacuationAdvice || advice;
         activeThreat = storm.disasterType;
         activeBulletinId = storm.id;
+        sourceName = "NASA Earth Observatory (EONET Satellite)";
       }
 
       // Update counters
@@ -516,6 +653,7 @@ async function syncDatabaseNow() {
           advice,
           activeThreat,
           activeBulletinId,
+          source: sourceName,
           safeAlternativeHub: info.state.includes("Himachal")
             ? "Chandigarh"
             : info.state.includes("Uttarakhand")
@@ -539,6 +677,7 @@ async function syncDatabaseNow() {
           hazardType: d.disaster.hazardType,
           corridor: d.corridor,
           movementStatus: d.disaster.movementStatus,
+          source: d.disaster.source,
           timestamp: new Date().toISOString(),
         });
       }
@@ -565,9 +704,19 @@ async function syncDatabaseNow() {
       console.warn("[WeatherSync] Error saving database file:", saveErr.message);
     }
 
+    // Broadcast update to all connected SSE clients (browsers)
+    broadcastUpdate({
+      type: "REALTIME_DATABASE_UPDATE",
+      timestamp: liveDatabase.lastSyncTimestamp,
+      syncCount: liveDatabase.syncCount,
+      stats: liveDatabase.stats,
+      destinations: Object.values(liveDatabase.destinations),
+      timeline: liveDatabase.recentEventsTimeline,
+    });
+
     const elapsed = Date.now() - startTime;
     console.log(
-      `[WeatherSync] ✅ Automated sync cycle #${liveDatabase.syncCount} complete in ${elapsed}ms: ` +
+      `[WeatherSync] ✅ Continuous sync cycle #${liveDatabase.syncCount} complete in ${elapsed}ms: ` +
       `${disasterZonesCount} 🔴 Disaster Zones, ${moderateAdvisoriesCount} 🟡 Advisories, ` +
       `${rainAlertsCount} 🌧️ Rain Alerts, ${normalClearCount} 🟢 Clear Hubs.`
     );
@@ -581,7 +730,156 @@ async function syncDatabaseNow() {
 }
 
 /**
- * Start the background synchronization scheduler
+ * Register a client response for Server-Sent Events (SSE)
+ */
+function registerSseClient(res) {
+  res.writeHead(200, {
+    "Content-Type": "text/event-stream",
+    "Cache-Control": "no-cache",
+    "Connection": "keep-alive",
+  });
+
+  // Send immediate initial data
+  const initialPayload = JSON.stringify({
+    type: "INITIAL_DATABASE_STATE",
+    timestamp: liveDatabase.lastSyncTimestamp,
+    syncCount: liveDatabase.syncCount,
+    stats: liveDatabase.stats,
+    destinations: Object.values(liveDatabase.destinations),
+    timeline: liveDatabase.recentEventsTimeline,
+  });
+  res.write(`data: ${initialPayload}\n\n`);
+
+  sseClients.add(res);
+
+  // Send periodic ping to prevent timeout
+  const pingInterval = setInterval(() => {
+    try {
+      res.write(":ping\n\n");
+    } catch {
+      clearInterval(pingInterval);
+      sseClients.delete(res);
+    }
+  }, 15000);
+
+  res.on("close", () => {
+    clearInterval(pingInterval);
+    sseClients.delete(res);
+  });
+}
+
+/**
+ * Broadcast real-time database update to all active browsers
+ */
+function broadcastUpdate(payload) {
+  if (sseClients.size === 0) return;
+  const message = `data: ${JSON.stringify(payload)}\n\n`;
+  for (const client of sseClients) {
+    try {
+      client.write(message);
+    } catch (err) {
+      sseClients.delete(client);
+    }
+  }
+}
+
+/**
+ * Formats alerts into the authoritative emergency format
+ */
+function getAllRealtimeAlerts(destination = "", severity = "") {
+  const destArray = Object.values(liveDatabase.destinations || {});
+  let list = destArray.map((d) => {
+    const isDis = d.disaster.alertTier === "RED";
+    const isMod = d.disaster.alertTier === "YELLOW";
+    return {
+      id: d.disaster.activeBulletinId || `ALERT-${d.name.toUpperCase().replace(/\s+/g, "_")}`,
+      alertTier: d.disaster.alertTier,
+      severity: d.disaster.severity,
+      isDisasterZone: isDis,
+      isDisaster: isDis,
+      isModerateAdvisory: isMod,
+      isRainAlert: d.disaster.isRainAlert,
+      isNormal: d.disaster.isNormal,
+      colorCode: d.disaster.colorCode,
+      badgeLabel: d.disaster.badgeLabel,
+      movementStatus: d.disaster.movementStatus,
+      movementFeasible: d.disaster.movementFeasible,
+      isRealLiveIncident: true,
+      source: d.disaster.source || "Unified Realtime Disaster Network",
+      sourceIcon: isDis ? "🚨" : isMod ? "🟡" : d.disaster.isRainAlert ? "🌧️" : "🟢",
+      disasterType: d.disaster.hazardType,
+      title: d.disaster.title,
+      destination: d.name,
+      region: `${d.state} • ${d.corridor}`,
+      coordinates: d.coordinates,
+      affectedCorridors: d.disaster.affectedCorridors || d.corridor,
+      affectedTransportModes: isDis
+        ? "Road Highway Movement Suspended"
+        : isMod
+        ? "Movement Possible with Precaution"
+        : "All Transport Modes Clear",
+      status: d.disaster.status,
+      issuedAt: d.disaster.lastVerifiedAt || liveDatabase.lastSyncTimestamp,
+      validUntil: new Date(Date.now() + 48 * 3600000).toISOString(),
+      description: d.disaster.description,
+      evacuationAdvice: d.disaster.advice,
+      safeAlternativeHub: d.disaster.safeAlternativeHub,
+      safeEvacuationRoute: {
+        routeTitle: `Safe Arterial Highway via ${d.corridor}`,
+        estimatedTransitTime: "2.5 hrs",
+        safetyStatus: isDis ? "POLICE_ESCORTED" : "ALL_WEATHER_CLEAR",
+        recommendedMode: isDis ? "Govt. SDRF Evacuation Shuttle" : "Standard Intercity Transport",
+        stepByStepInstructions: [
+          `1. Depart ${d.name} via ${d.corridor}.`,
+          "2. Follow directives from district police and SEOC helpline 1070.",
+          `3. Arrive safely at transit hub ${d.disaster.safeAlternativeHub}.`,
+        ],
+      },
+      liveWeather: {
+        temp: d.weather.temperature,
+        windGust: d.weather.windGusts,
+        precipitation: d.weather.precipitation,
+        humidity: d.weather.humidity,
+        condition: d.weather.condition,
+        icon: d.weather.icon,
+      },
+    };
+  });
+
+  if (destination && destination.trim()) {
+    const dLower = destination.trim().toLowerCase();
+    list = list.filter(
+      (a) =>
+        a.destination.toLowerCase() === dLower ||
+        a.region.toLowerCase().includes(dLower) ||
+        (a.title && a.title.toLowerCase().includes(dLower))
+    );
+  }
+
+  if (severity && severity.trim()) {
+    const sLower = severity.trim().toLowerCase();
+    list = list.filter(
+      (a) =>
+        a.severity.toLowerCase() === sLower ||
+        a.alertTier.toLowerCase() === sLower ||
+        (sLower === "disaster_zone" && a.isDisasterZone) ||
+        (sLower === "rain_alert" && a.isRainAlert)
+    );
+  }
+
+  return list.sort((a, b) => {
+    const rank = (item) => {
+      if (item.alertTier === "RED") return 1;
+      if (item.alertTier === "YELLOW") return 2;
+      if (item.isRainAlert) return 3;
+      return 4;
+    };
+    return rank(a) - rank(b);
+  });
+}
+
+/**
+ * Start the background continuous synchronization scheduler
  */
 function startRealtimeSyncScheduler() {
   if (syncTimerId) {
@@ -606,7 +904,7 @@ function startRealtimeSyncScheduler() {
   // Run immediate first sync
   syncDatabaseNow();
 
-  // Schedule recurring background sync every 60 seconds
+  // Schedule recurring background sync every 60 seconds continuously
   syncTimerId = setInterval(() => {
     syncDatabaseNow();
   }, SYNC_INTERVAL_MS);
@@ -652,7 +950,6 @@ function getLiveDestinationsArray(filters = {}) {
     result = result.filter((d) => d.state.toLowerCase().includes(st));
   }
 
-  // Sort: RED first, then YELLOW, then RAIN, then CLEAR
   return result.sort((a, b) => {
     const rank = (item) => {
       if (item.disaster.alertTier === "RED") return 1;
@@ -690,6 +987,7 @@ function getSyncStatus() {
     stats: liveDatabase.stats,
     dataSources: liveDatabase.dataSources,
     recentEventsTimeline: liveDatabase.recentEventsTimeline,
+    activeSubscribersCount: sseClients.size,
   };
 }
 
@@ -700,4 +998,6 @@ module.exports = {
   getLiveDestinationsArray,
   getDestinationByName,
   getSyncStatus,
+  registerSseClient,
+  getAllRealtimeAlerts,
 };

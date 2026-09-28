@@ -13,6 +13,7 @@ import EmergencyRadarMap from "../components/EmergencyRadarMap";
 import EmergencySOSBroadcaster from "../components/EmergencySOSBroadcaster";
 import OfflineEmergencyPassModal from "../components/OfflineEmergencyPassModal";
 import SafeTravelDestinations from "../components/SafeTravelDestinations";
+import { useRealtimeDisaster } from "../context/RealtimeDisasterContext";
 
 export default function EmergencyHub() {
   const [searchParams] = useSearchParams();
@@ -165,9 +166,17 @@ export default function EmergencyHub() {
     new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" })
   );
 
+  const {
+    destinations: liveSyncedDestinations,
+    lastSyncTimestamp,
+    forceSync: forceRealtimeSync,
+    isSyncing: isContextSyncing,
+  } = useRealtimeDisaster();
+
   const handleRefreshLive = async () => {
     setIsRefreshingLive(true);
     try {
+      if (forceRealtimeSync) await forceRealtimeSync();
       const res = await getActiveDisasterAlerts();
       if (res && res.alerts) {
         setAlerts(res.alerts);
@@ -181,6 +190,66 @@ export default function EmergencyHub() {
       setIsRefreshingLive(false);
     }
   };
+
+  // Continuous sync listener: automatically updates alerts when live database changes
+  useEffect(() => {
+    if (liveSyncedDestinations && liveSyncedDestinations.length > 0) {
+      const formattedAlerts = liveSyncedDestinations.map((d) => {
+        const isDis = d.disaster?.alertTier === "RED";
+        const isMod = d.disaster?.alertTier === "YELLOW";
+        return {
+          id: d.disaster?.activeBulletinId || `ALERT-${d.name.toUpperCase().replace(/\s+/g, "_")}`,
+          alertTier: d.disaster?.alertTier || "GREEN",
+          severity: d.disaster?.severity || "NORMAL",
+          isDisasterZone: isDis,
+          isDisaster: isDis,
+          isModerateAdvisory: isMod,
+          isRainAlert: !!d.disaster?.isRainAlert,
+          isNormal: !isDis && !isMod,
+          colorCode: d.disaster?.colorCode || "#10b981",
+          badgeLabel: d.disaster?.badgeLabel || "🟢 Normal",
+          movementStatus: d.disaster?.movementStatus || "ALL ROUTES OPEN & NORMAL",
+          movementFeasible: d.disaster ? d.disaster.movementFeasible : true,
+          isRealLiveIncident: true,
+          source: d.disaster?.source || "Unified Realtime Disaster Network",
+          disasterType: d.disaster?.hazardType || "Clear Weather",
+          title: d.disaster?.title || `Clear Corridors: ${d.name}`,
+          destination: d.name,
+          region: `${d.state} • ${d.corridor}`,
+          coordinates: d.coordinates,
+          affectedCorridors: d.disaster?.affectedCorridors || d.corridor,
+          affectedTransportModes: isDis ? "Road Highway Movement Suspended" : isMod ? "Caution Advised" : "Normal Transport",
+          status: d.disaster?.status || "NORMAL",
+          issuedAt: d.disaster?.lastVerifiedAt || new Date().toISOString(),
+          validUntil: new Date(Date.now() + 48 * 3600000).toISOString(),
+          description: d.disaster?.description,
+          evacuationAdvice: d.disaster?.advice,
+          safeAlternativeHub: d.disaster?.safeAlternativeHub,
+          safeEvacuationRoute: {
+            routeTitle: `Safe Highway via ${d.corridor}`,
+            estimatedTransitTime: "2.5 hrs",
+            safetyStatus: isDis ? "POLICE_ESCORTED" : "CLEAR",
+            recommendedMode: isDis ? "Govt. SDRF Shuttle" : "Highway Transit",
+            stepByStepInstructions: [
+              `1. Depart via ${d.corridor}.`,
+              "2. Follow state helpline 1070 instructions.",
+              `3. Reach safe transit hub ${d.disaster?.safeAlternativeHub}.`,
+            ],
+          },
+          liveWeather: {
+            temp: d.weather?.temperature,
+            windGust: d.weather?.windGusts,
+            precipitation: d.weather?.precipitation,
+            humidity: d.weather?.humidity,
+          },
+        };
+      });
+
+      setAlerts(formattedAlerts);
+      setLoadingAlerts(false);
+      setLastSyncedTime(new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" }));
+    }
+  }, [liveSyncedDestinations]);
 
   // Fetch active alerts
   useEffect(() => {

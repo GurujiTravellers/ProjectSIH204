@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, NavLink, useNavigate, useLocation } from "react-router-dom";
 import { getCurrentUser } from "../services/api";
+import { useRealtimeDisaster } from "../context/RealtimeDisasterContext";
 
 function Navbar() {
   const navigate = useNavigate();
@@ -10,6 +11,8 @@ function Navbar() {
   const [showMenu, setShowMenu] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+
+  const { activeDisasterZones } = useRealtimeDisaster();
 
   const profileRef = useRef(null);
 
@@ -301,7 +304,22 @@ function Navbar() {
           </NavLink>
 
           <NavLink to="/weather" className={({ isActive }) => (isActive ? "nav-link active" : "nav-link")}>
-            Weather & Radar
+            <span style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
+              Weather & Radar
+              {activeDisasterZones && activeDisasterZones.length > 0 && (
+                <span
+                  title={`${activeDisasterZones.length} Active Disaster Zone(s) Detected`}
+                  style={{
+                    width: "8px",
+                    height: "8px",
+                    borderRadius: "50%",
+                    background: "#ef4444",
+                    boxShadow: "0 0 8px #ef4444",
+                    display: "inline-block",
+                  }}
+                />
+              )}
+            </span>
           </NavLink>
 
           {user && (
@@ -488,6 +506,11 @@ function Navbar() {
 
               <NavLink to="/weather" className={({ isActive }) => (isActive ? "mobile-nav-item active" : "mobile-nav-item")}>
                 <span className="mobile-icon">🌦️</span> Weather & Disaster Radar
+                {activeDisasterZones && activeDisasterZones.length > 0 && (
+                  <span style={{ marginLeft: "auto", background: "#ef4444", color: "#fff", fontSize: "11px", fontWeight: "800", padding: "2px 8px", borderRadius: "10px" }}>
+                    {activeDisasterZones.length} Active
+                  </span>
+                )}
               </NavLink>
 
               <NavLink to="/emergency-hub" className={({ isActive }) => (isActive ? "mobile-nav-item active" : "mobile-nav-item")}>

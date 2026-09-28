@@ -1,7 +1,7 @@
 {
-  "lastSyncTimestamp": "2026-09-28T17:35:56.498Z",
-  "nextSyncTimestamp": "2026-09-28T17:36:56.498Z",
-  "syncCount": 5,
+  "lastSyncTimestamp": "2026-09-28T17:46:58.736Z",
+  "nextSyncTimestamp": "2026-09-28T17:47:58.736Z",
+  "syncCount": 17,
   "isSyncing": true,
   "destinations": {
     "Shimla": {
@@ -22,11 +22,11 @@
         "rain": 0,
         "windSpeed": 1,
         "windGusts": 6,
-        "weatherCode": 2,
-        "condition": "Partly Cloudy",
-        "icon": "⛅",
-        "category": "cloudy",
-        "lastUpdatedAt": "2026-09-28T17:35:56.497Z"
+        "weatherCode": 1,
+        "condition": "Mainly Clear",
+        "icon": "🌤️",
+        "category": "clear",
+        "lastUpdatedAt": "2026-09-28T17:46:58.735Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -50,7 +50,7 @@
         "activeBulletinId": null,
         "safeAlternativeHub": "Chandigarh",
         "affectedCorridors": "NH-5 Himalayan Expressway",
-        "lastVerifiedAt": "2026-09-28T17:35:56.497Z"
+        "lastVerifiedAt": "2026-09-28T17:46:58.735Z"
       }
     },
     "Manali": {
@@ -64,18 +64,18 @@
         "lon": 77.1887
       },
       "weather": {
-        "temperature": 15,
-        "apparentTemperature": 14.4,
-        "humidity": 74,
+        "temperature": 15.2,
+        "apparentTemperature": 14.5,
+        "humidity": 72,
         "precipitation": 0,
         "rain": 0,
         "windSpeed": 5,
         "windGusts": 30,
-        "weatherCode": 3,
-        "condition": "Overcast",
-        "icon": "☁️",
+        "weatherCode": 2,
+        "condition": "Partly Cloudy",
+        "icon": "⛅",
         "category": "cloudy",
-        "lastUpdatedAt": "2026-09-28T17:35:56.497Z"
+        "lastUpdatedAt": "2026-09-28T17:46:58.735Z"
       },
       "disaster": {
         "alertTier": "RED",
@@ -99,7 +99,7 @@
         "activeBulletinId": "NDMA-HP-MANDI-NH3-REAL",
         "safeAlternativeHub": "Chandigarh",
         "affectedCorridors": "NH-3 (Chandigarh-Manali)",
-        "lastVerifiedAt": "2026-09-28T17:35:56.497Z"
+        "lastVerifiedAt": "2026-09-28T17:46:58.735Z"
       }
     },
     "Rohtang Pass": {
@@ -113,18 +113,18 @@
         "lon": 77.2466
       },
       "weather": {
-        "temperature": -0.3,
-        "apparentTemperature": -2.9,
+        "temperature": -0.4,
+        "apparentTemperature": -3,
         "humidity": 87,
         "precipitation": 0,
         "rain": 0,
         "windSpeed": 1,
-        "windGusts": 16,
+        "windGusts": 15,
         "weatherCode": 3,
         "condition": "Overcast",
         "icon": "☁️",
         "category": "cloudy",
-        "lastUpdatedAt": "2026-09-28T17:35:56.497Z"
+        "lastUpdatedAt": "2026-09-28T17:46:58.735Z"
       },
       "disaster": {
         "alertTier": "YELLOW",
@@ -148,7 +148,7 @@
         "activeBulletinId": "NDMA-HP-ROHTANG-WEATHER-GATE",
         "safeAlternativeHub": "Chandigarh",
         "affectedCorridors": "Manali-Leh Highway (13,058 ft)",
-        "lastVerifiedAt": "2026-09-28T17:35:56.497Z"
+        "lastVerifiedAt": "2026-09-28T17:46:58.735Z"
       }
     },
     "Kasol": {
@@ -162,18 +162,18 @@
         "lon": 77.315
       },
       "weather": {
-        "temperature": 17.2,
-        "apparentTemperature": 17.5,
+        "temperature": 17.1,
+        "apparentTemperature": 17.4,
         "humidity": 70,
         "precipitation": 0,
         "rain": 0,
-        "windSpeed": 2,
-        "windGusts": 23,
+        "windSpeed": 1,
+        "windGusts": 22,
         "weatherCode": 3,
         "condition": "Overcast",
         "icon": "☁️",
         "category": "cloudy",
-        "lastUpdatedAt": "2026-09-28T17:35:56.497Z"
+        "lastUpdatedAt": "2026-09-28T17:46:58.735Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -191,13 +191,13 @@
         "movementFeasible": true,
         "hazardType": "Normal Microclimate & Clear Corridors",
         "title": "Clear Corridors & Normal Weather: Kasol",
-        "description": "Fair weather conditions. Current Temperature: 17.2°C. Wind: 2 km/h. Highway corridor Bhuntar-Kasol-Manikaran Road is 100% operational with smooth transit.",
+        "description": "Fair weather conditions. Current Temperature: 17.1°C. Wind: 1 km/h. Highway corridor Bhuntar-Kasol-Manikaran Road is 100% operational with smooth transit.",
         "advice": "Monitored live via Open-Meteo satellite. Enjoy your journey with standard schedule.",
         "activeThreat": null,
         "activeBulletinId": null,
         "safeAlternativeHub": "Chandigarh",
         "affectedCorridors": "Bhuntar-Kasol-Manikaran Road",
-        "lastVerifiedAt": "2026-09-28T17:35:56.497Z"
+        "lastVerifiedAt": "2026-09-28T17:46:58.735Z"
       }
     },
     "Chitkul": {
@@ -211,8 +211,8 @@
         "lon": 78.4354
       },
       "weather": {
-        "temperature": 2.9,
-        "apparentTemperature": 0.5,
+        "temperature": 2.6,
+        "apparentTemperature": 0.2,
         "humidity": 86,
         "precipitation": 0,
         "rain": 0,
@@ -222,7 +222,7 @@
         "condition": "Overcast",
         "icon": "☁️",
         "category": "cloudy",
-        "lastUpdatedAt": "2026-09-28T17:35:56.497Z"
+        "lastUpdatedAt": "2026-09-28T17:46:58.735Z"
       },
       "disaster": {
         "alertTier": "YELLOW",
@@ -246,7 +246,7 @@
         "activeBulletinId": "USGS-us7000tdv4",
         "safeAlternativeHub": "Chandigarh",
         "affectedCorridors": "Kinnaur Valley Indo-Tibet Border Road",
-        "lastVerifiedAt": "2026-09-28T17:35:56.497Z"
+        "lastVerifiedAt": "2026-09-28T17:46:58.735Z"
       }
     },
     "Kalpa": {
@@ -260,18 +260,18 @@
         "lon": 78.2562
       },
       "weather": {
-        "temperature": 7.3,
-        "apparentTemperature": 6,
+        "temperature": 7.1,
+        "apparentTemperature": 5.8,
         "humidity": 91,
         "precipitation": 0,
         "rain": 0,
         "windSpeed": 2,
-        "windGusts": 19,
+        "windGusts": 20,
         "weatherCode": 3,
         "condition": "Overcast",
         "icon": "☁️",
         "category": "cloudy",
-        "lastUpdatedAt": "2026-09-28T17:35:56.497Z"
+        "lastUpdatedAt": "2026-09-28T17:46:58.735Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -289,13 +289,13 @@
         "movementFeasible": true,
         "hazardType": "Normal Microclimate & Clear Corridors",
         "title": "Clear Corridors & Normal Weather: Kalpa",
-        "description": "Fair weather conditions. Current Temperature: 7.3°C. Wind: 2 km/h. Highway corridor NH-5 Reckong Peo - Kalpa Link is 100% operational with smooth transit.",
+        "description": "Fair weather conditions. Current Temperature: 7.1°C. Wind: 2 km/h. Highway corridor NH-5 Reckong Peo - Kalpa Link is 100% operational with smooth transit.",
         "advice": "Monitored live via Open-Meteo satellite. Enjoy your journey with standard schedule.",
         "activeThreat": null,
         "activeBulletinId": null,
         "safeAlternativeHub": "Chandigarh",
         "affectedCorridors": "NH-5 Reckong Peo - Kalpa Link",
-        "lastVerifiedAt": "2026-09-28T17:35:56.497Z"
+        "lastVerifiedAt": "2026-09-28T17:46:58.735Z"
       }
     },
     "Sissu": {
@@ -309,18 +309,18 @@
         "lon": 77.1245
       },
       "weather": {
-        "temperature": 5.7,
-        "apparentTemperature": 4.3,
+        "temperature": 5.6,
+        "apparentTemperature": 4.2,
         "humidity": 96,
         "precipitation": 0.1,
         "rain": 0,
         "windSpeed": 1,
-        "windGusts": 24,
+        "windGusts": 23,
         "weatherCode": 73,
         "condition": "Snowfall",
         "icon": "❄️",
         "category": "snow",
-        "lastUpdatedAt": "2026-09-28T17:35:56.497Z"
+        "lastUpdatedAt": "2026-09-28T17:46:58.735Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -338,13 +338,13 @@
         "movementFeasible": true,
         "hazardType": "Normal Microclimate & Clear Corridors",
         "title": "Clear Corridors & Normal Weather: Sissu",
-        "description": "Fair weather conditions. Current Temperature: 5.7°C. Wind: 1 km/h. Highway corridor Atal Tunnel North Portal / Lahaul Highway is 100% operational with smooth transit.",
+        "description": "Fair weather conditions. Current Temperature: 5.6°C. Wind: 1 km/h. Highway corridor Atal Tunnel North Portal / Lahaul Highway is 100% operational with smooth transit.",
         "advice": "Monitored live via Open-Meteo satellite. Enjoy your journey with standard schedule.",
         "activeThreat": null,
         "activeBulletinId": null,
         "safeAlternativeHub": "Chandigarh",
         "affectedCorridors": "Atal Tunnel North Portal / Lahaul Highway",
-        "lastVerifiedAt": "2026-09-28T17:35:56.497Z"
+        "lastVerifiedAt": "2026-09-28T17:46:58.735Z"
       }
     },
     "Kaza": {
@@ -369,7 +369,7 @@
         "condition": "Heavy Snow Showers",
         "icon": "🌨️",
         "category": "snow",
-        "lastUpdatedAt": "2026-09-28T17:35:56.497Z"
+        "lastUpdatedAt": "2026-09-28T17:46:58.735Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -393,7 +393,7 @@
         "activeBulletinId": null,
         "safeAlternativeHub": "Chandigarh",
         "affectedCorridors": "NH-505 Spiti Valley Route",
-        "lastVerifiedAt": "2026-09-28T17:35:56.497Z"
+        "lastVerifiedAt": "2026-09-28T17:46:58.735Z"
       }
     },
     "Chandratal Lake": {
@@ -409,16 +409,16 @@
       "weather": {
         "temperature": 1.5,
         "apparentTemperature": -0.7,
-        "humidity": 88,
+        "humidity": 87,
         "precipitation": 0,
         "rain": 0,
         "windSpeed": 0,
-        "windGusts": 12,
+        "windGusts": 11,
         "weatherCode": 3,
         "condition": "Overcast",
         "icon": "☁️",
         "category": "cloudy",
-        "lastUpdatedAt": "2026-09-28T17:35:56.497Z"
+        "lastUpdatedAt": "2026-09-28T17:46:58.735Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -442,7 +442,7 @@
         "activeBulletinId": null,
         "safeAlternativeHub": "Chandigarh",
         "affectedCorridors": "Batal-Chandratal Dirt Route (14,100 ft)",
-        "lastVerifiedAt": "2026-09-28T17:35:56.497Z"
+        "lastVerifiedAt": "2026-09-28T17:46:58.735Z"
       }
     },
     "Haridwar": {
@@ -457,17 +457,17 @@
       },
       "weather": {
         "temperature": 21,
-        "apparentTemperature": 24.5,
+        "apparentTemperature": 24.2,
         "humidity": 97,
         "precipitation": 0,
         "rain": 0,
-        "windSpeed": 4,
-        "windGusts": 10,
+        "windSpeed": 7,
+        "windGusts": 11,
         "weatherCode": 0,
         "condition": "Clear Sky",
         "icon": "☀️",
         "category": "clear",
-        "lastUpdatedAt": "2026-09-28T17:35:56.497Z"
+        "lastUpdatedAt": "2026-09-28T17:46:58.735Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -485,13 +485,13 @@
         "movementFeasible": true,
         "hazardType": "Normal Microclimate & Clear Corridors",
         "title": "Clear Corridors & Normal Weather: Haridwar",
-        "description": "Fair weather conditions. Current Temperature: 21°C. Wind: 4 km/h. Highway corridor NH-334 (Delhi-Haridwar Highway) is 100% operational with smooth transit.",
+        "description": "Fair weather conditions. Current Temperature: 21°C. Wind: 7 km/h. Highway corridor NH-334 (Delhi-Haridwar Highway) is 100% operational with smooth transit.",
         "advice": "Monitored live via Open-Meteo satellite. Enjoy your journey with standard schedule.",
         "activeThreat": null,
         "activeBulletinId": null,
         "safeAlternativeHub": "Dehradun",
         "affectedCorridors": "NH-334 (Delhi-Haridwar Highway)",
-        "lastVerifiedAt": "2026-09-28T17:35:56.497Z"
+        "lastVerifiedAt": "2026-09-28T17:46:58.735Z"
       }
     },
     "Rishikesh": {
@@ -506,17 +506,17 @@
       },
       "weather": {
         "temperature": 19.9,
-        "apparentTemperature": 23,
+        "apparentTemperature": 22.8,
         "humidity": 96,
         "precipitation": 0,
         "rain": 0,
-        "windSpeed": 3,
+        "windSpeed": 4,
         "windGusts": 7,
         "weatherCode": 0,
         "condition": "Clear Sky",
         "icon": "☀️",
         "category": "clear",
-        "lastUpdatedAt": "2026-09-28T17:35:56.497Z"
+        "lastUpdatedAt": "2026-09-28T17:46:58.735Z"
       },
       "disaster": {
         "alertTier": "YELLOW",
@@ -540,7 +540,7 @@
         "activeBulletinId": "NDMA-UK-RISHIKESH-SPATE",
         "safeAlternativeHub": "Dehradun",
         "affectedCorridors": "NH-7 All-Weather Badrinath Route",
-        "lastVerifiedAt": "2026-09-28T17:35:56.497Z"
+        "lastVerifiedAt": "2026-09-28T17:46:58.735Z"
       }
     },
     "Dehradun": {
@@ -554,18 +554,18 @@
         "lon": 78.0322
       },
       "weather": {
-        "temperature": 20.4,
-        "apparentTemperature": 22.8,
-        "humidity": 96,
+        "temperature": 20.3,
+        "apparentTemperature": 22.9,
+        "humidity": 95,
         "precipitation": 0,
         "rain": 0,
-        "windSpeed": 9,
+        "windSpeed": 8,
         "windGusts": 19,
-        "weatherCode": 2,
-        "condition": "Partly Cloudy",
-        "icon": "⛅",
-        "category": "cloudy",
-        "lastUpdatedAt": "2026-09-28T17:35:56.497Z"
+        "weatherCode": 1,
+        "condition": "Mainly Clear",
+        "icon": "🌤️",
+        "category": "clear",
+        "lastUpdatedAt": "2026-09-28T17:46:58.735Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -583,13 +583,13 @@
         "movementFeasible": true,
         "hazardType": "Normal Microclimate & Clear Corridors",
         "title": "Clear Corridors & Normal Weather: Dehradun",
-        "description": "Fair weather conditions. Current Temperature: 20.4°C. Wind: 9 km/h. Highway corridor NH-72 / Delhi-Dehradun Expressway is 100% operational with smooth transit.",
+        "description": "Fair weather conditions. Current Temperature: 20.3°C. Wind: 8 km/h. Highway corridor NH-72 / Delhi-Dehradun Expressway is 100% operational with smooth transit.",
         "advice": "Monitored live via Open-Meteo satellite. Enjoy your journey with standard schedule.",
         "activeThreat": null,
         "activeBulletinId": null,
         "safeAlternativeHub": "Dehradun",
         "affectedCorridors": "NH-72 / Delhi-Dehradun Expressway",
-        "lastVerifiedAt": "2026-09-28T17:35:56.497Z"
+        "lastVerifiedAt": "2026-09-28T17:46:58.735Z"
       }
     },
     "Mussoorie": {
@@ -604,17 +604,17 @@
       },
       "weather": {
         "temperature": 12.8,
-        "apparentTemperature": 13,
-        "humidity": 92,
+        "apparentTemperature": 12.7,
+        "humidity": 91,
         "precipitation": 0,
         "rain": 0,
-        "windSpeed": 2,
-        "windGusts": 16,
+        "windSpeed": 3,
+        "windGusts": 15,
         "weatherCode": 3,
         "condition": "Overcast",
         "icon": "☁️",
         "category": "cloudy",
-        "lastUpdatedAt": "2026-09-28T17:35:56.497Z"
+        "lastUpdatedAt": "2026-09-28T17:46:58.735Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -632,13 +632,13 @@
         "movementFeasible": true,
         "hazardType": "Normal Microclimate & Clear Corridors",
         "title": "Clear Corridors & Normal Weather: Mussoorie",
-        "description": "Fair weather conditions. Current Temperature: 12.8°C. Wind: 2 km/h. Highway corridor Dehradun-Mussoorie Hill Ghat Road is 100% operational with smooth transit.",
+        "description": "Fair weather conditions. Current Temperature: 12.8°C. Wind: 3 km/h. Highway corridor Dehradun-Mussoorie Hill Ghat Road is 100% operational with smooth transit.",
         "advice": "Monitored live via Open-Meteo satellite. Enjoy your journey with standard schedule.",
         "activeThreat": null,
         "activeBulletinId": null,
         "safeAlternativeHub": "Dehradun",
         "affectedCorridors": "Dehradun-Mussoorie Hill Ghat Road",
-        "lastVerifiedAt": "2026-09-28T17:35:56.497Z"
+        "lastVerifiedAt": "2026-09-28T17:46:58.735Z"
       }
     },
     "Srinagar": {
@@ -652,9 +652,9 @@
         "lon": 74.7973
       },
       "weather": {
-        "temperature": 15.3,
+        "temperature": 15.2,
         "apparentTemperature": 15.4,
-        "humidity": 76,
+        "humidity": 77,
         "precipitation": 0,
         "rain": 0,
         "windSpeed": 1,
@@ -663,7 +663,7 @@
         "condition": "Clear Sky",
         "icon": "☀️",
         "category": "clear",
-        "lastUpdatedAt": "2026-09-28T17:35:56.497Z"
+        "lastUpdatedAt": "2026-09-28T17:46:58.735Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -681,13 +681,13 @@
         "movementFeasible": true,
         "hazardType": "Normal Microclimate & Clear Corridors",
         "title": "Clear Corridors & Normal Weather: Srinagar",
-        "description": "Fair weather conditions. Current Temperature: 15.3°C. Wind: 1 km/h. Highway corridor NH-44 Banihal Tunnel Expressway is 100% operational with smooth transit.",
+        "description": "Fair weather conditions. Current Temperature: 15.2°C. Wind: 1 km/h. Highway corridor NH-44 Banihal Tunnel Expressway is 100% operational with smooth transit.",
         "advice": "Monitored live via Open-Meteo satellite. Enjoy your journey with standard schedule.",
         "activeThreat": null,
         "activeBulletinId": null,
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "NH-44 Banihal Tunnel Expressway",
-        "lastVerifiedAt": "2026-09-28T17:35:56.497Z"
+        "lastVerifiedAt": "2026-09-28T17:46:58.735Z"
       }
     },
     "Gulmarg": {
@@ -701,9 +701,9 @@
         "lon": 74.3805
       },
       "weather": {
-        "temperature": 5.6,
-        "apparentTemperature": 3.9,
-        "humidity": 82,
+        "temperature": 5.5,
+        "apparentTemperature": 3.7,
+        "humidity": 83,
         "precipitation": 0,
         "rain": 0,
         "windSpeed": 0,
@@ -712,7 +712,7 @@
         "condition": "Clear Sky",
         "icon": "☀️",
         "category": "clear",
-        "lastUpdatedAt": "2026-09-28T17:35:56.497Z"
+        "lastUpdatedAt": "2026-09-28T17:46:58.735Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -730,13 +730,13 @@
         "movementFeasible": true,
         "hazardType": "Normal Microclimate & Clear Corridors",
         "title": "Clear Corridors & Normal Weather: Gulmarg",
-        "description": "Fair weather conditions. Current Temperature: 5.6°C. Wind: 0 km/h. Highway corridor Srinagar-Tangmarg-Gulmarg Route (8,690 ft) is 100% operational with smooth transit.",
+        "description": "Fair weather conditions. Current Temperature: 5.5°C. Wind: 0 km/h. Highway corridor Srinagar-Tangmarg-Gulmarg Route (8,690 ft) is 100% operational with smooth transit.",
         "advice": "Monitored live via Open-Meteo satellite. Enjoy your journey with standard schedule.",
         "activeThreat": null,
         "activeBulletinId": null,
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "Srinagar-Tangmarg-Gulmarg Route (8,690 ft)",
-        "lastVerifiedAt": "2026-09-28T17:35:56.497Z"
+        "lastVerifiedAt": "2026-09-28T17:46:58.735Z"
       }
     },
     "Pahalgam": {
@@ -750,9 +750,9 @@
         "lon": 75.315
       },
       "weather": {
-        "temperature": 10.5,
-        "apparentTemperature": 9.4,
-        "humidity": 78,
+        "temperature": 10.4,
+        "apparentTemperature": 9.3,
+        "humidity": 77,
         "precipitation": 0,
         "rain": 0,
         "windSpeed": 2,
@@ -761,7 +761,7 @@
         "condition": "Clear Sky",
         "icon": "☀️",
         "category": "clear",
-        "lastUpdatedAt": "2026-09-28T17:35:56.497Z"
+        "lastUpdatedAt": "2026-09-28T17:46:58.735Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -779,13 +779,13 @@
         "movementFeasible": true,
         "hazardType": "Normal Microclimate & Clear Corridors",
         "title": "Clear Corridors & Normal Weather: Pahalgam",
-        "description": "Fair weather conditions. Current Temperature: 10.5°C. Wind: 2 km/h. Highway corridor Anantnag-Pahalgam Lidder Valley Highway is 100% operational with smooth transit.",
+        "description": "Fair weather conditions. Current Temperature: 10.4°C. Wind: 2 km/h. Highway corridor Anantnag-Pahalgam Lidder Valley Highway is 100% operational with smooth transit.",
         "advice": "Monitored live via Open-Meteo satellite. Enjoy your journey with standard schedule.",
         "activeThreat": null,
         "activeBulletinId": null,
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "Anantnag-Pahalgam Lidder Valley Highway",
-        "lastVerifiedAt": "2026-09-28T17:35:56.497Z"
+        "lastVerifiedAt": "2026-09-28T17:46:58.735Z"
       }
     },
     "Digha": {
@@ -801,16 +801,16 @@
       "weather": {
         "temperature": 26.7,
         "apparentTemperature": 33.1,
-        "humidity": 92,
+        "humidity": 91,
         "precipitation": 0,
         "rain": 0,
-        "windSpeed": 4,
-        "windGusts": 7,
+        "windSpeed": 3,
+        "windGusts": 6,
         "weatherCode": 3,
         "condition": "Overcast",
         "icon": "☁️",
         "category": "cloudy",
-        "lastUpdatedAt": "2026-09-28T17:35:56.497Z"
+        "lastUpdatedAt": "2026-09-28T17:46:58.735Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -828,13 +828,13 @@
         "movementFeasible": true,
         "hazardType": "Normal Microclimate & Clear Corridors",
         "title": "Clear Corridors & Normal Weather: Digha",
-        "description": "Fair weather conditions. Current Temperature: 26.7°C. Wind: 4 km/h. Highway corridor NH-116B Coastal Highway is 100% operational with smooth transit.",
+        "description": "Fair weather conditions. Current Temperature: 26.7°C. Wind: 3 km/h. Highway corridor NH-116B Coastal Highway is 100% operational with smooth transit.",
         "advice": "Monitored live via Open-Meteo satellite. Enjoy your journey with standard schedule.",
         "activeThreat": null,
         "activeBulletinId": null,
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "NH-116B Coastal Highway",
-        "lastVerifiedAt": "2026-09-28T17:35:56.497Z"
+        "lastVerifiedAt": "2026-09-28T17:46:58.735Z"
       }
     },
     "Darjeeling": {
@@ -848,9 +848,9 @@
         "lon": 88.2663
       },
       "weather": {
-        "temperature": 12.5,
-        "apparentTemperature": 12.8,
-        "humidity": 97,
+        "temperature": 12.3,
+        "apparentTemperature": 12.5,
+        "humidity": 96,
         "precipitation": 0,
         "rain": 0,
         "windSpeed": 2,
@@ -859,7 +859,7 @@
         "condition": "Clear Sky",
         "icon": "☀️",
         "category": "clear",
-        "lastUpdatedAt": "2026-09-28T17:35:56.497Z"
+        "lastUpdatedAt": "2026-09-28T17:46:58.735Z"
       },
       "disaster": {
         "alertTier": "YELLOW",
@@ -883,7 +883,7 @@
         "activeBulletinId": "NDMA-WB-DARJEELING-ROHINI",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "Rohini Road / Hill Cart Road (NH-110)",
-        "lastVerifiedAt": "2026-09-28T17:35:56.497Z"
+        "lastVerifiedAt": "2026-09-28T17:46:58.735Z"
       }
     },
     "Kolkata": {
@@ -897,18 +897,18 @@
         "lon": 88.3639
       },
       "weather": {
-        "temperature": 27.4,
-        "apparentTemperature": 33.8,
+        "temperature": 27.3,
+        "apparentTemperature": 33.7,
         "humidity": 88,
         "precipitation": 0,
         "rain": 0,
         "windSpeed": 3,
-        "windGusts": 6,
+        "windGusts": 7,
         "weatherCode": 2,
         "condition": "Partly Cloudy",
         "icon": "⛅",
         "category": "cloudy",
-        "lastUpdatedAt": "2026-09-28T17:35:56.497Z"
+        "lastUpdatedAt": "2026-09-28T17:46:58.735Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -926,13 +926,13 @@
         "movementFeasible": true,
         "hazardType": "Normal Microclimate & Clear Corridors",
         "title": "Clear Corridors & Normal Weather: Kolkata",
-        "description": "Fair weather conditions. Current Temperature: 27.4°C. Wind: 3 km/h. Highway corridor NH-16 / NH-19 / Kona Expressway is 100% operational with smooth transit.",
+        "description": "Fair weather conditions. Current Temperature: 27.3°C. Wind: 3 km/h. Highway corridor NH-16 / NH-19 / Kona Expressway is 100% operational with smooth transit.",
         "advice": "Monitored live via Open-Meteo satellite. Enjoy your journey with standard schedule.",
         "activeThreat": null,
         "activeBulletinId": null,
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "NH-16 / NH-19 / Kona Expressway",
-        "lastVerifiedAt": "2026-09-28T17:35:56.497Z"
+        "lastVerifiedAt": "2026-09-28T17:46:58.735Z"
       }
     },
     "Puri": {
@@ -946,9 +946,9 @@
         "lon": 85.8312
       },
       "weather": {
-        "temperature": 26.9,
-        "apparentTemperature": 33.1,
-        "humidity": 89,
+        "temperature": 26.8,
+        "apparentTemperature": 33,
+        "humidity": 90,
         "precipitation": 0,
         "rain": 0,
         "windSpeed": 4,
@@ -957,7 +957,7 @@
         "condition": "Clear Sky",
         "icon": "☀️",
         "category": "clear",
-        "lastUpdatedAt": "2026-09-28T17:35:56.497Z"
+        "lastUpdatedAt": "2026-09-28T17:46:58.735Z"
       },
       "disaster": {
         "alertTier": "RED",
@@ -981,7 +981,7 @@
         "activeBulletinId": "IMD-OD-CYCLONE-REAL",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "NH-316 (Bhubaneswar-Puri Highway)",
-        "lastVerifiedAt": "2026-09-28T17:35:56.497Z"
+        "lastVerifiedAt": "2026-09-28T17:46:58.735Z"
       }
     },
     "Bhubaneswar": {
@@ -995,18 +995,18 @@
         "lon": 85.8245
       },
       "weather": {
-        "temperature": 26,
-        "apparentTemperature": 31.7,
+        "temperature": 25.9,
+        "apparentTemperature": 31.5,
         "humidity": 92,
         "precipitation": 0,
         "rain": 0,
         "windSpeed": 5,
-        "windGusts": 9,
+        "windGusts": 10,
         "weatherCode": 0,
         "condition": "Clear Sky",
         "icon": "☀️",
         "category": "clear",
-        "lastUpdatedAt": "2026-09-28T17:35:56.497Z"
+        "lastUpdatedAt": "2026-09-28T17:46:58.735Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -1024,13 +1024,13 @@
         "movementFeasible": true,
         "hazardType": "Normal Microclimate & Clear Corridors",
         "title": "Clear Corridors & Normal Weather: Bhubaneswar",
-        "description": "Fair weather conditions. Current Temperature: 26°C. Wind: 5 km/h. Highway corridor NH-16 Golden Quadrilateral is 100% operational with smooth transit.",
+        "description": "Fair weather conditions. Current Temperature: 25.9°C. Wind: 5 km/h. Highway corridor NH-16 Golden Quadrilateral is 100% operational with smooth transit.",
         "advice": "Monitored live via Open-Meteo satellite. Enjoy your journey with standard schedule.",
         "activeThreat": null,
         "activeBulletinId": null,
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "NH-16 Golden Quadrilateral",
-        "lastVerifiedAt": "2026-09-28T17:35:56.497Z"
+        "lastVerifiedAt": "2026-09-28T17:46:58.735Z"
       }
     },
     "Konark": {
@@ -1044,8 +1044,8 @@
         "lon": 86.0945
       },
       "weather": {
-        "temperature": 27.6,
-        "apparentTemperature": 34.2,
+        "temperature": 27.5,
+        "apparentTemperature": 34.1,
         "humidity": 87,
         "precipitation": 0,
         "rain": 0,
@@ -1055,7 +1055,7 @@
         "condition": "Clear Sky",
         "icon": "☀️",
         "category": "clear",
-        "lastUpdatedAt": "2026-09-28T17:35:56.497Z"
+        "lastUpdatedAt": "2026-09-28T17:46:58.735Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -1073,13 +1073,13 @@
         "movementFeasible": true,
         "hazardType": "Normal Microclimate & Clear Corridors",
         "title": "Clear Corridors & Normal Weather: Konark",
-        "description": "Fair weather conditions. Current Temperature: 27.6°C. Wind: 2 km/h. Highway corridor Puri-Konark Marine Drive is 100% operational with smooth transit.",
+        "description": "Fair weather conditions. Current Temperature: 27.5°C. Wind: 2 km/h. Highway corridor Puri-Konark Marine Drive is 100% operational with smooth transit.",
         "advice": "Monitored live via Open-Meteo satellite. Enjoy your journey with standard schedule.",
         "activeThreat": null,
         "activeBulletinId": null,
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "Puri-Konark Marine Drive",
-        "lastVerifiedAt": "2026-09-28T17:35:56.497Z"
+        "lastVerifiedAt": "2026-09-28T17:46:58.735Z"
       }
     },
     "Shillong": {
@@ -1093,9 +1093,9 @@
         "lon": 91.8933
       },
       "weather": {
-        "temperature": 20.1,
-        "apparentTemperature": 23.3,
-        "humidity": 94,
+        "temperature": 20,
+        "apparentTemperature": 23.1,
+        "humidity": 95,
         "precipitation": 0,
         "rain": 0,
         "windSpeed": 2,
@@ -1104,7 +1104,7 @@
         "condition": "Mainly Clear",
         "icon": "🌤️",
         "category": "clear",
-        "lastUpdatedAt": "2026-09-28T17:35:56.497Z"
+        "lastUpdatedAt": "2026-09-28T17:46:58.735Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -1122,13 +1122,13 @@
         "movementFeasible": true,
         "hazardType": "Normal Microclimate & Clear Corridors",
         "title": "Clear Corridors & Normal Weather: Shillong",
-        "description": "Fair weather conditions. Current Temperature: 20.1°C. Wind: 2 km/h. Highway corridor NH-6 (Guwahati-Shillong 4-Lane) is 100% operational with smooth transit.",
+        "description": "Fair weather conditions. Current Temperature: 20°C. Wind: 2 km/h. Highway corridor NH-6 (Guwahati-Shillong 4-Lane) is 100% operational with smooth transit.",
         "advice": "Monitored live via Open-Meteo satellite. Enjoy your journey with standard schedule.",
         "activeThreat": null,
         "activeBulletinId": null,
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "NH-6 (Guwahati-Shillong 4-Lane)",
-        "lastVerifiedAt": "2026-09-28T17:35:56.497Z"
+        "lastVerifiedAt": "2026-09-28T17:46:58.735Z"
       }
     },
     "Mawlynnong Village": {
@@ -1142,8 +1142,8 @@
         "lon": 91.916
       },
       "weather": {
-        "temperature": 24.4,
-        "apparentTemperature": 28.7,
+        "temperature": 24.3,
+        "apparentTemperature": 28.5,
         "humidity": 84,
         "precipitation": 0,
         "rain": 0,
@@ -1153,7 +1153,7 @@
         "condition": "Clear Sky",
         "icon": "☀️",
         "category": "clear",
-        "lastUpdatedAt": "2026-09-28T17:35:56.497Z"
+        "lastUpdatedAt": "2026-09-28T17:46:58.735Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -1171,13 +1171,13 @@
         "movementFeasible": true,
         "hazardType": "Normal Microclimate & Clear Corridors",
         "title": "Clear Corridors & Normal Weather: Mawlynnong Village",
-        "description": "Fair weather conditions. Current Temperature: 24.4°C. Wind: 3 km/h. Highway corridor Shillong-Pynursla-Mawlynnong Road is 100% operational with smooth transit.",
+        "description": "Fair weather conditions. Current Temperature: 24.3°C. Wind: 3 km/h. Highway corridor Shillong-Pynursla-Mawlynnong Road is 100% operational with smooth transit.",
         "advice": "Monitored live via Open-Meteo satellite. Enjoy your journey with standard schedule.",
         "activeThreat": null,
         "activeBulletinId": null,
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "Shillong-Pynursla-Mawlynnong Road",
-        "lastVerifiedAt": "2026-09-28T17:35:56.497Z"
+        "lastVerifiedAt": "2026-09-28T17:46:58.735Z"
       }
     },
     "Dawki": {
@@ -1202,7 +1202,7 @@
         "condition": "Clear Sky",
         "icon": "☀️",
         "category": "clear",
-        "lastUpdatedAt": "2026-09-28T17:35:56.497Z"
+        "lastUpdatedAt": "2026-09-28T17:46:58.735Z"
       },
       "disaster": {
         "alertTier": "YELLOW",
@@ -1226,7 +1226,7 @@
         "activeBulletinId": "NDMA-MEGHALAYA-DAWKI-MONSOON",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "NH-206 Indo-Bangladesh Border Highway",
-        "lastVerifiedAt": "2026-09-28T17:35:56.497Z"
+        "lastVerifiedAt": "2026-09-28T17:46:58.735Z"
       }
     },
     "Jaipur": {
@@ -1240,8 +1240,8 @@
         "lon": 75.7873
       },
       "weather": {
-        "temperature": 24.2,
-        "apparentTemperature": 28.2,
+        "temperature": 24.1,
+        "apparentTemperature": 28.1,
         "humidity": 86,
         "precipitation": 0,
         "rain": 0,
@@ -1251,7 +1251,7 @@
         "condition": "Clear Sky",
         "icon": "☀️",
         "category": "clear",
-        "lastUpdatedAt": "2026-09-28T17:35:56.497Z"
+        "lastUpdatedAt": "2026-09-28T17:46:58.735Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -1269,13 +1269,13 @@
         "movementFeasible": true,
         "hazardType": "Normal Microclimate & Clear Corridors",
         "title": "Clear Corridors & Normal Weather: Jaipur",
-        "description": "Fair weather conditions. Current Temperature: 24.2°C. Wind: 5 km/h. Highway corridor NH-48 (Delhi-Jaipur Expressway) is 100% operational with smooth transit.",
+        "description": "Fair weather conditions. Current Temperature: 24.1°C. Wind: 5 km/h. Highway corridor NH-48 (Delhi-Jaipur Expressway) is 100% operational with smooth transit.",
         "advice": "Monitored live via Open-Meteo satellite. Enjoy your journey with standard schedule.",
         "activeThreat": null,
         "activeBulletinId": null,
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "NH-48 (Delhi-Jaipur Expressway)",
-        "lastVerifiedAt": "2026-09-28T17:35:56.497Z"
+        "lastVerifiedAt": "2026-09-28T17:46:58.735Z"
       }
     },
     "Jaisalmer": {
@@ -1300,7 +1300,7 @@
         "condition": "Clear Sky",
         "icon": "☀️",
         "category": "clear",
-        "lastUpdatedAt": "2026-09-28T17:35:56.497Z"
+        "lastUpdatedAt": "2026-09-28T17:46:58.735Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -1324,7 +1324,7 @@
         "activeBulletinId": null,
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "NH-11 Thar Desert Highway",
-        "lastVerifiedAt": "2026-09-28T17:35:56.497Z"
+        "lastVerifiedAt": "2026-09-28T17:46:58.735Z"
       }
     },
     "Ajmer": {
@@ -1338,18 +1338,18 @@
         "lon": 74.6399
       },
       "weather": {
-        "temperature": 24.7,
+        "temperature": 24.8,
         "apparentTemperature": 28.2,
-        "humidity": 74,
+        "humidity": 73,
         "precipitation": 0,
         "rain": 0,
         "windSpeed": 1,
-        "windGusts": 5,
+        "windGusts": 4,
         "weatherCode": 0,
         "condition": "Clear Sky",
         "icon": "☀️",
         "category": "clear",
-        "lastUpdatedAt": "2026-09-28T17:35:56.497Z"
+        "lastUpdatedAt": "2026-09-28T17:46:58.735Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -1367,13 +1367,13 @@
         "movementFeasible": true,
         "hazardType": "Normal Microclimate & Clear Corridors",
         "title": "Clear Corridors & Normal Weather: Ajmer",
-        "description": "Fair weather conditions. Current Temperature: 24.7°C. Wind: 1 km/h. Highway corridor NH-48 (Jaipur-Ajmer Expressway) is 100% operational with smooth transit.",
+        "description": "Fair weather conditions. Current Temperature: 24.8°C. Wind: 1 km/h. Highway corridor NH-48 (Jaipur-Ajmer Expressway) is 100% operational with smooth transit.",
         "advice": "Monitored live via Open-Meteo satellite. Enjoy your journey with standard schedule.",
         "activeThreat": null,
         "activeBulletinId": null,
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "NH-48 (Jaipur-Ajmer Expressway)",
-        "lastVerifiedAt": "2026-09-28T17:35:56.497Z"
+        "lastVerifiedAt": "2026-09-28T17:46:58.735Z"
       }
     },
     "Udaipur": {
@@ -1387,9 +1387,9 @@
         "lon": 73.7125
       },
       "weather": {
-        "temperature": 23.8,
-        "apparentTemperature": 25.9,
-        "humidity": 73,
+        "temperature": 23.7,
+        "apparentTemperature": 25.8,
+        "humidity": 74,
         "precipitation": 0,
         "rain": 0,
         "windSpeed": 7,
@@ -1398,7 +1398,7 @@
         "condition": "Clear Sky",
         "icon": "☀️",
         "category": "clear",
-        "lastUpdatedAt": "2026-09-28T17:35:56.497Z"
+        "lastUpdatedAt": "2026-09-28T17:46:58.735Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -1416,13 +1416,13 @@
         "movementFeasible": true,
         "hazardType": "Normal Microclimate & Clear Corridors",
         "title": "Clear Corridors & Normal Weather: Udaipur",
-        "description": "Fair weather conditions. Current Temperature: 23.8°C. Wind: 7 km/h. Highway corridor NH-48 Golden Quadrilateral & Aravalli Ghats is 100% operational with smooth transit.",
+        "description": "Fair weather conditions. Current Temperature: 23.7°C. Wind: 7 km/h. Highway corridor NH-48 Golden Quadrilateral & Aravalli Ghats is 100% operational with smooth transit.",
         "advice": "Monitored live via Open-Meteo satellite. Enjoy your journey with standard schedule.",
         "activeThreat": null,
         "activeBulletinId": null,
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "NH-48 Golden Quadrilateral & Aravalli Ghats",
-        "lastVerifiedAt": "2026-09-28T17:35:56.497Z"
+        "lastVerifiedAt": "2026-09-28T17:46:58.735Z"
       }
     },
     "Delhi": {
@@ -1436,7 +1436,7 @@
         "lon": 77.209
       },
       "weather": {
-        "temperature": 22.5,
+        "temperature": 22.4,
         "apparentTemperature": 25.8,
         "humidity": 91,
         "precipitation": 0,
@@ -1447,7 +1447,7 @@
         "condition": "Clear Sky",
         "icon": "☀️",
         "category": "clear",
-        "lastUpdatedAt": "2026-09-28T17:35:56.497Z"
+        "lastUpdatedAt": "2026-09-28T17:46:58.735Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -1465,13 +1465,13 @@
         "movementFeasible": true,
         "hazardType": "Normal Microclimate & Clear Corridors",
         "title": "Clear Corridors & Normal Weather: Delhi",
-        "description": "Fair weather conditions. Current Temperature: 22.5°C. Wind: 7 km/h. Highway corridor Eastern & Western Peripheral Expressways is 100% operational with smooth transit.",
+        "description": "Fair weather conditions. Current Temperature: 22.4°C. Wind: 7 km/h. Highway corridor Eastern & Western Peripheral Expressways is 100% operational with smooth transit.",
         "advice": "Monitored live via Open-Meteo satellite. Enjoy your journey with standard schedule.",
         "activeThreat": null,
         "activeBulletinId": null,
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "Eastern & Western Peripheral Expressways",
-        "lastVerifiedAt": "2026-09-28T17:35:56.497Z"
+        "lastVerifiedAt": "2026-09-28T17:46:58.735Z"
       }
     },
     "Agra": {
@@ -1485,8 +1485,8 @@
         "lon": 78.0081
       },
       "weather": {
-        "temperature": 25.1,
-        "apparentTemperature": 28.1,
+        "temperature": 25,
+        "apparentTemperature": 28,
         "humidity": 78,
         "precipitation": 0,
         "rain": 0,
@@ -1496,7 +1496,7 @@
         "condition": "Clear Sky",
         "icon": "☀️",
         "category": "clear",
-        "lastUpdatedAt": "2026-09-28T17:35:56.497Z"
+        "lastUpdatedAt": "2026-09-28T17:46:58.735Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -1514,13 +1514,13 @@
         "movementFeasible": true,
         "hazardType": "Normal Microclimate & Clear Corridors",
         "title": "Clear Corridors & Normal Weather: Agra",
-        "description": "Fair weather conditions. Current Temperature: 25.1°C. Wind: 9 km/h. Highway corridor Yamuna Expressway / Agra-Lucknow Expressway is 100% operational with smooth transit.",
+        "description": "Fair weather conditions. Current Temperature: 25°C. Wind: 9 km/h. Highway corridor Yamuna Expressway / Agra-Lucknow Expressway is 100% operational with smooth transit.",
         "advice": "Monitored live via Open-Meteo satellite. Enjoy your journey with standard schedule.",
         "activeThreat": null,
         "activeBulletinId": null,
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "Yamuna Expressway / Agra-Lucknow Expressway",
-        "lastVerifiedAt": "2026-09-28T17:35:56.497Z"
+        "lastVerifiedAt": "2026-09-28T17:46:58.735Z"
       }
     },
     "Varanasi": {
@@ -1534,18 +1534,18 @@
         "lon": 82.9739
       },
       "weather": {
-        "temperature": 25.6,
-        "apparentTemperature": 31.1,
+        "temperature": 25.5,
+        "apparentTemperature": 31,
         "humidity": 94,
         "precipitation": 0,
         "rain": 0,
         "windSpeed": 6,
-        "windGusts": 12,
+        "windGusts": 11,
         "weatherCode": 0,
         "condition": "Clear Sky",
         "icon": "☀️",
         "category": "clear",
-        "lastUpdatedAt": "2026-09-28T17:35:56.497Z"
+        "lastUpdatedAt": "2026-09-28T17:46:58.736Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -1563,13 +1563,13 @@
         "movementFeasible": true,
         "hazardType": "Normal Microclimate & Clear Corridors",
         "title": "Clear Corridors & Normal Weather: Varanasi",
-        "description": "Fair weather conditions. Current Temperature: 25.6°C. Wind: 6 km/h. Highway corridor NH-19 / Grand Trunk Road is 100% operational with smooth transit.",
+        "description": "Fair weather conditions. Current Temperature: 25.5°C. Wind: 6 km/h. Highway corridor NH-19 / Grand Trunk Road is 100% operational with smooth transit.",
         "advice": "Monitored live via Open-Meteo satellite. Enjoy your journey with standard schedule.",
         "activeThreat": null,
         "activeBulletinId": null,
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "NH-19 / Grand Trunk Road",
-        "lastVerifiedAt": "2026-09-28T17:35:56.497Z"
+        "lastVerifiedAt": "2026-09-28T17:46:58.736Z"
       }
     },
     "Lucknow": {
@@ -1583,9 +1583,9 @@
         "lon": 80.9462
       },
       "weather": {
-        "temperature": 25.4,
-        "apparentTemperature": 30.6,
-        "humidity": 89,
+        "temperature": 25.2,
+        "apparentTemperature": 30.4,
+        "humidity": 90,
         "precipitation": 0,
         "rain": 0,
         "windSpeed": 4,
@@ -1594,7 +1594,7 @@
         "condition": "Clear Sky",
         "icon": "☀️",
         "category": "clear",
-        "lastUpdatedAt": "2026-09-28T17:35:56.497Z"
+        "lastUpdatedAt": "2026-09-28T17:46:58.736Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -1612,13 +1612,13 @@
         "movementFeasible": true,
         "hazardType": "Normal Microclimate & Clear Corridors",
         "title": "Clear Corridors & Normal Weather: Lucknow",
-        "description": "Fair weather conditions. Current Temperature: 25.4°C. Wind: 4 km/h. Highway corridor Purvanchal & Agra-Lucknow Expressways is 100% operational with smooth transit.",
+        "description": "Fair weather conditions. Current Temperature: 25.2°C. Wind: 4 km/h. Highway corridor Purvanchal & Agra-Lucknow Expressways is 100% operational with smooth transit.",
         "advice": "Monitored live via Open-Meteo satellite. Enjoy your journey with standard schedule.",
         "activeThreat": null,
         "activeBulletinId": null,
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "Purvanchal & Agra-Lucknow Expressways",
-        "lastVerifiedAt": "2026-09-28T17:35:56.497Z"
+        "lastVerifiedAt": "2026-09-28T17:46:58.736Z"
       }
     },
     "Goa": {
@@ -1632,18 +1632,18 @@
         "lon": 74.124
       },
       "weather": {
-        "temperature": 25.6,
-        "apparentTemperature": 31.5,
+        "temperature": 25.5,
+        "apparentTemperature": 31.4,
         "humidity": 92,
         "precipitation": 0,
         "rain": 0,
         "windSpeed": 2,
         "windGusts": 4,
-        "weatherCode": 1,
-        "condition": "Mainly Clear",
-        "icon": "🌤️",
+        "weatherCode": 0,
+        "condition": "Clear Sky",
+        "icon": "☀️",
         "category": "clear",
-        "lastUpdatedAt": "2026-09-28T17:35:56.497Z"
+        "lastUpdatedAt": "2026-09-28T17:46:58.736Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -1661,13 +1661,13 @@
         "movementFeasible": true,
         "hazardType": "Normal Microclimate & Clear Corridors",
         "title": "Clear Corridors & Normal Weather: Goa",
-        "description": "Fair weather conditions. Current Temperature: 25.6°C. Wind: 2 km/h. Highway corridor NH-66 Coastal Link (Mumbai-Goa-Kochi) is 100% operational with smooth transit.",
+        "description": "Fair weather conditions. Current Temperature: 25.5°C. Wind: 2 km/h. Highway corridor NH-66 Coastal Link (Mumbai-Goa-Kochi) is 100% operational with smooth transit.",
         "advice": "Monitored live via Open-Meteo satellite. Enjoy your journey with standard schedule.",
         "activeThreat": null,
         "activeBulletinId": null,
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "NH-66 Coastal Link (Mumbai-Goa-Kochi)",
-        "lastVerifiedAt": "2026-09-28T17:35:56.497Z"
+        "lastVerifiedAt": "2026-09-28T17:46:58.736Z"
       }
     },
     "Mumbai": {
@@ -1687,12 +1687,12 @@
         "precipitation": 0,
         "rain": 0,
         "windSpeed": 4,
-        "windGusts": 10,
+        "windGusts": 9,
         "weatherCode": 0,
         "condition": "Clear Sky",
         "icon": "☀️",
         "category": "clear",
-        "lastUpdatedAt": "2026-09-28T17:35:56.497Z"
+        "lastUpdatedAt": "2026-09-28T17:46:58.736Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -1716,7 +1716,7 @@
         "activeBulletinId": null,
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "Western Express Highway & Coastal Road",
-        "lastVerifiedAt": "2026-09-28T17:35:56.497Z"
+        "lastVerifiedAt": "2026-09-28T17:46:58.736Z"
       }
     },
     "Pune": {
@@ -1741,7 +1741,7 @@
         "condition": "Clear Sky",
         "icon": "☀️",
         "category": "clear",
-        "lastUpdatedAt": "2026-09-28T17:35:56.497Z"
+        "lastUpdatedAt": "2026-09-28T17:46:58.736Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -1765,7 +1765,7 @@
         "activeBulletinId": null,
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "Mumbai-Pune Expressway / NH-48",
-        "lastVerifiedAt": "2026-09-28T17:35:56.497Z"
+        "lastVerifiedAt": "2026-09-28T17:46:58.736Z"
       }
     },
     "Ahmedabad": {
@@ -1779,9 +1779,9 @@
         "lon": 72.5714
       },
       "weather": {
-        "temperature": 28.5,
-        "apparentTemperature": 32,
-        "humidity": 63,
+        "temperature": 28.3,
+        "apparentTemperature": 31.9,
+        "humidity": 66,
         "precipitation": 0,
         "rain": 0,
         "windSpeed": 6,
@@ -1790,7 +1790,7 @@
         "condition": "Clear Sky",
         "icon": "☀️",
         "category": "clear",
-        "lastUpdatedAt": "2026-09-28T17:35:56.497Z"
+        "lastUpdatedAt": "2026-09-28T17:46:58.736Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -1808,13 +1808,13 @@
         "movementFeasible": true,
         "hazardType": "Normal Microclimate & Clear Corridors",
         "title": "Clear Corridors & Normal Weather: Ahmedabad",
-        "description": "Fair weather conditions. Current Temperature: 28.5°C. Wind: 6 km/h. Highway corridor NE-1 (Ahmedabad-Vadodara Expressway) is 100% operational with smooth transit.",
+        "description": "Fair weather conditions. Current Temperature: 28.3°C. Wind: 6 km/h. Highway corridor NE-1 (Ahmedabad-Vadodara Expressway) is 100% operational with smooth transit.",
         "advice": "Monitored live via Open-Meteo satellite. Enjoy your journey with standard schedule.",
         "activeThreat": null,
         "activeBulletinId": null,
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "NE-1 (Ahmedabad-Vadodara Expressway)",
-        "lastVerifiedAt": "2026-09-28T17:35:56.497Z"
+        "lastVerifiedAt": "2026-09-28T17:46:58.736Z"
       }
     },
     "Gujarat": {
@@ -1828,9 +1828,9 @@
         "lon": 72.5714
       },
       "weather": {
-        "temperature": 28.5,
-        "apparentTemperature": 32,
-        "humidity": 63,
+        "temperature": 28.3,
+        "apparentTemperature": 31.9,
+        "humidity": 66,
         "precipitation": 0,
         "rain": 0,
         "windSpeed": 6,
@@ -1839,7 +1839,7 @@
         "condition": "Clear Sky",
         "icon": "☀️",
         "category": "clear",
-        "lastUpdatedAt": "2026-09-28T17:35:56.497Z"
+        "lastUpdatedAt": "2026-09-28T17:46:58.736Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -1857,13 +1857,13 @@
         "movementFeasible": true,
         "hazardType": "Normal Microclimate & Clear Corridors",
         "title": "Clear Corridors & Normal Weather: Gujarat",
-        "description": "Fair weather conditions. Current Temperature: 28.5°C. Wind: 6 km/h. Highway corridor NE-1 & Rann of Kutch Coastal Highway is 100% operational with smooth transit.",
+        "description": "Fair weather conditions. Current Temperature: 28.3°C. Wind: 6 km/h. Highway corridor NE-1 & Rann of Kutch Coastal Highway is 100% operational with smooth transit.",
         "advice": "Monitored live via Open-Meteo satellite. Enjoy your journey with standard schedule.",
         "activeThreat": null,
         "activeBulletinId": null,
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "NE-1 & Rann of Kutch Coastal Highway",
-        "lastVerifiedAt": "2026-09-28T17:35:56.497Z"
+        "lastVerifiedAt": "2026-09-28T17:46:58.736Z"
       }
     },
     "Kalka": {
@@ -1877,18 +1877,18 @@
         "lon": 76.9348
       },
       "weather": {
-        "temperature": 20.9,
-        "apparentTemperature": 23.8,
-        "humidity": 92,
+        "temperature": 20.8,
+        "apparentTemperature": 23.6,
+        "humidity": 91,
         "precipitation": 0,
         "rain": 0,
         "windSpeed": 5,
         "windGusts": 12,
-        "weatherCode": 1,
-        "condition": "Mainly Clear",
-        "icon": "🌤️",
+        "weatherCode": 0,
+        "condition": "Clear Sky",
+        "icon": "☀️",
         "category": "clear",
-        "lastUpdatedAt": "2026-09-28T17:35:56.497Z"
+        "lastUpdatedAt": "2026-09-28T17:46:58.736Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -1906,13 +1906,13 @@
         "movementFeasible": true,
         "hazardType": "Normal Microclimate & Clear Corridors",
         "title": "Clear Corridors & Normal Weather: Kalka",
-        "description": "Fair weather conditions. Current Temperature: 20.9°C. Wind: 5 km/h. Highway corridor NH-5 Himalayan Gateway (Kalka-Shimla Toy Train) is 100% operational with smooth transit.",
+        "description": "Fair weather conditions. Current Temperature: 20.8°C. Wind: 5 km/h. Highway corridor NH-5 Himalayan Gateway (Kalka-Shimla Toy Train) is 100% operational with smooth transit.",
         "advice": "Monitored live via Open-Meteo satellite. Enjoy your journey with standard schedule.",
         "activeThreat": null,
         "activeBulletinId": null,
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "NH-5 Himalayan Gateway (Kalka-Shimla Toy Train)",
-        "lastVerifiedAt": "2026-09-28T17:35:56.497Z"
+        "lastVerifiedAt": "2026-09-28T17:46:58.736Z"
       }
     },
     "Chandigarh": {
@@ -1926,18 +1926,18 @@
         "lon": 76.7794
       },
       "weather": {
-        "temperature": 22.1,
-        "apparentTemperature": 26.2,
+        "temperature": 22,
+        "apparentTemperature": 26,
         "humidity": 97,
         "precipitation": 0,
         "rain": 0,
-        "windSpeed": 4,
+        "windSpeed": 5,
         "windGusts": 9,
         "weatherCode": 1,
         "condition": "Mainly Clear",
         "icon": "🌤️",
         "category": "clear",
-        "lastUpdatedAt": "2026-09-28T17:35:56.497Z"
+        "lastUpdatedAt": "2026-09-28T17:46:58.736Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -1955,13 +1955,13 @@
         "movementFeasible": true,
         "hazardType": "Normal Microclimate & Clear Corridors",
         "title": "Clear Corridors & Normal Weather: Chandigarh",
-        "description": "Fair weather conditions. Current Temperature: 22.1°C. Wind: 4 km/h. Highway corridor NH-152D & NH-44 Express Corridor is 100% operational with smooth transit.",
+        "description": "Fair weather conditions. Current Temperature: 22°C. Wind: 5 km/h. Highway corridor NH-152D & NH-44 Express Corridor is 100% operational with smooth transit.",
         "advice": "Monitored live via Open-Meteo satellite. Enjoy your journey with standard schedule.",
         "activeThreat": null,
         "activeBulletinId": null,
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "NH-152D & NH-44 Express Corridor",
-        "lastVerifiedAt": "2026-09-28T17:35:56.497Z"
+        "lastVerifiedAt": "2026-09-28T17:46:58.736Z"
       }
     },
     "Amritsar": {
@@ -1975,18 +1975,18 @@
         "lon": 74.8723
       },
       "weather": {
-        "temperature": 23.7,
-        "apparentTemperature": 28.1,
+        "temperature": 23.6,
+        "apparentTemperature": 27.9,
         "humidity": 90,
         "precipitation": 0,
         "rain": 0,
         "windSpeed": 3,
-        "windGusts": 4,
+        "windGusts": 5,
         "weatherCode": 0,
         "condition": "Clear Sky",
         "icon": "☀️",
         "category": "clear",
-        "lastUpdatedAt": "2026-09-28T17:35:56.497Z"
+        "lastUpdatedAt": "2026-09-28T17:46:58.736Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -2004,13 +2004,13 @@
         "movementFeasible": true,
         "hazardType": "Normal Microclimate & Clear Corridors",
         "title": "Clear Corridors & Normal Weather: Amritsar",
-        "description": "Fair weather conditions. Current Temperature: 23.7°C. Wind: 3 km/h. Highway corridor NH-3 (Amritsar-Jalandhar-Delhi) is 100% operational with smooth transit.",
+        "description": "Fair weather conditions. Current Temperature: 23.6°C. Wind: 3 km/h. Highway corridor NH-3 (Amritsar-Jalandhar-Delhi) is 100% operational with smooth transit.",
         "advice": "Monitored live via Open-Meteo satellite. Enjoy your journey with standard schedule.",
         "activeThreat": null,
         "activeBulletinId": null,
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "NH-3 (Amritsar-Jalandhar-Delhi)",
-        "lastVerifiedAt": "2026-09-28T17:35:56.497Z"
+        "lastVerifiedAt": "2026-09-28T17:46:58.736Z"
       }
     },
     "Punjab": {
@@ -2024,18 +2024,18 @@
         "lon": 74.8723
       },
       "weather": {
-        "temperature": 23.7,
-        "apparentTemperature": 28.1,
+        "temperature": 23.6,
+        "apparentTemperature": 27.9,
         "humidity": 90,
         "precipitation": 0,
         "rain": 0,
         "windSpeed": 3,
-        "windGusts": 4,
+        "windGusts": 5,
         "weatherCode": 0,
         "condition": "Clear Sky",
         "icon": "☀️",
         "category": "clear",
-        "lastUpdatedAt": "2026-09-28T17:35:56.497Z"
+        "lastUpdatedAt": "2026-09-28T17:46:58.736Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -2053,13 +2053,13 @@
         "movementFeasible": true,
         "hazardType": "Normal Microclimate & Clear Corridors",
         "title": "Clear Corridors & Normal Weather: Punjab",
-        "description": "Fair weather conditions. Current Temperature: 23.7°C. Wind: 3 km/h. Highway corridor NH-3 (Amritsar-Jalandhar-Delhi Expressway) is 100% operational with smooth transit.",
+        "description": "Fair weather conditions. Current Temperature: 23.6°C. Wind: 3 km/h. Highway corridor NH-3 (Amritsar-Jalandhar-Delhi Expressway) is 100% operational with smooth transit.",
         "advice": "Monitored live via Open-Meteo satellite. Enjoy your journey with standard schedule.",
         "activeThreat": null,
         "activeBulletinId": null,
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "NH-3 (Amritsar-Jalandhar-Delhi Expressway)",
-        "lastVerifiedAt": "2026-09-28T17:35:56.497Z"
+        "lastVerifiedAt": "2026-09-28T17:46:58.736Z"
       }
     },
     "Leh Ladakh": {
@@ -2073,18 +2073,18 @@
         "lon": 77.5771
       },
       "weather": {
-        "temperature": 6.2,
-        "apparentTemperature": 3.1,
-        "humidity": 60,
+        "temperature": 5.9,
+        "apparentTemperature": 2.9,
+        "humidity": 61,
         "precipitation": 0,
         "rain": 0,
-        "windSpeed": 5,
-        "windGusts": 20,
+        "windSpeed": 4,
+        "windGusts": 19,
         "weatherCode": 2,
         "condition": "Partly Cloudy",
         "icon": "⛅",
         "category": "cloudy",
-        "lastUpdatedAt": "2026-09-28T17:35:56.497Z"
+        "lastUpdatedAt": "2026-09-28T17:46:58.736Z"
       },
       "disaster": {
         "alertTier": "YELLOW",
@@ -2108,7 +2108,7 @@
         "activeBulletinId": "USGS-us6000txk0",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "Leh-Manali Highway & Zoji La Route (17,582 ft Khardung La)",
-        "lastVerifiedAt": "2026-09-28T17:35:56.497Z"
+        "lastVerifiedAt": "2026-09-28T17:46:58.736Z"
       }
     },
     "Leh": {
@@ -2122,18 +2122,18 @@
         "lon": 77.5771
       },
       "weather": {
-        "temperature": 6.2,
-        "apparentTemperature": 3.1,
-        "humidity": 60,
+        "temperature": 5.9,
+        "apparentTemperature": 2.9,
+        "humidity": 61,
         "precipitation": 0,
         "rain": 0,
-        "windSpeed": 5,
-        "windGusts": 20,
+        "windSpeed": 4,
+        "windGusts": 19,
         "weatherCode": 2,
         "condition": "Partly Cloudy",
         "icon": "⛅",
         "category": "cloudy",
-        "lastUpdatedAt": "2026-09-28T17:35:56.497Z"
+        "lastUpdatedAt": "2026-09-28T17:46:58.736Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -2151,13 +2151,13 @@
         "movementFeasible": true,
         "hazardType": "Normal Microclimate & Clear Corridors",
         "title": "Clear Corridors & Normal Weather: Leh",
-        "description": "Fair weather conditions. Current Temperature: 6.2°C. Wind: 5 km/h. Highway corridor Leh-Manali Highway & Khardung La Pass is 100% operational with smooth transit.",
+        "description": "Fair weather conditions. Current Temperature: 5.9°C. Wind: 4 km/h. Highway corridor Leh-Manali Highway & Khardung La Pass is 100% operational with smooth transit.",
         "advice": "Monitored live via Open-Meteo satellite. Enjoy your journey with standard schedule.",
         "activeThreat": null,
         "activeBulletinId": null,
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "Leh-Manali Highway & Khardung La Pass",
-        "lastVerifiedAt": "2026-09-28T17:35:56.497Z"
+        "lastVerifiedAt": "2026-09-28T17:46:58.736Z"
       }
     },
     "Bengaluru": {
@@ -2172,7 +2172,7 @@
       },
       "weather": {
         "temperature": 21.2,
-        "apparentTemperature": 25.1,
+        "apparentTemperature": 25.2,
         "humidity": 97,
         "precipitation": 0.1,
         "rain": 0.1,
@@ -2182,7 +2182,7 @@
         "condition": "Light Drizzle",
         "icon": "🌦️",
         "category": "rain",
-        "lastUpdatedAt": "2026-09-28T17:35:56.497Z"
+        "lastUpdatedAt": "2026-09-28T17:46:58.736Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -2206,7 +2206,7 @@
         "activeBulletinId": null,
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "NH-44 & NH-75 Arterials",
-        "lastVerifiedAt": "2026-09-28T17:35:56.497Z"
+        "lastVerifiedAt": "2026-09-28T17:46:58.736Z"
       }
     },
     "Chennai": {
@@ -2231,7 +2231,7 @@
         "condition": "Overcast",
         "icon": "☁️",
         "category": "cloudy",
-        "lastUpdatedAt": "2026-09-28T17:35:56.498Z"
+        "lastUpdatedAt": "2026-09-28T17:46:58.736Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -2255,7 +2255,7 @@
         "activeBulletinId": null,
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "East Coast Road (ECR) / NH-48",
-        "lastVerifiedAt": "2026-09-28T17:35:56.498Z"
+        "lastVerifiedAt": "2026-09-28T17:46:58.736Z"
       }
     },
     "Hyderabad": {
@@ -2269,9 +2269,9 @@
         "lon": 78.4867
       },
       "weather": {
-        "temperature": 27.2,
-        "apparentTemperature": 30.5,
-        "humidity": 65,
+        "temperature": 27.1,
+        "apparentTemperature": 30.4,
+        "humidity": 66,
         "precipitation": 0,
         "rain": 0,
         "windSpeed": 4,
@@ -2280,7 +2280,7 @@
         "condition": "Clear Sky",
         "icon": "☀️",
         "category": "clear",
-        "lastUpdatedAt": "2026-09-28T17:35:56.498Z"
+        "lastUpdatedAt": "2026-09-28T17:46:58.736Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -2298,13 +2298,13 @@
         "movementFeasible": true,
         "hazardType": "Normal Microclimate & Clear Corridors",
         "title": "Clear Corridors & Normal Weather: Hyderabad",
-        "description": "Fair weather conditions. Current Temperature: 27.2°C. Wind: 4 km/h. Highway corridor Nehru Outer Ring Road / NH-44 is 100% operational with smooth transit.",
+        "description": "Fair weather conditions. Current Temperature: 27.1°C. Wind: 4 km/h. Highway corridor Nehru Outer Ring Road / NH-44 is 100% operational with smooth transit.",
         "advice": "Monitored live via Open-Meteo satellite. Enjoy your journey with standard schedule.",
         "activeThreat": null,
         "activeBulletinId": null,
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "Nehru Outer Ring Road / NH-44",
-        "lastVerifiedAt": "2026-09-28T17:35:56.498Z"
+        "lastVerifiedAt": "2026-09-28T17:46:58.736Z"
       }
     },
     "Kochi": {
@@ -2318,18 +2318,18 @@
         "lon": 76.2673
       },
       "weather": {
-        "temperature": 27.7,
+        "temperature": 27.6,
         "apparentTemperature": 34.2,
-        "humidity": 86,
+        "humidity": 87,
         "precipitation": 0,
         "rain": 0,
-        "windSpeed": 3,
-        "windGusts": 8,
+        "windSpeed": 2,
+        "windGusts": 7,
         "weatherCode": 3,
         "condition": "Overcast",
         "icon": "☁️",
         "category": "cloudy",
-        "lastUpdatedAt": "2026-09-28T17:35:56.498Z"
+        "lastUpdatedAt": "2026-09-28T17:46:58.736Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -2347,13 +2347,13 @@
         "movementFeasible": true,
         "hazardType": "Normal Microclimate & Clear Corridors",
         "title": "Clear Corridors & Normal Weather: Kochi",
-        "description": "Fair weather conditions. Current Temperature: 27.7°C. Wind: 3 km/h. Highway corridor NH-66 / NH-85 (Kochi-Munnar) is 100% operational with smooth transit.",
+        "description": "Fair weather conditions. Current Temperature: 27.6°C. Wind: 2 km/h. Highway corridor NH-66 / NH-85 (Kochi-Munnar) is 100% operational with smooth transit.",
         "advice": "Monitored live via Open-Meteo satellite. Enjoy your journey with standard schedule.",
         "activeThreat": null,
         "activeBulletinId": null,
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "NH-66 / NH-85 (Kochi-Munnar)",
-        "lastVerifiedAt": "2026-09-28T17:35:56.498Z"
+        "lastVerifiedAt": "2026-09-28T17:46:58.736Z"
       }
     },
     "Kerala": {
@@ -2367,18 +2367,18 @@
         "lon": 76.2673
       },
       "weather": {
-        "temperature": 27.7,
+        "temperature": 27.6,
         "apparentTemperature": 34.2,
-        "humidity": 86,
+        "humidity": 87,
         "precipitation": 0,
         "rain": 0,
-        "windSpeed": 3,
-        "windGusts": 8,
+        "windSpeed": 2,
+        "windGusts": 7,
         "weatherCode": 3,
         "condition": "Overcast",
         "icon": "☁️",
         "category": "cloudy",
-        "lastUpdatedAt": "2026-09-28T17:35:56.498Z"
+        "lastUpdatedAt": "2026-09-28T17:46:58.736Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -2396,13 +2396,13 @@
         "movementFeasible": true,
         "hazardType": "Normal Microclimate & Clear Corridors",
         "title": "Clear Corridors & Normal Weather: Kerala",
-        "description": "Fair weather conditions. Current Temperature: 27.7°C. Wind: 3 km/h. Highway corridor NH-66 Coastal Corridor & NH-85 Gap Road is 100% operational with smooth transit.",
+        "description": "Fair weather conditions. Current Temperature: 27.6°C. Wind: 2 km/h. Highway corridor NH-66 Coastal Corridor & NH-85 Gap Road is 100% operational with smooth transit.",
         "advice": "Monitored live via Open-Meteo satellite. Enjoy your journey with standard schedule.",
         "activeThreat": null,
         "activeBulletinId": null,
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "NH-66 Coastal Corridor & NH-85 Gap Road",
-        "lastVerifiedAt": "2026-09-28T17:35:56.498Z"
+        "lastVerifiedAt": "2026-09-28T17:46:58.736Z"
       }
     },
     "Vizag": {
@@ -2417,17 +2417,17 @@
       },
       "weather": {
         "temperature": 26.8,
-        "apparentTemperature": 33.2,
+        "apparentTemperature": 33.3,
         "humidity": 91,
         "precipitation": 0,
         "rain": 0,
-        "windSpeed": 3,
+        "windSpeed": 2,
         "windGusts": 8,
         "weatherCode": 0,
         "condition": "Clear Sky",
         "icon": "☀️",
         "category": "clear",
-        "lastUpdatedAt": "2026-09-28T17:35:56.498Z"
+        "lastUpdatedAt": "2026-09-28T17:46:58.736Z"
       },
       "disaster": {
         "alertTier": "RED",
@@ -2451,7 +2451,7 @@
         "activeBulletinId": "NASA-IN-EONET_24785",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "NH-16 Coastal Expressway & Araku Ghat",
-        "lastVerifiedAt": "2026-09-28T17:35:56.498Z"
+        "lastVerifiedAt": "2026-09-28T17:46:58.736Z"
       }
     },
     "Ooty": {
@@ -2465,18 +2465,18 @@
         "lon": 76.695
       },
       "weather": {
-        "temperature": 13.3,
-        "apparentTemperature": 13.7,
+        "temperature": 13.2,
+        "apparentTemperature": 13.6,
         "humidity": 99,
         "precipitation": 0,
         "rain": 0,
-        "windSpeed": 4,
+        "windSpeed": 3,
         "windGusts": 16,
         "weatherCode": 3,
         "condition": "Overcast",
         "icon": "☁️",
         "category": "cloudy",
-        "lastUpdatedAt": "2026-09-28T17:35:56.498Z"
+        "lastUpdatedAt": "2026-09-28T17:46:58.736Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -2494,13 +2494,13 @@
         "movementFeasible": true,
         "hazardType": "Normal Microclimate & Clear Corridors",
         "title": "Clear Corridors & Normal Weather: Ooty",
-        "description": "Fair weather conditions. Current Temperature: 13.3°C. Wind: 4 km/h. Highway corridor Nilgiri Mountain Ghat Road (36 Hairpin Bends) is 100% operational with smooth transit.",
+        "description": "Fair weather conditions. Current Temperature: 13.2°C. Wind: 3 km/h. Highway corridor Nilgiri Mountain Ghat Road (36 Hairpin Bends) is 100% operational with smooth transit.",
         "advice": "Monitored live via Open-Meteo satellite. Enjoy your journey with standard schedule.",
         "activeThreat": null,
         "activeBulletinId": null,
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "Nilgiri Mountain Ghat Road (36 Hairpin Bends)",
-        "lastVerifiedAt": "2026-09-28T17:35:56.498Z"
+        "lastVerifiedAt": "2026-09-28T17:46:58.736Z"
       }
     },
     "Pondicherry": {
@@ -2514,18 +2514,18 @@
         "lon": 79.8083
       },
       "weather": {
-        "temperature": 29.5,
-        "apparentTemperature": 35.9,
-        "humidity": 87,
+        "temperature": 29.6,
+        "apparentTemperature": 35.8,
+        "humidity": 85,
         "precipitation": 0,
         "rain": 0,
-        "windSpeed": 11,
-        "windGusts": 20,
+        "windSpeed": 12,
+        "windGusts": 21,
         "weatherCode": 3,
         "condition": "Overcast",
         "icon": "☁️",
         "category": "cloudy",
-        "lastUpdatedAt": "2026-09-28T17:35:56.498Z"
+        "lastUpdatedAt": "2026-09-28T17:46:58.736Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -2543,13 +2543,13 @@
         "movementFeasible": true,
         "hazardType": "Normal Microclimate & Clear Corridors",
         "title": "Clear Corridors & Normal Weather: Pondicherry",
-        "description": "Fair weather conditions. Current Temperature: 29.5°C. Wind: 11 km/h. Highway corridor East Coast Road (Scenic Coastal Highway) is 100% operational with smooth transit.",
+        "description": "Fair weather conditions. Current Temperature: 29.6°C. Wind: 12 km/h. Highway corridor East Coast Road (Scenic Coastal Highway) is 100% operational with smooth transit.",
         "advice": "Monitored live via Open-Meteo satellite. Enjoy your journey with standard schedule.",
         "activeThreat": null,
         "activeBulletinId": null,
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "East Coast Road (Scenic Coastal Highway)",
-        "lastVerifiedAt": "2026-09-28T17:35:56.498Z"
+        "lastVerifiedAt": "2026-09-28T17:46:58.736Z"
       }
     },
     "Hampi": {
@@ -2564,17 +2564,17 @@
       },
       "weather": {
         "temperature": 24.6,
-        "apparentTemperature": 26.9,
+        "apparentTemperature": 27.1,
         "humidity": 82,
         "precipitation": 0,
         "rain": 0,
-        "windSpeed": 16,
+        "windSpeed": 14,
         "windGusts": 29,
-        "weatherCode": 2,
-        "condition": "Partly Cloudy",
-        "icon": "⛅",
-        "category": "cloudy",
-        "lastUpdatedAt": "2026-09-28T17:35:56.498Z"
+        "weatherCode": 1,
+        "condition": "Mainly Clear",
+        "icon": "🌤️",
+        "category": "clear",
+        "lastUpdatedAt": "2026-09-28T17:46:58.736Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -2592,13 +2592,13 @@
         "movementFeasible": true,
         "hazardType": "Normal Microclimate & Clear Corridors",
         "title": "Clear Corridors & Normal Weather: Hampi",
-        "description": "Fair weather conditions. Current Temperature: 24.6°C. Wind: 16 km/h. Highway corridor NH-50 & Tungabhadra Heritage Ring Road is 100% operational with smooth transit.",
+        "description": "Fair weather conditions. Current Temperature: 24.6°C. Wind: 14 km/h. Highway corridor NH-50 & Tungabhadra Heritage Ring Road is 100% operational with smooth transit.",
         "advice": "Monitored live via Open-Meteo satellite. Enjoy your journey with standard schedule.",
         "activeThreat": null,
         "activeBulletinId": null,
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "NH-50 & Tungabhadra Heritage Ring Road",
-        "lastVerifiedAt": "2026-09-28T17:35:56.498Z"
+        "lastVerifiedAt": "2026-09-28T17:46:58.736Z"
       }
     },
     "Andaman": {
@@ -2614,7 +2614,7 @@
       "weather": {
         "temperature": 25.6,
         "apparentTemperature": 30.7,
-        "humidity": 94,
+        "humidity": 95,
         "precipitation": 0,
         "rain": 0,
         "windSpeed": 10,
@@ -2623,7 +2623,7 @@
         "condition": "Overcast",
         "icon": "☁️",
         "category": "cloudy",
-        "lastUpdatedAt": "2026-09-28T17:35:56.498Z"
+        "lastUpdatedAt": "2026-09-28T17:46:58.736Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -2647,7 +2647,7 @@
         "activeBulletinId": null,
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "Andaman Trunk Road (ATR) & Island Ferries",
-        "lastVerifiedAt": "2026-09-28T17:35:56.498Z"
+        "lastVerifiedAt": "2026-09-28T17:46:58.736Z"
       }
     },
     "Guwahati": {
@@ -2661,18 +2661,18 @@
         "lon": 91.7362
       },
       "weather": {
-        "temperature": 26.8,
-        "apparentTemperature": 32.8,
-        "humidity": 88,
+        "temperature": 26.7,
+        "apparentTemperature": 32.7,
+        "humidity": 89,
         "precipitation": 0,
         "rain": 0,
-        "windSpeed": 3,
+        "windSpeed": 4,
         "windGusts": 7,
         "weatherCode": 0,
         "condition": "Clear Sky",
         "icon": "☀️",
         "category": "clear",
-        "lastUpdatedAt": "2026-09-28T17:35:56.498Z"
+        "lastUpdatedAt": "2026-09-28T17:46:58.736Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -2690,13 +2690,13 @@
         "movementFeasible": true,
         "hazardType": "Normal Microclimate & Clear Corridors",
         "title": "Clear Corridors & Normal Weather: Guwahati",
-        "description": "Fair weather conditions. Current Temperature: 26.8°C. Wind: 3 km/h. Highway corridor NH-27 / Guwahati-Shillong Highway is 100% operational with smooth transit.",
+        "description": "Fair weather conditions. Current Temperature: 26.7°C. Wind: 4 km/h. Highway corridor NH-27 / Guwahati-Shillong Highway is 100% operational with smooth transit.",
         "advice": "Monitored live via Open-Meteo satellite. Enjoy your journey with standard schedule.",
         "activeThreat": null,
         "activeBulletinId": null,
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "NH-27 / Guwahati-Shillong Highway",
-        "lastVerifiedAt": "2026-09-28T17:35:56.498Z"
+        "lastVerifiedAt": "2026-09-28T17:46:58.736Z"
       }
     }
   },
@@ -2723,7 +2723,7 @@
       "hazardType": "Major Landslide & Beas River Cloudburst Surge",
       "corridor": "NH-3 (Chandigarh-Manali)",
       "movementStatus": "TRAVEL HAZARDOUS / ROUTES SUSPENDED",
-      "timestamp": "2026-09-28T17:35:56.498Z"
+      "timestamp": "2026-09-28T17:46:58.736Z"
     },
     {
       "destination": "Rohtang Pass",
@@ -2733,7 +2733,7 @@
       "hazardType": "High-Altitude Blizzard & Black Ice Warning",
       "corridor": "Manali-Leh Highway (13,058 ft)",
       "movementStatus": "MOVEMENT POSSIBLE WITH CAUTION",
-      "timestamp": "2026-09-28T17:35:56.498Z"
+      "timestamp": "2026-09-28T17:46:58.736Z"
     },
     {
       "destination": "Chitkul",
@@ -2743,7 +2743,7 @@
       "hazardType": "Earthquake / Seismic Tremor",
       "corridor": "Kinnaur Valley Indo-Tibet Border Road",
       "movementStatus": "MOVEMENT POSSIBLE WITH CAUTION",
-      "timestamp": "2026-09-28T17:35:56.498Z"
+      "timestamp": "2026-09-28T17:46:58.736Z"
     },
     {
       "destination": "Rishikesh",
@@ -2753,7 +2753,7 @@
       "hazardType": "Ganges River High Water Spate & Rafting Suspension",
       "corridor": "NH-7 All-Weather Badrinath Route",
       "movementStatus": "MOVEMENT POSSIBLE WITH CAUTION",
-      "timestamp": "2026-09-28T17:35:56.498Z"
+      "timestamp": "2026-09-28T17:46:58.736Z"
     },
     {
       "destination": "Darjeeling",
@@ -2763,7 +2763,7 @@
       "hazardType": "Hill Slope Mudslide & Ghat Bypass Precaution",
       "corridor": "Rohini Road / Hill Cart Road (NH-110)",
       "movementStatus": "MOVEMENT POSSIBLE WITH CAUTION",
-      "timestamp": "2026-09-28T17:35:56.498Z"
+      "timestamp": "2026-09-28T17:46:58.736Z"
     },
     {
       "destination": "Puri",
@@ -2773,7 +2773,7 @@
       "hazardType": "Severe Cyclonic Storm & Tidal Inundation",
       "corridor": "NH-316 (Bhubaneswar-Puri Highway)",
       "movementStatus": "TRAVEL HAZARDOUS / ROUTES SUSPENDED",
-      "timestamp": "2026-09-28T17:35:56.498Z"
+      "timestamp": "2026-09-28T17:46:58.736Z"
     },
     {
       "destination": "Dawki",
@@ -2783,7 +2783,7 @@
       "hazardType": "Umngot River High Current & Border Transit Advisory",
       "corridor": "NH-206 Indo-Bangladesh Border Highway",
       "movementStatus": "MOVEMENT POSSIBLE WITH CAUTION",
-      "timestamp": "2026-09-28T17:35:56.498Z"
+      "timestamp": "2026-09-28T17:46:58.736Z"
     },
     {
       "destination": "Leh Ladakh",
@@ -2793,7 +2793,7 @@
       "hazardType": "Earthquake / Seismic Tremor",
       "corridor": "Leh-Manali Highway & Zoji La Route (17,582 ft Khardung La)",
       "movementStatus": "MOVEMENT POSSIBLE WITH CAUTION",
-      "timestamp": "2026-09-28T17:35:56.498Z"
+      "timestamp": "2026-09-28T17:46:58.736Z"
     },
     {
       "destination": "Vizag",
@@ -2803,7 +2803,7 @@
       "hazardType": "Severe Storms",
       "corridor": "NH-16 Coastal Expressway & Araku Ghat",
       "movementStatus": "TRAVEL HAZARDOUS / ROUTES SUSPENDED",
-      "timestamp": "2026-09-28T17:35:56.498Z"
+      "timestamp": "2026-09-28T17:46:58.736Z"
     }
   ]
 }
