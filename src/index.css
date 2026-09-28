@@ -27321,32 +27321,33 @@ h1, h2, h3, .section-heading h2 {
   text-decoration: none !important;
   cursor: pointer !important;
 
-  /* Default state: Black under white text with a thin black border */
-  background: #000000 !important;
+  /* Default state: Black under white text with a thin black border & bottom-anchored gradient */
   background-color: #000000 !important;
+  background-image: linear-gradient(to top, #43d79c, #43d79c) !important;
+  background-repeat: no-repeat !important;
+  background-position: bottom center !important;
+  background-size: 100% 0% !important;
   color: #ffffff !important;
   border: 1px solid #000000 !important;
   border-color: #000000 !important;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
 
-  /* Smooth translation & color transitions */
-  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
-              background 0.25s cubic-bezier(0.4, 0, 0.2, 1),
-              background-color 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+  /* Smooth bottom-to-up translation & color transitions */
+  transition: background-size 0.38s cubic-bezier(0.2, 0.9, 0.3, 1),
+              transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
               color 0.25s cubic-bezier(0.4, 0, 0.2, 1),
               border-color 0.25s cubic-bezier(0.4, 0, 0.2, 1),
               box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
-  will-change: transform;
+  will-change: transform, background-size;
 }
 
-/* Hover: Same translation lift effect and converts into same color green with thin black border */
+/* Hover: Bottom-to-up fill rising to 100% height, translation lift effect, black text on vivid green */
 .destination-details-actions .details-plan-button:hover,
 .destination-details-actions .details-home-button:hover,
 .destination-details-actions .details-back-button:hover,
 .destination-details-page .details-home-button:hover,
 .destination-details-page .details-back-button:hover {
-  background: #43d79c !important;
-  background-color: #43d79c !important;
+  background-size: 100% 100% !important;
   color: #000000 !important;
   border: 1px solid #000000 !important;
   border-color: #000000 !important;
@@ -27608,22 +27609,24 @@ h1, h2, h3, .section-heading h2 {
   line-height: 1.25 !important;
   box-sizing: border-box !important;
 
-  /* Default state: Solid dark with pure white text and thin black border */
-  background: #000000 !important;
+  /* Default state: Solid dark with pure white text and thin black border & bottom-anchored gradient */
   background-color: #000000 !important;
+  background-image: linear-gradient(to top, #43d79c, #43d79c) !important;
+  background-repeat: no-repeat !important;
+  background-position: bottom center !important;
+  background-size: 100% 0% !important;
   color: #ffffff !important;
   border: 1.5px solid #000000 !important;
   border-color: #000000 !important;
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.14) !important;
 
-  /* Smooth translation & color transitions */
-  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
-              background 0.25s cubic-bezier(0.4, 0, 0.2, 1),
-              background-color 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+  /* Smooth bottom-to-up translation & color transitions */
+  transition: background-size 0.38s cubic-bezier(0.2, 0.9, 0.3, 1),
+              transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
               color 0.25s cubic-bezier(0.4, 0, 0.2, 1),
               border-color 0.25s cubic-bezier(0.4, 0, 0.2, 1),
               box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
-  will-change: transform;
+  will-change: transform, background-size;
 }
 
 /* Ensure default text inside button is 100% white & readable */
@@ -27634,12 +27637,11 @@ h1, h2, h3, .section-heading h2 {
   transition: color 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
-/* Hover state: Translation lift effect & converts into vivid green (#43d79c) with thin black border */
+/* Hover state: Bottom-to-up fill rising to 100% height, translation lift effect & converts into vivid green (#43d79c) with thin black border */
 .protected-action-btn:hover,
 .protected-booking-page .protected-action-btn:hover,
 .protected-actions-container .protected-action-btn:hover {
-  background: #43d79c !important;
-  background-color: #43d79c !important;
+  background-size: 100% 100% !important;
   color: #000000 !important;
   border: 1.5px solid #000000 !important;
   border-color: #000000 !important;
@@ -27663,7 +27665,7 @@ h1, h2, h3, .section-heading h2 {
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2) !important;
 }
 
-/* Also apply the translation & readable color-changing hover effect to Escrow Refund & Cancel buttons in MyTrips */
+/* Also apply the bottom-to-up transition & readable color-changing hover effect to Escrow Refund & Cancel buttons in MyTrips */
 .trip-actions-buttons .trip-action-btn,
 .trip-actions-buttons .cancel-btn,
 .trip-actions-buttons .view-ticket,
@@ -27676,14 +27678,19 @@ h1, h2, h3, .section-heading h2 {
   border-radius: 10px !important;
   font-weight: 700 !important;
   cursor: pointer !important;
+  background-color: #000000 !important;
+  background-image: linear-gradient(to top, #43d79c, #43d79c) !important;
+  background-repeat: no-repeat !important;
+  background-position: bottom center !important;
+  background-size: 100% 0% !important;
+  color: #ffffff !important;
   border: 1.5px solid #000000 !important;
-  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
-              background 0.25s cubic-bezier(0.4, 0, 0.2, 1),
-              background-color 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+  transition: background-size 0.38s cubic-bezier(0.2, 0.9, 0.3, 1),
+              transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
               color 0.25s cubic-bezier(0.4, 0, 0.2, 1),
               border-color 0.25s cubic-bezier(0.4, 0, 0.2, 1),
               box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
-  will-change: transform;
+  will-change: transform, background-size;
 }
 
 .trip-actions-buttons .trip-action-btn:hover,
@@ -27692,8 +27699,7 @@ h1, h2, h3, .section-heading h2 {
 .cancel-modal-content .trip-action-btn:hover,
 .cancel-modal-content .hotel-detail-back-button:hover,
 .trip-replan-refund-btn:hover {
-  background: #43d79c !important;
-  background-color: #43d79c !important;
+  background-size: 100% 100% !important;
   color: #000000 !important;
   border: 1.5px solid #000000 !important;
   border-color: #000000 !important;
@@ -27709,4 +27715,642 @@ h1, h2, h3, .section-heading h2 {
 .trip-replan-refund-btn:hover * {
   color: #000000 !important;
 }
+
+/* =========================================================
+   UNIVERSAL BOTTOM-TO-UP COLOR TRANSITION HOVER SYSTEM
+   Visible bottom-to-up color transition across all buttons
+   ========================================================= */
+
+/* 1. Base slide-up engine applied to all interactive buttons */
+.tg-btn-slide-up,
+.explore-button,
+.login-button,
+.hotel-button,
+.hotel-select-button,
+.destinations-reset-btn,
+.search-container button,
+.home-search button,
+.destinations-search button,
+.hotels-search button,
+.activities-search button,
+.weather-sync-btn,
+.weather-radar-action-btn,
+.weather-filter-btn,
+.weather-reset-btn,
+.weather-forecast-btn,
+.weather-detour-btn,
+.weather-plan-btn,
+.weather-modal-dismiss-btn,
+.primary-button,
+.planner-button,
+.destination-action-btn {
+  position: relative !important;
+  overflow: hidden !important;
+  z-index: 1 !important;
+  background-repeat: no-repeat !important;
+  background-position: bottom center !important;
+  background-size: 100% 0% !important;
+  will-change: background-size, transform;
+  transition: background-size 0.38s cubic-bezier(0.2, 0.9, 0.3, 1),
+              transform 0.25s cubic-bezier(0.2, 0.9, 0.3, 1),
+              color 0.25s ease,
+              border-color 0.25s ease,
+              box-shadow 0.3s ease !important;
+}
+
+/* Explore & Destination Card Buttons */
+.explore-button {
+  background-color: #18221d !important;
+  background-image: linear-gradient(to top, #43d79c, #43d79c) !important;
+  color: #ffffff !important;
+  border: 1px solid #18221d !important;
+}
+.explore-button:hover {
+  background-size: 100% 100% !important;
+  color: #000000 !important;
+  border-color: #000000 !important;
+  transform: translateY(-2.5px) !important;
+  box-shadow: 0 6px 18px rgba(67, 215, 156, 0.4) !important;
+}
+.explore-button:hover * {
+  color: #000000 !important;
+}
+
+/* Login Button */
+.login-button {
+  background-color: #18221d !important;
+  background-image: linear-gradient(to top, #43d79c, #43d79c) !important;
+  color: #ffffff !important;
+  border: 1px solid #18221d !important;
+}
+.login-button:hover {
+  background-size: 100% 100% !important;
+  color: #000000 !important;
+  border-color: #000000 !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 18px rgba(67, 215, 156, 0.35) !important;
+}
+.login-button:hover * {
+  color: #000000 !important;
+}
+
+/* Hotel Card Action Buttons */
+.hotel-button {
+  background-color: #10b981 !important;
+  background-image: linear-gradient(to top, #047857, #047857) !important;
+  color: #ffffff !important;
+  border: 1px solid #10b981 !important;
+}
+.hotel-button:hover {
+  background-size: 100% 100% !important;
+  color: #ffffff !important;
+  border-color: #047857 !important;
+  transform: translateY(-2.5px) !important;
+  box-shadow: 0 6px 18px rgba(4, 120, 87, 0.4) !important;
+}
+
+.hotel-select-button {
+  background-color: #ffffff !important;
+  background-image: linear-gradient(to top, #43d79c, #43d79c) !important;
+  color: #0f172a !important;
+  border: 1.5px solid #cbd5e1 !important;
+}
+.hotel-select-button:hover {
+  background-size: 100% 100% !important;
+  color: #000000 !important;
+  border-color: #000000 !important;
+  transform: translateY(-2.5px) !important;
+  box-shadow: 0 6px 18px rgba(67, 215, 156, 0.35) !important;
+}
+
+/* Destinations Reset Button & Search Buttons */
+.destinations-reset-btn,
+.search-container button,
+.home-search button,
+.destinations-search button,
+.hotels-search button {
+  background-color: #18221d !important;
+  background-image: linear-gradient(to top, #43d79c, #43d79c) !important;
+  color: #ffffff !important;
+}
+.destinations-reset-btn:hover,
+.search-container button:hover,
+.home-search button:hover,
+.destinations-search button:hover,
+.hotels-search button:hover {
+  background-size: 100% 100% !important;
+  color: #000000 !important;
+  border-color: #000000 !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 18px rgba(67, 215, 156, 0.38) !important;
+}
+.destinations-reset-btn:hover *,
+.search-container button:hover *,
+.home-search button:hover *,
+.destinations-search button:hover *,
+.hotels-search button:hover * {
+  color: #000000 !important;
+}
+
+/* 2. Weather & Radar Page Buttons (Bottom-to-Up Hover) */
+.weather-sync-btn {
+  background-color: rgba(59, 130, 246, 0.18) !important;
+  border: 1px solid rgba(96, 165, 250, 0.4) !important;
+  color: #93c5fd !important;
+  background-image: linear-gradient(to top, #0284c7, #0284c7) !important;
+}
+.weather-sync-btn:hover {
+  background-size: 100% 100% !important;
+  color: #ffffff !important;
+  border-color: #38bdf8 !important;
+  box-shadow: 0 6px 20px rgba(2, 132, 199, 0.45) !important;
+  transform: translateY(-2px) !important;
+}
+.weather-sync-btn:hover * {
+  color: #ffffff !important;
+}
+
+.weather-radar-action-btn {
+  background-color: #0f172a !important;
+  border: 1.5px solid #0f172a !important;
+  color: #ffffff !important;
+  background-image: linear-gradient(to top, #dc2626, #dc2626) !important;
+}
+.weather-radar-action-btn:hover {
+  background-size: 100% 100% !important;
+  color: #ffffff !important;
+  border-color: #ef4444 !important;
+  box-shadow: 0 8px 24px rgba(220, 38, 38, 0.45) !important;
+  transform: translateY(-2px) !important;
+}
+.weather-radar-action-btn:hover * {
+  color: #ffffff !important;
+}
+
+.weather-filter-btn {
+  background-color: #f1f5f9 !important;
+  border: 1px solid #cbd5e1 !important;
+  color: #334155 !important;
+  background-image: linear-gradient(to top, #0f172a, #0f172a) !important;
+}
+.weather-filter-btn:hover {
+  background-size: 100% 100% !important;
+  color: #ffffff !important;
+  border-color: #0f172a !important;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.25) !important;
+  transform: translateY(-2px) !important;
+}
+.weather-filter-btn:hover * {
+  color: #ffffff !important;
+}
+.weather-filter-btn.active {
+  background-color: #0f172a !important;
+  color: #ffffff !important;
+  border-color: #0f172a !important;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.25) !important;
+}
+
+.weather-forecast-btn {
+  background-color: #ffffff !important;
+  border: 1.5px solid #cbd5e1 !important;
+  color: #0f172a !important;
+  background-image: linear-gradient(to top, #0284c7, #0284c7) !important;
+}
+.weather-forecast-btn:hover {
+  background-size: 100% 100% !important;
+  color: #ffffff !important;
+  border-color: #0284c7 !important;
+  box-shadow: 0 6px 18px rgba(2, 132, 199, 0.35) !important;
+  transform: translateY(-2px) !important;
+}
+.weather-forecast-btn:hover * {
+  color: #ffffff !important;
+}
+
+.weather-plan-btn {
+  background-color: #0284c7 !important;
+  border: 1.5px solid #0284c7 !important;
+  color: #ffffff !important;
+  background-image: linear-gradient(to top, #0369a1, #0369a1) !important;
+}
+.weather-plan-btn:hover {
+  background-size: 100% 100% !important;
+  color: #ffffff !important;
+  border-color: #0369a1 !important;
+  box-shadow: 0 6px 18px rgba(2, 132, 199, 0.45) !important;
+  transform: translateY(-2px) !important;
+}
+
+.weather-detour-btn {
+  background-color: #dc2626 !important;
+  border: 1.5px solid #dc2626 !important;
+  color: #ffffff !important;
+  background-image: linear-gradient(to top, #991b1b, #991b1b) !important;
+}
+.weather-detour-btn:hover {
+  background-size: 100% 100% !important;
+  color: #ffffff !important;
+  border-color: #991b1b !important;
+  box-shadow: 0 6px 18px rgba(220, 38, 38, 0.45) !important;
+  transform: translateY(-2px) !important;
+}
+
+.weather-reset-btn {
+  background-color: #f1f5f9 !important;
+  border: 1.5px solid #cbd5e1 !important;
+  color: #1e293b !important;
+  background-image: linear-gradient(to top, #0f172a, #0f172a) !important;
+}
+.weather-reset-btn:hover {
+  background-size: 100% 100% !important;
+  color: #ffffff !important;
+  border-color: #0f172a !important;
+  transform: translateY(-2px) !important;
+}
+
+.weather-modal-dismiss-btn {
+  background-color: #e2e8f0 !important;
+  border: 1.5px solid #cbd5e1 !important;
+  color: #1e293b !important;
+  background-image: linear-gradient(to top, #0f172a, #0f172a) !important;
+}
+.weather-modal-dismiss-btn:hover {
+  background-size: 100% 100% !important;
+  color: #ffffff !important;
+  border-color: #0f172a !important;
+  transform: translateY(-2px) !important;
+}
+
+/* 3. Emergency Hub Buttons (Bottom-to-Up Hover) */
+.emg-hub-btn {
+  position: relative !important;
+  overflow: hidden !important;
+  z-index: 1 !important;
+  background-repeat: no-repeat !important;
+  background-position: bottom center !important;
+  background-size: 100% 0% !important;
+  transition: background-size 0.38s cubic-bezier(0.2, 0.9, 0.3, 1),
+              transform 0.25s cubic-bezier(0.2, 0.9, 0.3, 1),
+              color 0.25s ease,
+              border-color 0.25s ease,
+              box-shadow 0.3s ease !important;
+}
+
+.emg-hub-btn.btn-red {
+  background-image: linear-gradient(to top, #ef4444, #ef4444) !important;
+}
+.emg-hub-btn.btn-red:hover {
+  background-size: 100% 100% !important;
+  color: #ffffff !important;
+  border-color: #ef4444 !important;
+  box-shadow: 0 6px 20px rgba(239, 68, 68, 0.45) !important;
+  transform: translateY(-2px) !important;
+}
+
+.emg-hub-btn.btn-blue {
+  background-image: linear-gradient(to top, #0284c7, #0284c7) !important;
+}
+.emg-hub-btn.btn-blue:hover {
+  background-size: 100% 100% !important;
+  color: #ffffff !important;
+  border-color: #0284c7 !important;
+  box-shadow: 0 6px 20px rgba(2, 132, 199, 0.45) !important;
+  transform: translateY(-2px) !important;
+}
+
+.emg-hub-btn.btn-green {
+  background-image: linear-gradient(to top, #16a34a, #16a34a) !important;
+}
+.emg-hub-btn.btn-green:hover {
+  background-size: 100% 100% !important;
+  color: #ffffff !important;
+  border-color: #16a34a !important;
+  box-shadow: 0 6px 20px rgba(22, 163, 74, 0.45) !important;
+  transform: translateY(-2px) !important;
+}
+
+.emg-hub-btn.btn-teal {
+  background-image: linear-gradient(to top, #059669, #059669) !important;
+}
+.emg-hub-btn.btn-teal:hover {
+  background-size: 100% 100% !important;
+  color: #ffffff !important;
+  border-color: #059669 !important;
+  box-shadow: 0 6px 20px rgba(5, 150, 105, 0.45) !important;
+  transform: translateY(-2px) !important;
+}
+
+.emg-hub-btn.btn-amber {
+  background-image: linear-gradient(to top, #d97706, #d97706) !important;
+}
+.emg-hub-btn.btn-amber:hover {
+  background-size: 100% 100% !important;
+  color: #ffffff !important;
+  border-color: #d97706 !important;
+  box-shadow: 0 6px 20px rgba(217, 119, 6, 0.45) !important;
+  transform: translateY(-2px) !important;
+}
+
+.emg-hub-btn.btn-dark {
+  background-image: linear-gradient(to top, #0f172a, #0f172a) !important;
+}
+.emg-hub-btn.btn-dark:hover {
+  background-size: 100% 100% !important;
+  color: #ffffff !important;
+  border-color: #0f172a !important;
+  box-shadow: 0 6px 20px rgba(15, 23, 42, 0.45) !important;
+  transform: translateY(-2px) !important;
+}
+
+/* =========================================================
+   MOBILE RESPONSIVENESS & ROW-BY-ROW CARD SYSTEM
+   Max-width: 768px (Mobile & Small Tablets)
+   Max-width: 480px (Smartphones)
+   ========================================================= */
+
+@media (max-width: 768px) {
+  /* 1. ROW-BY-ROW CARDS: Strictly 1 Card per row for Destinations & Hotels */
+  .destination-grid,
+  .destinations-section .destination-grid,
+  .destinations-page .destination-grid,
+  .destinations-results-grid,
+  .hotel-grid,
+  .hotels-page .hotel-grid,
+  .destination-hotels-list,
+  .activity-grid,
+  .activities-grid,
+  .destination-local-grid,
+  .destination-image-grid,
+  .feature-grid,
+  .dashboard-grid,
+  .weather-destinations-grid,
+  .innovation-grid {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Single-card full width & clean presentation */
+  .destination-card,
+  .destinations-page .destination-card,
+  .hotel-card,
+  .hotels-page .hotel-card,
+  .destination-hotel-card,
+  .attraction-card,
+  .activity-card,
+  .destination-card-skeleton {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin: 0 0 4px 0 !important;
+    border-radius: 16px !important;
+    overflow: hidden !important;
+    background: #ffffff !important;
+    box-shadow: 0 6px 20px rgba(15, 23, 42, 0.07) !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  /* Card image proportions on mobile */
+  .destination-card-media,
+  .destination-card img,
+  .hotel-image-container,
+  .hotel-image,
+  .destination-hotel-image,
+  .skeleton-image-box {
+    width: 100% !important;
+    height: 220px !important;
+    max-height: 220px !important;
+    object-fit: cover !important;
+    display: block !important;
+  }
+
+  /* Card body typography and spacing */
+  .destination-info,
+  .hotel-info,
+  .destination-hotel-card-info {
+    padding: 18px 16px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 6px !important;
+  }
+
+  .destination-info h3,
+  .hotel-info h3,
+  .destination-hotel-card-info h3 {
+    font-size: 20px !important;
+    font-weight: 800 !important;
+    line-height: 1.3 !important;
+    color: #0f172a !important;
+  }
+
+  .destination-description {
+    font-size: 13.5px !important;
+    line-height: 1.55 !important;
+    color: #475569 !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 3 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+  }
+
+  .destination-card-bottom {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 12px !important;
+    margin-top: 12px !important;
+    padding-top: 12px !important;
+    border-top: 1px solid #f1f5f9 !important;
+  }
+
+  .destination-card-bottom .explore-button {
+    flex: 1 !important;
+    padding: 12px 18px !important;
+    font-size: 14px !important;
+    font-weight: 800 !important;
+    text-align: center !important;
+    border-radius: 10px !important;
+  }
+
+  .hotel-actions-group {
+    display: flex !important;
+    gap: 10px !important;
+    width: 100% !important;
+    margin-top: 10px !important;
+  }
+
+  .hotel-actions-group .hotel-button,
+  .hotel-actions-group .hotel-select-button {
+    flex: 1 !important;
+    padding: 12px 14px !important;
+    font-size: 13.5px !important;
+    font-weight: 700 !important;
+    text-align: center !important;
+    border-radius: 10px !important;
+  }
+
+  /* 2. Page Containers & Padding Alignment */
+  .destinations-section,
+  .destinations-page-content,
+  .hotels-page-content,
+  .activities-page-content,
+  .dashboard-page,
+  .details-page-content {
+    padding: 28px 16px 48px !important;
+  }
+
+  .section-heading {
+    margin-bottom: 24px !important;
+  }
+
+  .section-heading h2 {
+    font-size: 28px !important;
+    line-height: 1.2 !important;
+  }
+
+  .section-heading span {
+    font-size: 13.5px !important;
+    line-height: 1.5 !important;
+  }
+
+  /* 3. Hero Section Mobile Optimization */
+  .hero-overlay {
+    padding: 40px 16px !important;
+    min-height: 480px !important;
+  }
+
+  .hero h1 {
+    font-size: 38px !important;
+    line-height: 1.15 !important;
+    margin: 16px 0 !important;
+  }
+
+  .hero-description {
+    font-size: 15px !important;
+    line-height: 1.6 !important;
+    margin-bottom: 24px !important;
+  }
+
+  .search-container {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+    padding: 8px !important;
+  }
+
+  .search-container input {
+    width: 100% !important;
+    padding: 12px 14px !important;
+    font-size: 15px !important;
+  }
+
+  .search-container button {
+    width: 100% !important;
+    min-height: 48px !important;
+    padding: 12px !important;
+    font-size: 15px !important;
+    font-weight: 700 !important;
+  }
+
+  /* 4. Filter Bars & Chips */
+  .destinations-filters-bar,
+  .hotels-filters-bar {
+    width: 100% !important;
+  }
+
+  .destinations-category-chips {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    padding: 6px 2px 10px !important;
+    gap: 8px !important;
+    scrollbar-width: thin;
+    justify-content: flex-start !important;
+  }
+
+  .destinations-chip {
+    white-space: nowrap !important;
+    flex-shrink: 0 !important;
+    padding: 7px 14px !important;
+    font-size: 13px !important;
+  }
+
+  .destinations-selectors {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    gap: 12px !important;
+  }
+
+  .destinations-select-wrapper {
+    width: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 4px !important;
+  }
+
+  .destinations-select-wrapper select {
+    width: 100% !important;
+    min-height: 46px !important;
+    border-radius: 10px !important;
+    padding: 10px 14px !important;
+    font-size: 14px !important;
+  }
+
+  /* 5. Weather & Radar Page Mobile Optimization */
+  .weather-stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 10px !important;
+  }
+
+  .weather-bulletins-wrapper {
+    margin: 24px auto 0 !important;
+    padding: 0 16px !important;
+  }
+
+  .weather-destinations-grid {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero h1 {
+    font-size: 32px !important;
+  }
+
+  .weather-stats-grid {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+
+  .destination-card-media,
+  .destination-card img,
+  .hotel-image-container,
+  .hotel-image,
+  .destination-hotel-image {
+    height: 195px !important;
+    max-height: 195px !important;
+  }
+
+  .destination-card-bottom {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+
+  .destination-rating {
+    align-self: flex-start !important;
+  }
+
+  .hotel-actions-group {
+    flex-direction: column !important;
+  }
+}
+
 

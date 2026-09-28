@@ -252,19 +252,16 @@ export default function Weather() {
             <button
               onClick={() => loadData(true)}
               disabled={isSyncing}
+              className="weather-sync-btn tg-btn-slide-up"
               style={{
                 display: "inline-flex",
                 alignItems: "center",
                 gap: "8px",
-                background: isSyncing ? "rgba(255,255,255,0.1)" : "rgba(59, 130, 246, 0.2)",
-                border: "1px solid rgba(96, 165, 250, 0.4)",
-                color: "#93c5fd",
                 padding: "8px 18px",
                 borderRadius: "10px",
                 fontSize: "13px",
                 fontWeight: "700",
                 cursor: isSyncing ? "not-allowed" : "pointer",
-                transition: "all 0.2s ease",
               }}
             >
               <span style={{ display: "inline-block", transform: isSyncing ? "rotate(360deg)" : "none", transition: "transform 1s linear" }}>
@@ -296,6 +293,7 @@ export default function Weather() {
 
           {/* Quick Stats Grid */}
           <div
+            className="weather-stats-grid"
             style={{
               display: "grid",
               gridTemplateColumns: "repeat(auto-fit, minmax(190px, 1fr))",
@@ -382,7 +380,7 @@ export default function Weather() {
         </div>
       </div>
 
-      <div style={{ maxWidth: "1280px", margin: "-20px auto 0", padding: "0 24px" }}>
+      <div className="weather-bulletins-wrapper" style={{ maxWidth: "1280px", margin: "36px auto 0", padding: "0 24px" }}>
         {/* 2. REAL-TIME DISASTER WARNING TICKER (IF ACTIVE) */}
         {activeCriticalAlerts.length > 0 && (
           <div
@@ -447,10 +445,8 @@ export default function Weather() {
                   <div style={{ display: "flex", gap: "8px" }}>
                     <button
                       onClick={() => handleOpenDetails(dest)}
+                      className="weather-radar-action-btn tg-btn-slide-up"
                       style={{
-                        background: "#0f172a",
-                        color: "#ffffff",
-                        border: "none",
                         padding: "8px 14px",
                         borderRadius: "8px",
                         fontSize: "13px",
@@ -462,14 +458,13 @@ export default function Weather() {
                     </button>
                     <Link
                       to={`/emergency-hub?dest=${encodeURIComponent(dest.name)}&tab=REPLAN`}
+                      className="weather-detour-btn tg-btn-slide-up"
                       style={{
-                        background: "#ef4444",
-                        color: "#ffffff",
-                        textDecoration: "none",
                         padding: "8px 14px",
                         borderRadius: "8px",
                         fontSize: "13px",
                         fontWeight: "700",
+                        textDecoration: "none",
                       }}
                     >
                       Safe Detour & Replan
@@ -572,6 +567,7 @@ export default function Weather() {
               <button
                 key={btn.id}
                 onClick={() => setTierFilter(btn.id)}
+                className={`weather-filter-btn tg-btn-slide-up ${tierFilter === btn.id ? "active" : ""}`}
                 style={{
                   padding: "8px 16px",
                   borderRadius: "20px",
@@ -581,7 +577,6 @@ export default function Weather() {
                   fontSize: "13px",
                   fontWeight: "700",
                   cursor: "pointer",
-                  transition: "all 0.2s ease",
                 }}
               >
                 {btn.label}
@@ -634,12 +629,10 @@ export default function Weather() {
                 setTierFilter("ALL");
                 setRegionFilter("ALL");
               }}
+              className="weather-reset-btn tg-btn-slide-up"
               style={{
                 padding: "8px 18px",
                 borderRadius: "8px",
-                background: "#0284c7",
-                color: "#ffffff",
-                border: "none",
                 fontWeight: "700",
                 cursor: "pointer",
               }}
@@ -649,6 +642,7 @@ export default function Weather() {
           </div>
         ) : (
           <div
+            className="weather-destinations-grid"
             style={{
               display: "grid",
               gridTemplateColumns: "repeat(auto-fill, minmax(350px, 1fr))",
@@ -815,11 +809,9 @@ export default function Weather() {
                   >
                     <button
                       onClick={() => handleOpenDetails(item)}
+                      className="weather-forecast-btn tg-btn-slide-up"
                       style={{
                         flex: 1,
-                        background: "#ffffff",
-                        border: "1.5px solid #cbd5e1",
-                        color: "#0f172a",
                         padding: "8px 12px",
                         borderRadius: "8px",
                         fontSize: "12px",
@@ -833,17 +825,16 @@ export default function Weather() {
                     {isRed ? (
                       <Link
                         to={`/emergency-hub?dest=${encodeURIComponent(item.name)}&tab=REPLAN`}
+                        className="weather-detour-btn tg-btn-slide-up"
                         style={{
                           flex: 1,
-                          background: "#dc2626",
-                          color: "#ffffff",
-                          textDecoration: "none",
                           padding: "8px 12px",
                           borderRadius: "8px",
                           fontSize: "12px",
                           fontWeight: "700",
                           textAlign: "center",
                           display: "inline-block",
+                          textDecoration: "none",
                         }}
                       >
                         🔄 Safe Detour
@@ -851,17 +842,16 @@ export default function Weather() {
                     ) : (
                       <Link
                         to={`/planner?destination=${encodeURIComponent(item.name)}`}
+                        className="weather-plan-btn tg-btn-slide-up"
                         style={{
                           flex: 1,
-                          background: "#0284c7",
-                          color: "#ffffff",
-                          textDecoration: "none",
                           padding: "8px 12px",
                           borderRadius: "8px",
                           fontSize: "12px",
                           fontWeight: "700",
                           textAlign: "center",
                           display: "inline-block",
+                          textDecoration: "none",
                         }}
                       >
                         🧭 Plan Trip Here
@@ -1076,34 +1066,34 @@ export default function Weather() {
             <div style={{ marginTop: "24px", display: "flex", gap: "12px", justifyContent: "flex-end" }}>
               <Link
                 to={`/emergency-hub?dest=${encodeURIComponent(selectedDestination.name)}`}
+                className="weather-radar-action-btn tg-btn-slide-up"
                 style={{
-                  background: "#0f172a",
-                  color: "#ffffff",
                   textDecoration: "none",
                   padding: "10px 18px",
                   borderRadius: "10px",
                   fontSize: "13px",
                   fontWeight: "700",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "6px",
                 }}
               >
                 🚨 Open Emergency Hub
               </Link>
-              <button
-                onClick={() => setDetailModalOpen(false)}
-                style={{
-                  background: "#e2e8f0",
-                  color: "#1e293b",
-                  border: "none",
-                  padding: "10px 18px",
-                  borderRadius: "10px",
-                  fontSize: "13px",
-                  fontWeight: "700",
-                  cursor: "pointer",
-                }}
-              >
-                Close
-              </button>
-            </div>
+                <button
+                  onClick={() => setDetailModalOpen(false)}
+                  className="weather-modal-dismiss-btn tg-btn-slide-up"
+                  style={{
+                    padding: "10px 18px",
+                    borderRadius: "10px",
+                    fontSize: "13px",
+                    fontWeight: "700",
+                    cursor: "pointer",
+                  }}
+                >
+                  Close
+                </button>
+              </div>
           </div>
         </div>
       )}
