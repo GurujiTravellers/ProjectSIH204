@@ -28151,10 +28151,9 @@ h1, h2, h3, .section-heading h2 {
     font-size: 13.5px !important;
     line-height: 1.55 !important;
     color: #475569 !important;
-    display: -webkit-box !important;
-    -webkit-line-clamp: 3 !important;
-    -webkit-box-orient: vertical !important;
+    max-height: 4.7em !important;
     overflow: hidden !important;
+    text-overflow: ellipsis !important;
   }
 
   .destination-card-bottom {
