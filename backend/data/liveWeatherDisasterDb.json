@@ -1,7 +1,7 @@
 {
-  "lastSyncTimestamp": "2026-09-29T09:17:48.233Z",
-  "nextSyncTimestamp": "2026-09-29T09:18:48.233Z",
-  "syncCount": 89,
+  "lastSyncTimestamp": "2026-09-29T09:23:45.662Z",
+  "nextSyncTimestamp": "2026-09-29T09:24:45.662Z",
+  "syncCount": 95,
   "isSyncing": true,
   "destinations": {
     "Shimla": {
@@ -26,7 +26,7 @@
         "condition": "Light Drizzle",
         "icon": "🌦️",
         "category": "rain",
-        "lastUpdatedAt": "2026-09-29T09:17:48.233Z"
+        "lastUpdatedAt": "2026-09-29T09:23:45.662Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -51,7 +51,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Chandigarh",
         "affectedCorridors": "NH-5 Himalayan Expressway",
-        "lastVerifiedAt": "2026-09-29T09:17:48.233Z"
+        "lastVerifiedAt": "2026-09-29T09:23:45.662Z"
       }
     },
     "Manali": {
@@ -76,7 +76,7 @@
         "condition": "Clear Sky",
         "icon": "☀️",
         "category": "clear",
-        "lastUpdatedAt": "2026-09-29T09:17:48.233Z"
+        "lastUpdatedAt": "2026-09-29T09:23:45.662Z"
       },
       "disaster": {
         "alertTier": "RED",
@@ -101,7 +101,7 @@
         "source": "Himachal Pradesh SDMA & NDMA Geological Warning System",
         "safeAlternativeHub": "Chandigarh",
         "affectedCorridors": "NH-3 (Chandigarh-Manali)",
-        "lastVerifiedAt": "2026-09-29T09:17:48.233Z"
+        "lastVerifiedAt": "2026-09-29T09:23:45.662Z"
       }
     },
     "Rohtang Pass": {
@@ -126,7 +126,7 @@
         "condition": "Partly Cloudy",
         "icon": "⛅",
         "category": "cloudy",
-        "lastUpdatedAt": "2026-09-29T09:17:48.233Z"
+        "lastUpdatedAt": "2026-09-29T09:23:45.662Z"
       },
       "disaster": {
         "alertTier": "YELLOW",
@@ -151,7 +151,7 @@
         "source": "BRO Project Deepak & Lahaul-Spiti District Police",
         "safeAlternativeHub": "Chandigarh",
         "affectedCorridors": "Manali-Leh Highway (13,058 ft)",
-        "lastVerifiedAt": "2026-09-29T09:17:48.233Z"
+        "lastVerifiedAt": "2026-09-29T09:23:45.662Z"
       }
     },
     "Kasol": {
@@ -176,7 +176,7 @@
         "condition": "Light Drizzle",
         "icon": "🌦️",
         "category": "rain",
-        "lastUpdatedAt": "2026-09-29T09:17:48.233Z"
+        "lastUpdatedAt": "2026-09-29T09:23:45.662Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -201,7 +201,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Chandigarh",
         "affectedCorridors": "Bhuntar-Kasol-Manikaran Road",
-        "lastVerifiedAt": "2026-09-29T09:17:48.233Z"
+        "lastVerifiedAt": "2026-09-29T09:23:45.662Z"
       }
     },
     "Chitkul": {
@@ -226,7 +226,7 @@
         "condition": "Mainly Clear",
         "icon": "🌤️",
         "category": "clear",
-        "lastUpdatedAt": "2026-09-29T09:17:48.233Z"
+        "lastUpdatedAt": "2026-09-29T09:23:45.662Z"
       },
       "disaster": {
         "alertTier": "YELLOW",
@@ -251,7 +251,7 @@
         "source": "USGS Live Indian Subcontinent Seismic Network",
         "safeAlternativeHub": "Chandigarh",
         "affectedCorridors": "Kinnaur Valley Indo-Tibet Border Road",
-        "lastVerifiedAt": "2026-09-29T09:17:48.233Z"
+        "lastVerifiedAt": "2026-09-29T09:23:45.662Z"
       }
     },
     "Kalpa": {
@@ -276,7 +276,7 @@
         "condition": "Mainly Clear",
         "icon": "🌤️",
         "category": "clear",
-        "lastUpdatedAt": "2026-09-29T09:17:48.233Z"
+        "lastUpdatedAt": "2026-09-29T09:23:45.662Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -301,7 +301,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Chandigarh",
         "affectedCorridors": "NH-5 Reckong Peo - Kalpa Link",
-        "lastVerifiedAt": "2026-09-29T09:17:48.233Z"
+        "lastVerifiedAt": "2026-09-29T09:23:45.662Z"
       }
     },
     "Sissu": {
@@ -326,7 +326,7 @@
         "condition": "Mainly Clear",
         "icon": "🌤️",
         "category": "clear",
-        "lastUpdatedAt": "2026-09-29T09:17:48.233Z"
+        "lastUpdatedAt": "2026-09-29T09:23:45.662Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -351,7 +351,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Chandigarh",
         "affectedCorridors": "Atal Tunnel North Portal / Lahaul Highway",
-        "lastVerifiedAt": "2026-09-29T09:17:48.233Z"
+        "lastVerifiedAt": "2026-09-29T09:23:45.662Z"
       }
     },
     "Kaza": {
@@ -376,7 +376,7 @@
         "condition": "Mainly Clear",
         "icon": "🌤️",
         "category": "clear",
-        "lastUpdatedAt": "2026-09-29T09:17:48.233Z"
+        "lastUpdatedAt": "2026-09-29T09:23:45.662Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -401,7 +401,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Chandigarh",
         "affectedCorridors": "NH-505 Spiti Valley Route",
-        "lastVerifiedAt": "2026-09-29T09:17:48.233Z"
+        "lastVerifiedAt": "2026-09-29T09:23:45.662Z"
       }
     },
     "Chandratal Lake": {
@@ -426,7 +426,7 @@
         "condition": "Overcast",
         "icon": "☁️",
         "category": "cloudy",
-        "lastUpdatedAt": "2026-09-29T09:17:48.233Z"
+        "lastUpdatedAt": "2026-09-29T09:23:45.662Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -451,7 +451,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Chandigarh",
         "affectedCorridors": "Batal-Chandratal Dirt Route (14,100 ft)",
-        "lastVerifiedAt": "2026-09-29T09:17:48.233Z"
+        "lastVerifiedAt": "2026-09-29T09:23:45.662Z"
       }
     },
     "Haridwar": {
@@ -476,7 +476,7 @@
         "condition": "Clear Sky",
         "icon": "☀️",
         "category": "clear",
-        "lastUpdatedAt": "2026-09-29T09:17:48.233Z"
+        "lastUpdatedAt": "2026-09-29T09:23:45.662Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -501,7 +501,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Dehradun",
         "affectedCorridors": "NH-334 (Delhi-Haridwar Highway)",
-        "lastVerifiedAt": "2026-09-29T09:17:48.233Z"
+        "lastVerifiedAt": "2026-09-29T09:23:45.662Z"
       }
     },
     "Rishikesh": {
@@ -526,7 +526,7 @@
         "condition": "Clear Sky",
         "icon": "☀️",
         "category": "clear",
-        "lastUpdatedAt": "2026-09-29T09:17:48.233Z"
+        "lastUpdatedAt": "2026-09-29T09:23:45.662Z"
       },
       "disaster": {
         "alertTier": "YELLOW",
@@ -551,7 +551,7 @@
         "source": "Uttarakhand State Disaster Management Authority (USDMA)",
         "safeAlternativeHub": "Dehradun",
         "affectedCorridors": "NH-7 All-Weather Badrinath Route",
-        "lastVerifiedAt": "2026-09-29T09:17:48.233Z"
+        "lastVerifiedAt": "2026-09-29T09:23:45.662Z"
       }
     },
     "Dehradun": {
@@ -576,7 +576,7 @@
         "condition": "Clear Sky",
         "icon": "☀️",
         "category": "clear",
-        "lastUpdatedAt": "2026-09-29T09:17:48.233Z"
+        "lastUpdatedAt": "2026-09-29T09:23:45.662Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -601,7 +601,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Dehradun",
         "affectedCorridors": "NH-72 / Delhi-Dehradun Expressway",
-        "lastVerifiedAt": "2026-09-29T09:17:48.233Z"
+        "lastVerifiedAt": "2026-09-29T09:23:45.662Z"
       }
     },
     "Mussoorie": {
@@ -626,7 +626,7 @@
         "condition": "Clear Sky",
         "icon": "☀️",
         "category": "clear",
-        "lastUpdatedAt": "2026-09-29T09:17:48.233Z"
+        "lastUpdatedAt": "2026-09-29T09:23:45.662Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -651,7 +651,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Dehradun",
         "affectedCorridors": "Dehradun-Mussoorie Hill Ghat Road",
-        "lastVerifiedAt": "2026-09-29T09:17:48.233Z"
+        "lastVerifiedAt": "2026-09-29T09:23:45.662Z"
       }
     },
     "Srinagar": {
@@ -676,7 +676,7 @@
         "condition": "Mainly Clear",
         "icon": "🌤️",
         "category": "clear",
-        "lastUpdatedAt": "2026-09-29T09:17:48.233Z"
+        "lastUpdatedAt": "2026-09-29T09:23:45.662Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -701,7 +701,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "NH-44 Banihal Tunnel Expressway",
-        "lastVerifiedAt": "2026-09-29T09:17:48.233Z"
+        "lastVerifiedAt": "2026-09-29T09:23:45.662Z"
       }
     },
     "Gulmarg": {
@@ -726,7 +726,7 @@
         "condition": "Mainly Clear",
         "icon": "🌤️",
         "category": "clear",
-        "lastUpdatedAt": "2026-09-29T09:17:48.233Z"
+        "lastUpdatedAt": "2026-09-29T09:23:45.662Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -751,7 +751,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "Srinagar-Tangmarg-Gulmarg Route (8,690 ft)",
-        "lastVerifiedAt": "2026-09-29T09:17:48.233Z"
+        "lastVerifiedAt": "2026-09-29T09:23:45.662Z"
       }
     },
     "Pahalgam": {
@@ -776,7 +776,7 @@
         "condition": "Mainly Clear",
         "icon": "🌤️",
         "category": "clear",
-        "lastUpdatedAt": "2026-09-29T09:17:48.233Z"
+        "lastUpdatedAt": "2026-09-29T09:23:45.662Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -801,7 +801,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "Anantnag-Pahalgam Lidder Valley Highway",
-        "lastVerifiedAt": "2026-09-29T09:17:48.233Z"
+        "lastVerifiedAt": "2026-09-29T09:23:45.662Z"
       }
     },
     "Digha": {
@@ -826,7 +826,7 @@
         "condition": "Mainly Clear",
         "icon": "🌤️",
         "category": "clear",
-        "lastUpdatedAt": "2026-09-29T09:17:48.233Z"
+        "lastUpdatedAt": "2026-09-29T09:23:45.662Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -851,7 +851,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "NH-116B Coastal Highway",
-        "lastVerifiedAt": "2026-09-29T09:17:48.233Z"
+        "lastVerifiedAt": "2026-09-29T09:23:45.662Z"
       }
     },
     "Darjeeling": {
@@ -876,7 +876,7 @@
         "condition": "Mainly Clear",
         "icon": "🌤️",
         "category": "clear",
-        "lastUpdatedAt": "2026-09-29T09:17:48.233Z"
+        "lastUpdatedAt": "2026-09-29T09:23:45.662Z"
       },
       "disaster": {
         "alertTier": "YELLOW",
@@ -901,7 +901,7 @@
         "source": "West Bengal Disaster Management Department & PWD Hills",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "Rohini Road / Hill Cart Road (NH-110)",
-        "lastVerifiedAt": "2026-09-29T09:17:48.233Z"
+        "lastVerifiedAt": "2026-09-29T09:23:45.662Z"
       }
     },
     "Kolkata": {
@@ -926,7 +926,7 @@
         "condition": "Partly Cloudy",
         "icon": "⛅",
         "category": "cloudy",
-        "lastUpdatedAt": "2026-09-29T09:17:48.233Z"
+        "lastUpdatedAt": "2026-09-29T09:23:45.662Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -951,7 +951,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "NH-16 / NH-19 / Kona Expressway",
-        "lastVerifiedAt": "2026-09-29T09:17:48.233Z"
+        "lastVerifiedAt": "2026-09-29T09:23:45.662Z"
       }
     },
     "Puri": {
@@ -976,7 +976,7 @@
         "condition": "Overcast",
         "icon": "☁️",
         "category": "cloudy",
-        "lastUpdatedAt": "2026-09-29T09:17:48.233Z"
+        "lastUpdatedAt": "2026-09-29T09:23:45.662Z"
       },
       "disaster": {
         "alertTier": "RED",
@@ -1001,7 +1001,7 @@
         "source": "India Meteorological Department (IMD) Cyclone Warning Division & Odisha OSDMA",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "NH-316 (Bhubaneswar-Puri Highway)",
-        "lastVerifiedAt": "2026-09-29T09:17:48.233Z"
+        "lastVerifiedAt": "2026-09-29T09:23:45.662Z"
       }
     },
     "Bhubaneswar": {
@@ -1026,7 +1026,7 @@
         "condition": "Partly Cloudy",
         "icon": "⛅",
         "category": "cloudy",
-        "lastUpdatedAt": "2026-09-29T09:17:48.233Z"
+        "lastUpdatedAt": "2026-09-29T09:23:45.662Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -1051,7 +1051,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "NH-16 Golden Quadrilateral",
-        "lastVerifiedAt": "2026-09-29T09:17:48.233Z"
+        "lastVerifiedAt": "2026-09-29T09:23:45.662Z"
       }
     },
     "Konark": {
@@ -1076,7 +1076,7 @@
         "condition": "Partly Cloudy",
         "icon": "⛅",
         "category": "cloudy",
-        "lastUpdatedAt": "2026-09-29T09:17:48.233Z"
+        "lastUpdatedAt": "2026-09-29T09:23:45.662Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -1101,7 +1101,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "Puri-Konark Marine Drive",
-        "lastVerifiedAt": "2026-09-29T09:17:48.233Z"
+        "lastVerifiedAt": "2026-09-29T09:23:45.662Z"
       }
     },
     "Shillong": {
@@ -1126,7 +1126,7 @@
         "condition": "Light Drizzle",
         "icon": "🌦️",
         "category": "rain",
-        "lastUpdatedAt": "2026-09-29T09:17:48.233Z"
+        "lastUpdatedAt": "2026-09-29T09:23:45.662Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -1151,7 +1151,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "NH-6 (Guwahati-Shillong 4-Lane)",
-        "lastVerifiedAt": "2026-09-29T09:17:48.233Z"
+        "lastVerifiedAt": "2026-09-29T09:23:45.662Z"
       }
     },
     "Mawlynnong Village": {
@@ -1176,7 +1176,7 @@
         "condition": "Overcast",
         "icon": "☁️",
         "category": "cloudy",
-        "lastUpdatedAt": "2026-09-29T09:17:48.233Z"
+        "lastUpdatedAt": "2026-09-29T09:23:45.662Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -1201,7 +1201,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "Shillong-Pynursla-Mawlynnong Road",
-        "lastVerifiedAt": "2026-09-29T09:17:48.233Z"
+        "lastVerifiedAt": "2026-09-29T09:23:45.662Z"
       }
     },
     "Dawki": {
@@ -1226,7 +1226,7 @@
         "condition": "Overcast",
         "icon": "☁️",
         "category": "cloudy",
-        "lastUpdatedAt": "2026-09-29T09:17:48.233Z"
+        "lastUpdatedAt": "2026-09-29T09:23:45.662Z"
       },
       "disaster": {
         "alertTier": "YELLOW",
@@ -1251,7 +1251,7 @@
         "source": "Meghalaya State Disaster Management Authority (MSDMA)",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "NH-206 Indo-Bangladesh Border Highway",
-        "lastVerifiedAt": "2026-09-29T09:17:48.233Z"
+        "lastVerifiedAt": "2026-09-29T09:23:45.662Z"
       }
     },
     "Jaipur": {
@@ -1276,7 +1276,7 @@
         "condition": "Mainly Clear",
         "icon": "🌤️",
         "category": "clear",
-        "lastUpdatedAt": "2026-09-29T09:17:48.233Z"
+        "lastUpdatedAt": "2026-09-29T09:23:45.662Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -1301,7 +1301,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "NH-48 (Delhi-Jaipur Expressway)",
-        "lastVerifiedAt": "2026-09-29T09:17:48.233Z"
+        "lastVerifiedAt": "2026-09-29T09:23:45.662Z"
       }
     },
     "Jaisalmer": {
@@ -1326,7 +1326,7 @@
         "condition": "Clear Sky",
         "icon": "☀️",
         "category": "clear",
-        "lastUpdatedAt": "2026-09-29T09:17:48.233Z"
+        "lastUpdatedAt": "2026-09-29T09:23:45.662Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -1351,7 +1351,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "NH-11 Thar Desert Highway",
-        "lastVerifiedAt": "2026-09-29T09:17:48.233Z"
+        "lastVerifiedAt": "2026-09-29T09:23:45.662Z"
       }
     },
     "Ajmer": {
@@ -1376,7 +1376,7 @@
         "condition": "Mainly Clear",
         "icon": "🌤️",
         "category": "clear",
-        "lastUpdatedAt": "2026-09-29T09:17:48.233Z"
+        "lastUpdatedAt": "2026-09-29T09:23:45.662Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -1401,7 +1401,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "NH-48 (Jaipur-Ajmer Expressway)",
-        "lastVerifiedAt": "2026-09-29T09:17:48.233Z"
+        "lastVerifiedAt": "2026-09-29T09:23:45.662Z"
       }
     },
     "Udaipur": {
@@ -1426,7 +1426,7 @@
         "condition": "Mainly Clear",
         "icon": "🌤️",
         "category": "clear",
-        "lastUpdatedAt": "2026-09-29T09:17:48.233Z"
+        "lastUpdatedAt": "2026-09-29T09:23:45.662Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -1451,7 +1451,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "NH-48 Golden Quadrilateral & Aravalli Ghats",
-        "lastVerifiedAt": "2026-09-29T09:17:48.233Z"
+        "lastVerifiedAt": "2026-09-29T09:23:45.662Z"
       }
     },
     "Delhi": {
@@ -1476,7 +1476,7 @@
         "condition": "Clear Sky",
         "icon": "☀️",
         "category": "clear",
-        "lastUpdatedAt": "2026-09-29T09:17:48.233Z"
+        "lastUpdatedAt": "2026-09-29T09:23:45.662Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -1501,7 +1501,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "Eastern & Western Peripheral Expressways",
-        "lastVerifiedAt": "2026-09-29T09:17:48.233Z"
+        "lastVerifiedAt": "2026-09-29T09:23:45.662Z"
       }
     },
     "Agra": {
@@ -1526,7 +1526,7 @@
         "condition": "Clear Sky",
         "icon": "☀️",
         "category": "clear",
-        "lastUpdatedAt": "2026-09-29T09:17:48.233Z"
+        "lastUpdatedAt": "2026-09-29T09:23:45.662Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -1551,7 +1551,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "Yamuna Expressway / Agra-Lucknow Expressway",
-        "lastVerifiedAt": "2026-09-29T09:17:48.233Z"
+        "lastVerifiedAt": "2026-09-29T09:23:45.662Z"
       }
     },
     "Varanasi": {
@@ -1576,7 +1576,7 @@
         "condition": "Clear Sky",
         "icon": "☀️",
         "category": "clear",
-        "lastUpdatedAt": "2026-09-29T09:17:48.233Z"
+        "lastUpdatedAt": "2026-09-29T09:23:45.662Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -1601,7 +1601,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "NH-19 / Grand Trunk Road",
-        "lastVerifiedAt": "2026-09-29T09:17:48.233Z"
+        "lastVerifiedAt": "2026-09-29T09:23:45.662Z"
       }
     },
     "Lucknow": {
@@ -1626,7 +1626,7 @@
         "condition": "Mainly Clear",
         "icon": "🌤️",
         "category": "clear",
-        "lastUpdatedAt": "2026-09-29T09:17:48.233Z"
+        "lastUpdatedAt": "2026-09-29T09:23:45.662Z"
       },
       "disaster": {
         "alertTier": "RED",
@@ -1651,7 +1651,7 @@
         "source": "GDACS (United Nations & European Commission)",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "Purvanchal & Agra-Lucknow Expressways",
-        "lastVerifiedAt": "2026-09-29T09:17:48.233Z"
+        "lastVerifiedAt": "2026-09-29T09:23:45.662Z"
       }
     },
     "Goa": {
@@ -1676,7 +1676,7 @@
         "condition": "Light Drizzle",
         "icon": "🌦️",
         "category": "rain",
-        "lastUpdatedAt": "2026-09-29T09:17:48.233Z"
+        "lastUpdatedAt": "2026-09-29T09:23:45.662Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -1701,7 +1701,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "NH-66 Coastal Link (Mumbai-Goa-Kochi)",
-        "lastVerifiedAt": "2026-09-29T09:17:48.233Z"
+        "lastVerifiedAt": "2026-09-29T09:23:45.662Z"
       }
     },
     "Mumbai": {
@@ -1726,7 +1726,7 @@
         "condition": "Light Drizzle",
         "icon": "🌦️",
         "category": "rain",
-        "lastUpdatedAt": "2026-09-29T09:17:48.233Z"
+        "lastUpdatedAt": "2026-09-29T09:23:45.662Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -1751,7 +1751,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "Western Express Highway & Coastal Road",
-        "lastVerifiedAt": "2026-09-29T09:17:48.233Z"
+        "lastVerifiedAt": "2026-09-29T09:23:45.662Z"
       }
     },
     "Pune": {
@@ -1776,7 +1776,7 @@
         "condition": "Light Drizzle",
         "icon": "🌦️",
         "category": "rain",
-        "lastUpdatedAt": "2026-09-29T09:17:48.233Z"
+        "lastUpdatedAt": "2026-09-29T09:23:45.662Z"
       },
       "disaster": {
         "alertTier": "YELLOW",
@@ -1801,7 +1801,7 @@
         "source": "GDACS (United Nations & European Commission)",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "Mumbai-Pune Expressway / NH-48",
-        "lastVerifiedAt": "2026-09-29T09:17:48.233Z"
+        "lastVerifiedAt": "2026-09-29T09:23:45.662Z"
       }
     },
     "Ahmedabad": {
@@ -1826,7 +1826,7 @@
         "condition": "Mainly Clear",
         "icon": "🌤️",
         "category": "clear",
-        "lastUpdatedAt": "2026-09-29T09:17:48.233Z"
+        "lastUpdatedAt": "2026-09-29T09:23:45.662Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -1851,7 +1851,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "NE-1 (Ahmedabad-Vadodara Expressway)",
-        "lastVerifiedAt": "2026-09-29T09:17:48.233Z"
+        "lastVerifiedAt": "2026-09-29T09:23:45.662Z"
       }
     },
     "Gujarat": {
@@ -1876,7 +1876,7 @@
         "condition": "Mainly Clear",
         "icon": "🌤️",
         "category": "clear",
-        "lastUpdatedAt": "2026-09-29T09:17:48.233Z"
+        "lastUpdatedAt": "2026-09-29T09:23:45.662Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -1901,7 +1901,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "NE-1 & Rann of Kutch Coastal Highway",
-        "lastVerifiedAt": "2026-09-29T09:17:48.233Z"
+        "lastVerifiedAt": "2026-09-29T09:23:45.662Z"
       }
     },
     "Kalka": {
@@ -1926,7 +1926,7 @@
         "condition": "Clear Sky",
         "icon": "☀️",
         "category": "clear",
-        "lastUpdatedAt": "2026-09-29T09:17:48.233Z"
+        "lastUpdatedAt": "2026-09-29T09:23:45.662Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -1951,7 +1951,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "NH-5 Himalayan Gateway (Kalka-Shimla Toy Train)",
-        "lastVerifiedAt": "2026-09-29T09:17:48.233Z"
+        "lastVerifiedAt": "2026-09-29T09:23:45.662Z"
       }
     },
     "Chandigarh": {
@@ -1976,7 +1976,7 @@
         "condition": "Clear Sky",
         "icon": "☀️",
         "category": "clear",
-        "lastUpdatedAt": "2026-09-29T09:17:48.233Z"
+        "lastUpdatedAt": "2026-09-29T09:23:45.662Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -2001,7 +2001,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "NH-152D & NH-44 Express Corridor",
-        "lastVerifiedAt": "2026-09-29T09:17:48.233Z"
+        "lastVerifiedAt": "2026-09-29T09:23:45.662Z"
       }
     },
     "Amritsar": {
@@ -2026,7 +2026,7 @@
         "condition": "Clear Sky",
         "icon": "☀️",
         "category": "clear",
-        "lastUpdatedAt": "2026-09-29T09:17:48.233Z"
+        "lastUpdatedAt": "2026-09-29T09:23:45.662Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -2051,7 +2051,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "NH-3 (Amritsar-Jalandhar-Delhi)",
-        "lastVerifiedAt": "2026-09-29T09:17:48.233Z"
+        "lastVerifiedAt": "2026-09-29T09:23:45.662Z"
       }
     },
     "Punjab": {
@@ -2076,7 +2076,7 @@
         "condition": "Clear Sky",
         "icon": "☀️",
         "category": "clear",
-        "lastUpdatedAt": "2026-09-29T09:17:48.233Z"
+        "lastUpdatedAt": "2026-09-29T09:23:45.662Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -2101,7 +2101,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "NH-3 (Amritsar-Jalandhar-Delhi Expressway)",
-        "lastVerifiedAt": "2026-09-29T09:17:48.233Z"
+        "lastVerifiedAt": "2026-09-29T09:23:45.662Z"
       }
     },
     "Leh Ladakh": {
@@ -2126,7 +2126,7 @@
         "condition": "Mainly Clear",
         "icon": "🌤️",
         "category": "clear",
-        "lastUpdatedAt": "2026-09-29T09:17:48.233Z"
+        "lastUpdatedAt": "2026-09-29T09:23:45.662Z"
       },
       "disaster": {
         "alertTier": "YELLOW",
@@ -2151,7 +2151,7 @@
         "source": "USGS Live Indian Subcontinent Seismic Network",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "Leh-Manali Highway & Zoji La Route (17,582 ft Khardung La)",
-        "lastVerifiedAt": "2026-09-29T09:17:48.233Z"
+        "lastVerifiedAt": "2026-09-29T09:23:45.662Z"
       }
     },
     "Leh": {
@@ -2176,7 +2176,7 @@
         "condition": "Mainly Clear",
         "icon": "🌤️",
         "category": "clear",
-        "lastUpdatedAt": "2026-09-29T09:17:48.233Z"
+        "lastUpdatedAt": "2026-09-29T09:23:45.662Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -2201,7 +2201,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "Leh-Manali Highway & Khardung La Pass",
-        "lastVerifiedAt": "2026-09-29T09:17:48.233Z"
+        "lastVerifiedAt": "2026-09-29T09:23:45.662Z"
       }
     },
     "Bengaluru": {
@@ -2226,7 +2226,7 @@
         "condition": "Overcast",
         "icon": "☁️",
         "category": "cloudy",
-        "lastUpdatedAt": "2026-09-29T09:17:48.233Z"
+        "lastUpdatedAt": "2026-09-29T09:23:45.662Z"
       },
       "disaster": {
         "alertTier": "YELLOW",
@@ -2251,7 +2251,7 @@
         "source": "GDACS (United Nations & European Commission)",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "NH-44 & NH-75 Arterials",
-        "lastVerifiedAt": "2026-09-29T09:17:48.233Z"
+        "lastVerifiedAt": "2026-09-29T09:23:45.662Z"
       }
     },
     "Chennai": {
@@ -2276,7 +2276,7 @@
         "condition": "Light Drizzle",
         "icon": "🌦️",
         "category": "rain",
-        "lastUpdatedAt": "2026-09-29T09:17:48.233Z"
+        "lastUpdatedAt": "2026-09-29T09:23:45.662Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -2301,7 +2301,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "East Coast Road (ECR) / NH-48",
-        "lastVerifiedAt": "2026-09-29T09:17:48.233Z"
+        "lastVerifiedAt": "2026-09-29T09:23:45.662Z"
       }
     },
     "Hyderabad": {
@@ -2326,7 +2326,7 @@
         "condition": "Partly Cloudy",
         "icon": "⛅",
         "category": "cloudy",
-        "lastUpdatedAt": "2026-09-29T09:17:48.233Z"
+        "lastUpdatedAt": "2026-09-29T09:23:45.662Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -2351,7 +2351,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "Nehru Outer Ring Road / NH-44",
-        "lastVerifiedAt": "2026-09-29T09:17:48.233Z"
+        "lastVerifiedAt": "2026-09-29T09:23:45.662Z"
       }
     },
     "Kochi": {
@@ -2376,7 +2376,7 @@
         "condition": "Overcast",
         "icon": "☁️",
         "category": "cloudy",
-        "lastUpdatedAt": "2026-09-29T09:17:48.233Z"
+        "lastUpdatedAt": "2026-09-29T09:23:45.662Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -2401,7 +2401,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "NH-66 / NH-85 (Kochi-Munnar)",
-        "lastVerifiedAt": "2026-09-29T09:17:48.233Z"
+        "lastVerifiedAt": "2026-09-29T09:23:45.662Z"
       }
     },
     "Kerala": {
@@ -2426,7 +2426,7 @@
         "condition": "Overcast",
         "icon": "☁️",
         "category": "cloudy",
-        "lastUpdatedAt": "2026-09-29T09:17:48.233Z"
+        "lastUpdatedAt": "2026-09-29T09:23:45.662Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -2451,7 +2451,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "NH-66 Coastal Corridor & NH-85 Gap Road",
-        "lastVerifiedAt": "2026-09-29T09:17:48.233Z"
+        "lastVerifiedAt": "2026-09-29T09:23:45.662Z"
       }
     },
     "Vizag": {
@@ -2476,7 +2476,7 @@
         "condition": "Mainly Clear",
         "icon": "🌤️",
         "category": "clear",
-        "lastUpdatedAt": "2026-09-29T09:17:48.233Z"
+        "lastUpdatedAt": "2026-09-29T09:23:45.662Z"
       },
       "disaster": {
         "alertTier": "RED",
@@ -2501,7 +2501,7 @@
         "source": "NASA Earth Observatory (EONET Satellite)",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "NH-16 Coastal Expressway & Araku Ghat",
-        "lastVerifiedAt": "2026-09-29T09:17:48.233Z"
+        "lastVerifiedAt": "2026-09-29T09:23:45.662Z"
       }
     },
     "Ooty": {
@@ -2526,7 +2526,7 @@
         "condition": "Light Drizzle",
         "icon": "🌦️",
         "category": "rain",
-        "lastUpdatedAt": "2026-09-29T09:17:48.233Z"
+        "lastUpdatedAt": "2026-09-29T09:23:45.662Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -2551,7 +2551,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "Nilgiri Mountain Ghat Road (36 Hairpin Bends)",
-        "lastVerifiedAt": "2026-09-29T09:17:48.233Z"
+        "lastVerifiedAt": "2026-09-29T09:23:45.662Z"
       }
     },
     "Pondicherry": {
@@ -2576,7 +2576,7 @@
         "condition": "Light Drizzle",
         "icon": "🌦️",
         "category": "rain",
-        "lastUpdatedAt": "2026-09-29T09:17:48.233Z"
+        "lastUpdatedAt": "2026-09-29T09:23:45.662Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -2601,7 +2601,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "East Coast Road (Scenic Coastal Highway)",
-        "lastVerifiedAt": "2026-09-29T09:17:48.233Z"
+        "lastVerifiedAt": "2026-09-29T09:23:45.662Z"
       }
     },
     "Hampi": {
@@ -2626,7 +2626,7 @@
         "condition": "Light Drizzle",
         "icon": "🌦️",
         "category": "rain",
-        "lastUpdatedAt": "2026-09-29T09:17:48.233Z"
+        "lastUpdatedAt": "2026-09-29T09:23:45.662Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -2651,7 +2651,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "NH-50 & Tungabhadra Heritage Ring Road",
-        "lastVerifiedAt": "2026-09-29T09:17:48.233Z"
+        "lastVerifiedAt": "2026-09-29T09:23:45.662Z"
       }
     },
     "Andaman": {
@@ -2676,7 +2676,7 @@
         "condition": "Mainly Clear",
         "icon": "🌤️",
         "category": "clear",
-        "lastUpdatedAt": "2026-09-29T09:17:48.233Z"
+        "lastUpdatedAt": "2026-09-29T09:23:45.662Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -2701,7 +2701,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "Andaman Trunk Road (ATR) & Island Ferries",
-        "lastVerifiedAt": "2026-09-29T09:17:48.233Z"
+        "lastVerifiedAt": "2026-09-29T09:23:45.662Z"
       }
     },
     "Guwahati": {
@@ -2726,7 +2726,7 @@
         "condition": "Clear Sky",
         "icon": "☀️",
         "category": "clear",
-        "lastUpdatedAt": "2026-09-29T09:17:48.233Z"
+        "lastUpdatedAt": "2026-09-29T09:23:45.662Z"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -2751,7 +2751,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "NH-27 / Guwahati-Shillong Highway",
-        "lastVerifiedAt": "2026-09-29T09:17:48.233Z"
+        "lastVerifiedAt": "2026-09-29T09:23:45.662Z"
       }
     }
   },
@@ -2779,7 +2779,7 @@
       "corridor": "NH-3 (Chandigarh-Manali)",
       "movementStatus": "TRAVEL HAZARDOUS / ROUTES SUSPENDED",
       "source": "Himachal Pradesh SDMA & NDMA Geological Warning System",
-      "timestamp": "2026-09-29T09:17:48.233Z"
+      "timestamp": "2026-09-29T09:23:45.662Z"
     },
     {
       "destination": "Rohtang Pass",
@@ -2790,7 +2790,7 @@
       "corridor": "Manali-Leh Highway (13,058 ft)",
       "movementStatus": "MOVEMENT POSSIBLE WITH CAUTION",
       "source": "BRO Project Deepak & Lahaul-Spiti District Police",
-      "timestamp": "2026-09-29T09:17:48.233Z"
+      "timestamp": "2026-09-29T09:23:45.662Z"
     },
     {
       "destination": "Chitkul",
@@ -2801,7 +2801,7 @@
       "corridor": "Kinnaur Valley Indo-Tibet Border Road",
       "movementStatus": "MOVEMENT POSSIBLE WITH CAUTION",
       "source": "USGS Live Indian Subcontinent Seismic Network",
-      "timestamp": "2026-09-29T09:17:48.233Z"
+      "timestamp": "2026-09-29T09:23:45.662Z"
     },
     {
       "destination": "Rishikesh",
@@ -2812,7 +2812,7 @@
       "corridor": "NH-7 All-Weather Badrinath Route",
       "movementStatus": "MOVEMENT POSSIBLE WITH CAUTION",
       "source": "Uttarakhand State Disaster Management Authority (USDMA)",
-      "timestamp": "2026-09-29T09:17:48.233Z"
+      "timestamp": "2026-09-29T09:23:45.662Z"
     },
     {
       "destination": "Darjeeling",
@@ -2823,7 +2823,7 @@
       "corridor": "Rohini Road / Hill Cart Road (NH-110)",
       "movementStatus": "MOVEMENT POSSIBLE WITH CAUTION",
       "source": "West Bengal Disaster Management Department & PWD Hills",
-      "timestamp": "2026-09-29T09:17:48.233Z"
+      "timestamp": "2026-09-29T09:23:45.662Z"
     },
     {
       "destination": "Puri",
@@ -2834,7 +2834,7 @@
       "corridor": "NH-316 (Bhubaneswar-Puri Highway)",
       "movementStatus": "TRAVEL HAZARDOUS / ROUTES SUSPENDED",
       "source": "India Meteorological Department (IMD) Cyclone Warning Division & Odisha OSDMA",
-      "timestamp": "2026-09-29T09:17:48.233Z"
+      "timestamp": "2026-09-29T09:23:45.662Z"
     },
     {
       "destination": "Dawki",
@@ -2845,7 +2845,7 @@
       "corridor": "NH-206 Indo-Bangladesh Border Highway",
       "movementStatus": "MOVEMENT POSSIBLE WITH CAUTION",
       "source": "Meghalaya State Disaster Management Authority (MSDMA)",
-      "timestamp": "2026-09-29T09:17:48.233Z"
+      "timestamp": "2026-09-29T09:23:45.662Z"
     },
     {
       "destination": "Lucknow",
@@ -2856,7 +2856,7 @@
       "corridor": "Purvanchal & Agra-Lucknow Expressways",
       "movementStatus": "TRAVEL HAZARDOUS / ROUTES SUSPENDED",
       "source": "GDACS (United Nations & European Commission)",
-      "timestamp": "2026-09-29T09:17:48.233Z"
+      "timestamp": "2026-09-29T09:23:45.662Z"
     },
     {
       "destination": "Pune",
@@ -2867,7 +2867,7 @@
       "corridor": "Mumbai-Pune Expressway / NH-48",
       "movementStatus": "MOVEMENT POSSIBLE WITH CAUTION",
       "source": "GDACS (United Nations & European Commission)",
-      "timestamp": "2026-09-29T09:17:48.233Z"
+      "timestamp": "2026-09-29T09:23:45.662Z"
     },
     {
       "destination": "Leh Ladakh",
@@ -2878,7 +2878,7 @@
       "corridor": "Leh-Manali Highway & Zoji La Route (17,582 ft Khardung La)",
       "movementStatus": "MOVEMENT POSSIBLE WITH CAUTION",
       "source": "USGS Live Indian Subcontinent Seismic Network",
-      "timestamp": "2026-09-29T09:17:48.233Z"
+      "timestamp": "2026-09-29T09:23:45.662Z"
     },
     {
       "destination": "Bengaluru",
@@ -2889,7 +2889,7 @@
       "corridor": "NH-44 & NH-75 Arterials",
       "movementStatus": "MOVEMENT POSSIBLE WITH CAUTION",
       "source": "GDACS (United Nations & European Commission)",
-      "timestamp": "2026-09-29T09:17:48.233Z"
+      "timestamp": "2026-09-29T09:23:45.662Z"
     },
     {
       "destination": "Vizag",
@@ -2900,7 +2900,7 @@
       "corridor": "NH-16 Coastal Expressway & Araku Ghat",
       "movementStatus": "TRAVEL HAZARDOUS / ROUTES SUSPENDED",
       "source": "NASA Earth Observatory (EONET Satellite)",
-      "timestamp": "2026-09-29T09:17:48.233Z"
+      "timestamp": "2026-09-29T09:23:45.662Z"
     }
   ]
 }

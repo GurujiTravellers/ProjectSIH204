@@ -510,27 +510,11 @@ router.post("/verify-otp", async (req, res) => {
 // ==========================================
 router.get("/me", authMiddleware, async (req, res) => {
   try {
-    let user = null;
-    try {
-      if (req.userId && typeof req.userId === "string" && !req.userId.startsWith("user_") && !req.userId.startsWith("g_usr_") && !req.userId.startsWith("fb_usr_")) {
-        user = await User.findById(req.userId).select("-password -emailOtp -phoneOtp").maxTimeMS(4000);
-      }
-    } catch (dbErr) {
-      console.warn("MongoDB /me error:", dbErr.message);
-    }
+    const user = await User.findById(req.userId).select("-password -emailOtp -phoneOtp");
 
     if (!user) {
-      return res.status(200).json({
-        user: {
-          id: req.userId || "user_demo",
-          _id: req.userId || "user_demo",
-          name: "Sounava Karmakar",
-          email: "karmakarsounava@gmail.com",
-          phone: "",
-          isEmailVerified: true,
-          isPhoneVerified: false,
-          authProvider: "google",
-        },
+      return res.status(404).json({
+        message: "User not found",
       });
     }
 
@@ -539,17 +523,8 @@ router.get("/me", authMiddleware, async (req, res) => {
     });
   } catch (error) {
     console.error("Get user error:", error.message);
-    res.status(200).json({
-      user: {
-        id: req.userId || "user_demo",
-        _id: req.userId || "user_demo",
-        name: "Sounava Karmakar",
-        email: "karmakarsounava@gmail.com",
-        phone: "",
-        isEmailVerified: true,
-        isPhoneVerified: false,
-        authProvider: "google",
-      },
+    res.status(500).json({
+      message: "Server error while getting user",
     });
   }
 });
