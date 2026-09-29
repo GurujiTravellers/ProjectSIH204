@@ -91,8 +91,9 @@ router.get("/alerts", async (req, res) => {
     console.error("Disaster alerts error:", error);
     res.json({
       success: true,
-      count: ACTIVE_DISASTER_ALERTS.length,
-      alerts: ACTIVE_DISASTER_ALERTS,
+      count: 0,
+      alerts: [],
+      message: "Live disaster feeds temporarily unavailable. No active emergency events verified.",
       timestamp: new Date().toISOString(),
     });
   }

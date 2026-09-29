@@ -23,7 +23,6 @@ const path = require("path");
 const {
   INDIA_LOCATIONS,
   findNearestIndiaLocation,
-  getVerifiedIndianDirectives,
   haversineDistanceKm,
 } = require("./realDisasterService");
 
@@ -115,6 +114,18 @@ let liveDatabase = {
   ],
   recentEventsTimeline: [],
 };
+
+// Immediately load cached database snapshot from disk on startup if present
+try {
+  if (fs.existsSync(DB_FILE_PATH)) {
+    const saved = JSON.parse(fs.readFileSync(DB_FILE_PATH, "utf8"));
+    if (saved && saved.destinations && Object.keys(saved.destinations).length > 0) {
+      liveDatabase = { ...liveDatabase, ...saved, isSyncing: false };
+    }
+  }
+} catch (e) {
+  // Ignore initial read error
+}
 
 let syncTimerId = null;
 
@@ -501,16 +512,16 @@ async function fetchTomorrowIoWeather(lat, lon) {
     return {
       temperature: values.temperature != null ? Math.round(values.temperature * 10) / 10 : null,
       apparentTemperature: values.temperatureApparent != null ? Math.round(values.temperatureApparent * 10) / 10 : null,
-      humidity: values.humidity != null ? Math.round(values.humidity) : 60,
+      humidity: values.humidity != null ? Math.round(values.humidity) : null,
       precipitation: values.precipitationIntensity != null ? Math.round(values.precipitationIntensity * 10) / 10 : 0,
       rain: values.rainIntensity != null ? Math.round(values.rainIntensity * 10) / 10 : 0,
-      windSpeed: values.windSpeed != null ? Math.round(values.windSpeed * 3.6) : 10, // m/s to km/h
-      windDirection: values.windDirection != null ? values.windDirection : 0,
-      windCompass: getWindCompass(values.windDirection),
-      windGusts: values.windGust != null ? Math.round(values.windGust * 3.6) : 15,
-      pressure: values.pressureSurfaceLevel != null ? Math.round(values.pressureSurfaceLevel) : 1013,
-      visibility: values.visibility != null ? Math.round(values.visibility * 10) / 10 : 10.0,
-      uvIndex: values.uvIndex != null ? Math.round(values.uvIndex) : 5,
+      windSpeed: values.windSpeed != null ? Math.round(values.windSpeed * 3.6) : null, // m/s to km/h
+      windDirection: values.windDirection != null ? values.windDirection : null,
+      windCompass: values.windDirection != null ? getWindCompass(values.windDirection) : "",
+      windGusts: values.windGust != null ? Math.round(values.windGust * 3.6) : null,
+      pressure: values.pressureSurfaceLevel != null ? Math.round(values.pressureSurfaceLevel) : null,
+      visibility: values.visibility != null ? Math.round(values.visibility * 10) / 10 : null,
+      uvIndex: values.uvIndex != null ? Math.round(values.uvIndex) : null,
       weatherCode: code,
       condition: mapped.label,
       icon: mapped.icon,
@@ -701,7 +712,6 @@ async function syncDatabaseNow() {
       fetchAllLocationsWeather(),
     ]);
 
-    const groundDirectives = getVerifiedIndianDirectives();
     const destinationMap = {};
 
     let disasterZonesCount = 0;
@@ -814,30 +824,7 @@ async function syncDatabaseNow() {
         sourceName = "Open-Meteo Satellite Radar";
       }
 
-      // Rule B: Overlay verified ground directives (Manali Landslide, Puri Cyclone, Rohtang gate, Rishikesh spate)
-      const matchingDirective = groundDirectives.find((d) => d.destination.toLowerCase() === key);
-      if (matchingDirective) {
-        alertTier = matchingDirective.alertTier;
-        severity = matchingDirective.severity;
-        isDisasterZone = matchingDirective.isDisasterZone;
-        isModerateAdvisory = matchingDirective.isModerateAdvisory;
-        isRainAlert = false;
-        isNormal = false;
-        status = matchingDirective.status;
-        colorCode = matchingDirective.colorCode;
-        badgeLabel = matchingDirective.badgeLabel;
-        movementStatus = matchingDirective.movementStatus;
-        movementFeasible = matchingDirective.movementFeasible;
-        hazardType = matchingDirective.disasterType;
-        title = matchingDirective.title;
-        description = matchingDirective.description;
-        advice = matchingDirective.evacuationAdvice || matchingDirective.movementAdvice || advice;
-        activeThreat = matchingDirective.disasterType;
-        activeBulletinId = matchingDirective.id;
-        sourceName = matchingDirective.source || "NDMA / IMD Ground Directives";
-      }
-
-      // Rule C: Overlay live GDACS events (Global Disaster Alert and Coordination System)
+      // Rule B: Overlay live GDACS events (Global Disaster Alert and Coordination System)
       const gdacs = gdacsEvents.find((g) => g.destination.toLowerCase() === key);
       if (gdacs && (gdacs.alertTier === "RED" || (gdacs.alertTier === "YELLOW" && alertTier !== "RED"))) {
         alertTier = gdacs.alertTier;

@@ -299,7 +299,7 @@ function getWeatherSummary(weatherCode) {
   return { icon: "🌤️", label: "Mixed Weather", category: "mixed" };
 }
 
-function computeReliefTelemetry(precipSum = 0, precipProb = 0, windGust = 0, tempMax = 25, tempMin = 15, weatherCode = 0) {
+function computeReliefTelemetry(precipSum = 0, precipProb = 0, windGust = 0, tempMax = null, tempMin = null, weatherCode = 0) {
   let riskTier = "GREEN";
   let reliefStatus = "NORMAL / ROUTINE STANDBY";
   let safeTransitWindow = "06:00 AM - 07:00 PM (Optimal daylight & clear roads)";
@@ -327,7 +327,7 @@ function computeReliefTelemetry(precipSum = 0, precipProb = 0, windGust = 0, tem
       "Emergency VHF wireless / satellite emergency beacon",
       "High-clearance 4x4 utility relief vehicle with winches"
     ];
-  } else if (precipSum >= 12 || windGust >= 45 || tempMin <= 0 || tempMax >= 42) {
+  } else if (precipSum >= 12 || windGust >= 45 || (tempMin != null && tempMin <= 0) || (tempMax != null && tempMax >= 42)) {
     riskTier = "YELLOW";
     reliefStatus = "MODERATE ADVISORY / CAUTION STANDBY";
     safeTransitWindow = "07:30 AM - 04:30 PM (Proceed with caution during full daylight)";
@@ -555,8 +555,8 @@ async function getWeatherForecast(
         precipSum,
         daily.precipitation_probability_max?.[index] ?? 0,
         windGust,
-        daily.temperature_2m_max?.[index] ?? 25,
-        daily.temperature_2m_min?.[index] ?? 15,
+        daily.temperature_2m_max?.[index] ?? null,
+        daily.temperature_2m_min?.[index] ?? null,
         code
       );
 

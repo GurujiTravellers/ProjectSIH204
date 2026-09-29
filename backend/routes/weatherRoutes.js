@@ -154,6 +154,16 @@ router.get("/destination/:name", async (req, res) => {
 
     // 1. Check Tomorrow.io real-time & forecast if key is available
     try {
+      const tomorrowLive = await fetchTomorrowIoWeather(coords.lat, coords.lon);
+      if (tomorrowLive && tomorrowLive.temperature != null) {
+        liveProvider = "Tomorrow.io Realtime API";
+        syncedData.weather = {
+          ...syncedData.weather,
+          ...tomorrowLive,
+          provider: "Tomorrow.io Realtime API",
+        };
+      }
+
       const tomorrowForecast = await fetchTomorrowIoForecast(coords.lat, coords.lon);
       if (tomorrowForecast && tomorrowForecast.timelines?.hourly) {
         liveProvider = "Tomorrow.io Live Weather & Forecast";
@@ -161,14 +171,14 @@ router.get("/destination/:name", async (req, res) => {
           time: h.time,
           temperature: h.values?.temperature != null ? Math.round(h.values.temperature * 10) / 10 : null,
           apparentTemperature: h.values?.temperatureApparent != null ? Math.round(h.values.temperatureApparent * 10) / 10 : null,
-          humidity: h.values?.humidity != null ? Math.round(h.values.humidity) : 60,
+          humidity: h.values?.humidity != null ? Math.round(h.values.humidity) : null,
           precipitation: h.values?.precipitationIntensity != null ? Math.round(h.values.precipitationIntensity * 10) / 10 : 0,
-          precipitationProbability: h.values?.precipitationProbability ?? 0,
-          windSpeed: h.values?.windSpeed != null ? Math.round(h.values.windSpeed * 3.6) : 10,
-          windDirection: h.values?.windDirection ?? 0,
-          pressure: h.values?.pressureSurfaceLevel != null ? Math.round(h.values.pressureSurfaceLevel) : 1013,
-          visibility: h.values?.visibility != null ? Math.round(h.values.visibility * 10) / 10 : 10.0,
-          weatherCode: h.values?.weatherCode ?? 1000,
+          precipitationProbability: h.values?.precipitationProbability ?? null,
+          windSpeed: h.values?.windSpeed != null ? Math.round(h.values.windSpeed * 3.6) : null,
+          windDirection: h.values?.windDirection ?? null,
+          pressure: h.values?.pressureSurfaceLevel != null ? Math.round(h.values.pressureSurfaceLevel) : null,
+          visibility: h.values?.visibility != null ? Math.round(h.values.visibility * 10) / 10 : null,
+          weatherCode: h.values?.weatherCode ?? null,
         }));
 
         hourlyForecast = tomorrowHourly;
