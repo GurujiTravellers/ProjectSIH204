@@ -1453,7 +1453,7 @@ export default function Weather() {
                       borderTop: "1px solid #f1f5f9",
                       display: "flex",
                       gap: "10px",
-                      background: "#fafafa",
+                      background: "#ffffff",
                     }}
                   >
                     <button

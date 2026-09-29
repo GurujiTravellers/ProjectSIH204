@@ -1328,8 +1328,8 @@ export default function EmergencyRadarMap({
         style={{
           marginTop: "14px",
           padding: "12px 16px",
-          background: isEmergencyMode ? "#1a2e1d" : "#f0fdf4",
-          border: "1px solid #86efac",
+          background: isEmergencyMode ? "#1a2e1d" : "#ffffff",
+          border: isEmergencyMode ? "1px solid #4a1d1d" : "1px solid #e2e8f0",
           borderRadius: "10px",
           display: "flex",
           alignItems: "center",
@@ -1340,7 +1340,7 @@ export default function EmergencyRadarMap({
       >
         <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
           <span style={{ fontSize: "15px" }}>🛡️</span>
-          <span style={{ fontSize: "12px", fontWeight: "800", color: "#166534" }}>
+          <span style={{ fontSize: "12px", fontWeight: "800", color: "#18221d" }}>
             Recommended Safe Travel Havens Today:
           </span>
           {["Jaipur", "Shimla", "Varanasi", "Agra", "Goa", "Kochi", "Bengaluru"].map((safeName) => (

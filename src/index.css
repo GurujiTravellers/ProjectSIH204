@@ -26369,12 +26369,12 @@ body * {
   position: relative !important;
   overflow: hidden !important;
   z-index: 1 !important;
-  background-color: #18221d !important;
+  background-color: #ffffff !important;
   background-image: linear-gradient(to top, #43d79c, #43d79c) !important;
   background-repeat: no-repeat !important;
   background-position: bottom center !important;
   background-size: 100% 0% !important;
-  color: #ffffff !important;
+  color: #18221d !important;
   border: 1.5px solid #18221d !important;
   border-radius: 8px !important;
   padding: 10px 18px !important;
@@ -26385,7 +26385,7 @@ body * {
   align-items: center !important;
   justify-content: center !important;
   gap: 8px !important;
-  box-shadow: 0 2px 6px rgba(24, 34, 29, 0.15) !important;
+  box-shadow: 0 2px 6px rgba(24, 34, 29, 0.08) !important;
   transition: background-size 0.38s cubic-bezier(0.2, 0.9, 0.3, 1),
               transform 0.25s cubic-bezier(0.2, 0.9, 0.3, 1),
               color 0.25s ease,
@@ -27826,15 +27826,15 @@ h1, h2, h3, .section-heading h2 {
 }
 
 .weather-sync-btn {
-  background-color: #18221d !important;
-  border: 1.5px solid #43d79c !important;
-  color: #43d79c !important;
+  background-color: #ffffff !important;
+  border: 1.5px solid #18221d !important;
+  color: #18221d !important;
   background-image: linear-gradient(to top, #43d79c, #43d79c) !important;
 }
 .weather-sync-btn:hover {
   background-size: 100% 100% !important;
   color: #000000 !important;
-  border-color: #43d79c !important;
+  border-color: #000000 !important;
   box-shadow: 0 6px 20px rgba(67, 215, 156, 0.38) !important;
   transform: translateY(-2px) !important;
 }
@@ -27843,9 +27843,9 @@ h1, h2, h3, .section-heading h2 {
 }
 
 .weather-radar-action-btn {
-  background-color: #18221d !important;
+  background-color: #ffffff !important;
   border: 1.5px solid #18221d !important;
-  color: #ffffff !important;
+  color: #18221d !important;
   background-image: linear-gradient(to top, #43d79c, #43d79c) !important;
 }
 .weather-radar-action-btn:hover {
@@ -27876,10 +27876,11 @@ h1, h2, h3, .section-heading h2 {
   color: #000000 !important;
 }
 .weather-filter-btn.active {
-  background-color: #18221d !important;
-  color: #43d79c !important;
-  border-color: #18221d !important;
-  box-shadow: 0 4px 12px rgba(24, 34, 29, 0.25) !important;
+  background-color: #ffffff !important;
+  color: #18221d !important;
+  border-color: #43d79c !important;
+  border-width: 2px !important;
+  box-shadow: 0 0 0 2px rgba(67, 215, 156, 0.25) !important;
 }
 
 .weather-forecast-btn {
@@ -27900,9 +27901,9 @@ h1, h2, h3, .section-heading h2 {
 }
 
 .weather-plan-btn {
-  background-color: #18221d !important;
+  background-color: #ffffff !important;
   border: 1.5px solid #18221d !important;
-  color: #ffffff !important;
+  color: #18221d !important;
   background-image: linear-gradient(to top, #43d79c, #43d79c) !important;
 }
 .weather-plan-btn:hover {
@@ -27917,9 +27918,9 @@ h1, h2, h3, .section-heading h2 {
 }
 
 .weather-detour-btn {
-  background-color: #18221d !important;
+  background-color: #ffffff !important;
   border: 1.5px solid #18221d !important;
-  color: #43d79c !important;
+  color: #18221d !important;
   background-image: linear-gradient(to top, #43d79c, #43d79c) !important;
 }
 .weather-detour-btn:hover {
@@ -27987,18 +27988,19 @@ h1, h2, h3, .section-heading h2 {
   transform: translateY(-1px) !important;
 }
 .radar-control-btn.active {
-  background-color: #18221d !important;
-  color: #43d79c !important;
-  border-color: #18221d !important;
-  box-shadow: 0 2px 8px rgba(24, 34, 29, 0.25) !important;
+  background-color: #ffffff !important;
+  color: #18221d !important;
+  border-color: #43d79c !important;
+  border-width: 2px !important;
+  box-shadow: 0 2px 8px rgba(67, 215, 156, 0.25) !important;
 }
 
 .radar-layer-btn {
   position: relative !important;
   overflow: hidden !important;
-  background-color: rgba(24, 34, 29, 0.85) !important;
-  color: #ffffff !important;
-  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  background-color: #ffffff !important;
+  color: #18221d !important;
+  border: 1.5px solid #cbd5e1 !important;
   border-radius: 8px !important;
   padding: 5px 12px !important;
   font-size: 12px !important;
@@ -28010,16 +28012,18 @@ h1, h2, h3, .section-heading h2 {
   transition: all 0.2s ease !important;
 }
 .radar-layer-btn:hover {
-  border-color: #43d79c !important;
-  color: #43d79c !important;
+  border-color: #18221d !important;
+  color: #000000 !important;
+  background-color: #43d79c !important;
   transform: translateY(-1px) !important;
 }
 .radar-layer-btn.active {
-  background-color: #43d79c !important;
+  background-color: #ffffff !important;
   color: #18221d !important;
   border-color: #43d79c !important;
+  border-width: 2px !important;
   font-weight: 800 !important;
-  box-shadow: 0 2px 10px rgba(67, 215, 156, 0.4) !important;
+  box-shadow: 0 2px 10px rgba(67, 215, 156, 0.35) !important;
 }
 
 .radar-haven-btn {
@@ -28076,9 +28080,9 @@ h1, h2, h3, .section-heading h2 {
 }
 
 .disaster-status-badge {
-  background: #18221d !important;
-  color: #43d79c !important;
-  border: 1px solid #43d79c !important;
+  background: #ffffff !important;
+  color: #18221d !important;
+  border: 1.5px solid #43d79c !important;
   padding: 3px 10px !important;
   border-radius: 12px !important;
   font-size: 12px !important;
@@ -28088,7 +28092,7 @@ h1, h2, h3, .section-heading h2 {
   gap: 6px !important;
 }
 
-/* Emergency Hub Buttons - Uniform 2-color Brand Behavior */
+/* Emergency Hub Buttons - Uniform White Base with Brand Hover */
 .emg-hub-btn,
 .emg-hub-btn.btn-red,
 .emg-hub-btn.btn-blue,
@@ -28099,12 +28103,12 @@ h1, h2, h3, .section-heading h2 {
   position: relative !important;
   overflow: hidden !important;
   z-index: 1 !important;
-  background-color: #18221d !important;
+  background-color: #ffffff !important;
   background-image: linear-gradient(to top, #43d79c, #43d79c) !important;
   background-repeat: no-repeat !important;
   background-position: bottom center !important;
   background-size: 100% 0% !important;
-  color: #ffffff !important;
+  color: #18221d !important;
   border: 1.5px solid #18221d !important;
   border-radius: 8px !important;
   padding: 10px 18px !important;
@@ -28115,7 +28119,7 @@ h1, h2, h3, .section-heading h2 {
   align-items: center !important;
   justify-content: center !important;
   gap: 8px !important;
-  box-shadow: 0 2px 6px rgba(24, 34, 29, 0.12) !important;
+  box-shadow: 0 2px 6px rgba(24, 34, 29, 0.08) !important;
   transition: background-size 0.38s cubic-bezier(0.2, 0.9, 0.3, 1),
               transform 0.25s cubic-bezier(0.2, 0.9, 0.3, 1),
               color 0.25s ease,
