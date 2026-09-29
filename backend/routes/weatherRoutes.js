@@ -14,7 +14,7 @@ const {
 const router = express.Router();
 
 const GEOCODING_URL = "https://geocoding-api.open-meteo.com/v1/search";
-const WEATHER_URL = "https://api.open-meteo.com/v1/forecast";
+const WEATHER_URL = process.env.OPEN_METEO_API_URL || "https://api.open-meteo.com/v1/forecast";
 
 /**
  * 0. GET REAL-TIME WEATHER RADAR CAPABILITIES & LIVE PROVIDER TILES
@@ -159,8 +159,8 @@ router.get("/destination/:name", async (req, res) => {
         liveProvider = "Tomorrow.io Live Weather & Forecast";
         const tomorrowHourly = (tomorrowForecast.timelines.hourly || []).slice(0, 24).map((h) => ({
           time: h.time,
-          temperature: h.values?.temperature != null ? Math.round(h.values.temperature * 10) / 10 : 24,
-          apparentTemperature: h.values?.temperatureApparent != null ? Math.round(h.values.temperatureApparent * 10) / 10 : 24,
+          temperature: h.values?.temperature != null ? Math.round(h.values.temperature * 10) / 10 : null,
+          apparentTemperature: h.values?.temperatureApparent != null ? Math.round(h.values.temperatureApparent * 10) / 10 : null,
           humidity: h.values?.humidity != null ? Math.round(h.values.humidity) : 60,
           precipitation: h.values?.precipitationIntensity != null ? Math.round(h.values.precipitationIntensity * 10) / 10 : 0,
           precipitationProbability: h.values?.precipitationProbability ?? 0,
@@ -179,11 +179,11 @@ router.get("/destination/:name", async (req, res) => {
             source: "Tomorrow.io Forecast API",
             daily: {
               time: tomorrowDaily.map((d) => d.time),
-              temperature_2m_max: tomorrowDaily.map((d) => d.values?.temperatureMax != null ? Math.round(d.values.temperatureMax * 10) / 10 : 28),
-              temperature_2m_min: tomorrowDaily.map((d) => d.values?.temperatureMin != null ? Math.round(d.values.temperatureMin * 10) / 10 : 18),
+              temperature_2m_max: tomorrowDaily.map((d) => d.values?.temperatureMax != null ? Math.round(d.values.temperatureMax * 10) / 10 : null),
+              temperature_2m_min: tomorrowDaily.map((d) => d.values?.temperatureMin != null ? Math.round(d.values.temperatureMin * 10) / 10 : null),
               precipitation_sum: tomorrowDaily.map((d) => d.values?.precipitationSum != null ? Math.round(d.values.precipitationSum * 10) / 10 : 0),
               precipitation_probability_max: tomorrowDaily.map((d) => d.values?.precipitationProbabilityMax ?? 0),
-              wind_speed_10m_max: tomorrowDaily.map((d) => d.values?.windSpeedMax != null ? Math.round(d.values.windSpeedMax * 3.6) : 15),
+              wind_speed_10m_max: tomorrowDaily.map((d) => d.values?.windSpeedMax != null ? Math.round(d.values.windSpeedMax * 3.6) : null),
             },
           };
         }
@@ -208,15 +208,15 @@ router.get("/destination/:name", async (req, res) => {
             const h = omData.hourly;
             hourlyForecast = (h.time || []).slice(0, 24).map((t, idx) => ({
               time: t,
-              temperature: h.temperature_2m?.[idx] ?? 24,
-              apparentTemperature: h.apparent_temperature?.[idx] ?? 24,
-              humidity: h.relative_humidity_2m?.[idx] ?? 60,
+              temperature: h.temperature_2m?.[idx] != null ? Math.round(h.temperature_2m[idx] * 10) / 10 : null,
+              apparentTemperature: h.apparent_temperature?.[idx] != null ? Math.round(h.apparent_temperature[idx] * 10) / 10 : null,
+              humidity: h.relative_humidity_2m?.[idx] ?? null,
               precipitation: h.precipitation?.[idx] ?? 0,
               precipitationProbability: h.precipitation_probability?.[idx] ?? 0,
-              windSpeed: h.wind_speed_10m?.[idx] ?? 10,
+              windSpeed: h.wind_speed_10m?.[idx] != null ? Math.round(h.wind_speed_10m[idx]) : null,
               windDirection: h.wind_direction_10m?.[idx] ?? 0,
-              pressure: h.surface_pressure?.[idx] != null ? Math.round(h.surface_pressure[idx]) : 1013,
-              visibility: h.visibility?.[idx] != null ? Math.round((h.visibility[idx] / 1000) * 10) / 10 : 10.0,
+              pressure: h.surface_pressure?.[idx] != null ? Math.round(h.surface_pressure[idx]) : null,
+              visibility: h.visibility?.[idx] != null ? Math.round((h.visibility[idx] / 1000) * 10) / 10 : null,
               weatherCode: h.weather_code?.[idx] ?? 0,
             }));
           }

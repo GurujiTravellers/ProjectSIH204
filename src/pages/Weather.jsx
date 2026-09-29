@@ -873,7 +873,7 @@ export default function Weather() {
                         <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
                           <span style={{ fontSize: "30px" }}>{item.weather.icon || "🌤️"}</span>
                           <span style={{ fontSize: "28px", fontWeight: "900", color: "#0f172a" }}>
-                            {item.weather.temperature}°C
+                            {item.weather.temperature != null ? `${item.weather.temperature}°C` : "Live..."}
                           </span>
                         </div>
                         <span style={{ fontSize: "12px", color: "#475569", fontWeight: "600" }}>
@@ -898,7 +898,9 @@ export default function Weather() {
                     >
                       <div>
                         <div style={{ color: "#64748b", fontSize: "11px" }}>Feels Like</div>
-                        <strong style={{ color: "#0f172a" }}>{item.weather.apparentTemperature}°C</strong>
+                        <strong style={{ color: "#0f172a" }}>
+                          {item.weather.apparentTemperature != null ? `${item.weather.apparentTemperature}°C` : "--"}
+                        </strong>
                       </div>
                       <div>
                         <div style={{ color: "#64748b", fontSize: "11px" }}>Wind / Gusts</div>
@@ -1131,10 +1133,10 @@ export default function Weather() {
               <div>
                 <span style={{ fontSize: "11px", color: "#64748b", textTransform: "uppercase", fontWeight: "700" }}>Temperature</span>
                 <div style={{ fontSize: "20px", fontWeight: "900", color: "#0f172a" }}>
-                  {selectedDestination.weather.temperature}°C
+                  {selectedDestination.weather.temperature != null ? `${selectedDestination.weather.temperature}°C` : "Connecting..."}
                 </div>
                 <span style={{ fontSize: "11px", color: "#64748b" }}>
-                  Feels like {selectedDestination.weather.apparentTemperature || selectedDestination.weather.temperature}°C
+                  Feels like {selectedDestination.weather.apparentTemperature != null ? `${selectedDestination.weather.apparentTemperature}°C` : (selectedDestination.weather.temperature != null ? `${selectedDestination.weather.temperature}°C` : "--")}
                 </span>
               </div>
 

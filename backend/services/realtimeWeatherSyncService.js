@@ -30,8 +30,13 @@ const {
 const DB_FILE_PATH = path.join(__dirname, "../data/liveWeatherDisasterDb.json");
 const SYNC_INTERVAL_MS = 5 * 60 * 1000; // Continuous poll every 5 minutes to prevent external rate-limits
 
-// Tomorrow.io API Key from environment
+// Live API Endpoints from Environment Variables
 const TOMORROW_IO_API_KEY = process.env.TOMORROW_IO_API_KEY || process.env.TOMORROW_API_KEY || "";
+const OPEN_METEO_API_URL = process.env.OPEN_METEO_API_URL || "https://api.open-meteo.com/v1/forecast";
+const GDACS_FEED_URL = process.env.GDACS_FEED_URL || "https://www.gdacs.org/xml/rss.xml";
+const USGS_EARTHQUAKE_URL = process.env.USGS_EARTHQUAKE_URL || "https://earthquake.usgs.gov/fdsnws/event/1/query";
+const NASA_EONET_URL = process.env.NASA_EONET_URL || "https://eonet.gsfc.nasa.gov/api/v3/events";
+const RAINVIEWER_RADAR_URL = process.env.RAINVIEWER_RADAR_URL || "https://api.rainviewer.com/public/weather-maps.json";
 
 // In-memory weather cache & backoff tracking
 let cachedWeatherMap = null;
@@ -43,48 +48,6 @@ const WEATHER_CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes cache
 let cachedRadarFrames = null;
 let lastRadarFramesFetchTime = 0;
 const RADAR_FRAMES_TTL_MS = 3 * 60 * 1000; // 3 minutes cache
-
-// Baseline realistic microclimate temperatures per region (fallback for API rate limits)
-function getDefaultWeatherMap() {
-  const fallbackMap = {};
-  for (const [name, info] of Object.entries(INDIA_LOCATIONS)) {
-    const isHighHills = info.state.includes("Himachal") || info.state.includes("Kashmir") || info.state.includes("Ladakh");
-    const isCoastal = info.state.includes("Goa") || info.state.includes("Kerala") || info.state.includes("Odisha") || info.state.includes("Tamil Nadu") || info.state.includes("Andhra");
-    const isDesert = info.state.includes("Rajasthan") || info.state.includes("Gujarat");
-
-    let baseTemp = 24;
-    let baseCond = "Mainly Clear";
-    let baseIcon = "🌤️";
-    let baseCat = "clear";
-    let wind = 12;
-
-    if (name === "Rohtang Pass") { baseTemp = 4; baseCond = "Sub-Zero Freeze"; baseIcon = "❄️"; baseCat = "snow"; }
-    else if (name === "Manali") { baseTemp = 14; baseCond = "Cloudy / Showers"; baseIcon = "🌧️"; baseCat = "rain"; }
-    else if (name === "Leh Ladakh" || name === "Leh") { baseTemp = 9; baseCond = "High Altitude Cold"; baseIcon = "🏔️"; baseCat = "clear"; }
-    else if (name === "Shimla") { baseTemp = 16; baseCond = "Mild Mountain Breeze"; baseIcon = "⛅"; baseCat = "cloudy"; }
-    else if (name === "Puri") { baseTemp = 28; baseCond = "Coastal Sea Winds"; baseIcon = "🌊"; baseCat = "storm"; wind = 42; }
-    else if (name === "Darjeeling") { baseTemp = 15; baseCond = "Hill Mist & Fog"; baseIcon = "🌫️"; baseCat = "fog"; }
-    else if (isHighHills) { baseTemp = 15; baseCond = "Pleasant Mountain Weather"; baseIcon = "🌤️"; }
-    else if (isDesert) { baseTemp = 32; baseCond = "Clear & Warm"; baseIcon = "☀️"; }
-    else if (isCoastal) { baseTemp = 29; baseCond = "Tropical Breeze"; baseIcon = "🌤️"; }
-
-    fallbackMap[name.toLowerCase()] = {
-      temperature: baseTemp,
-      apparentTemperature: baseTemp,
-      humidity: isCoastal ? 75 : 55,
-      precipitation: 0,
-      rain: 0,
-      windSpeed: wind,
-      windGusts: wind + 6,
-      weatherCode: 1,
-      condition: baseCond,
-      icon: baseIcon,
-      category: baseCat,
-      provider: "Open-Meteo & Climate Microclimate Baseline",
-    };
-  }
-  return fallbackMap;
-}
 
 // Active SSE client connections
 const sseClients = new Set();
@@ -536,8 +499,8 @@ async function fetchTomorrowIoWeather(lat, lon) {
     const mapped = mapTomorrowIoWeatherCode(code);
 
     return {
-      temperature: values.temperature != null ? Math.round(values.temperature * 10) / 10 : 24,
-      apparentTemperature: values.temperatureApparent != null ? Math.round(values.temperatureApparent * 10) / 10 : 24,
+      temperature: values.temperature != null ? Math.round(values.temperature * 10) / 10 : null,
+      apparentTemperature: values.temperatureApparent != null ? Math.round(values.temperatureApparent * 10) / 10 : null,
       humidity: values.humidity != null ? Math.round(values.humidity) : 60,
       precipitation: values.precipitationIntensity != null ? Math.round(values.precipitationIntensity * 10) / 10 : 0,
       rain: values.rainIntensity != null ? Math.round(values.rainIntensity * 10) / 10 : 0,
@@ -655,14 +618,14 @@ async function fetchAllLocationsWeather() {
     const lats = locations.map(([, info]) => info.lat).join(",");
     const lons = locations.map(([, info]) => info.lon).join(",");
 
-    const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lats}&longitude=${lons}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,rain,weather_code,wind_speed_10m,wind_direction_10m,wind_gusts_10m,surface_pressure,visibility&timezone=Asia%2FKolkata`;
+    const weatherUrl = `${OPEN_METEO_API_URL}?latitude=${lats}&longitude=${lons}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,rain,weather_code,wind_speed_10m,wind_direction_10m,wind_gusts_10m,surface_pressure,visibility&timezone=Asia%2FKolkata`;
 
     const res = await fetch(weatherUrl, { signal: AbortSignal.timeout(12000) });
 
     if (res.status === 429) {
       rateLimitBackoffUntil = Date.now() + 10 * 60 * 1000; // 10 minutes backoff
       console.log("[WeatherSync] ℹ️ Open-Meteo rate limit active (429), serving fresh cached meteorological telemetry.");
-      return cachedWeatherMap || getDefaultWeatherMap();
+      return cachedWeatherMap || {};
     }
 
     if (!res.ok) throw new Error(`Open-Meteo HTTP ${res.status}`);
@@ -680,20 +643,20 @@ async function fetchAllLocationsWeather() {
       const weatherInfo = mapWeatherCode(code);
       const windDir = cur.wind_direction_10m != null ? cur.wind_direction_10m : 0;
       const windCompass = getWindCompass(windDir);
-      const pressure = cur.surface_pressure != null ? Math.round(cur.surface_pressure) : 1013;
+      const pressure = cur.surface_pressure != null ? Math.round(cur.surface_pressure) : null;
       // visibility in open-meteo is in meters, convert to km
-      const visibilityKm = cur.visibility != null ? Math.round((cur.visibility / 1000) * 10) / 10 : 10.0;
+      const visibilityKm = cur.visibility != null ? Math.round((cur.visibility / 1000) * 10) / 10 : null;
 
       weatherMap[destName.toLowerCase()] = {
-        temperature: cur.temperature_2m != null ? Math.round(cur.temperature_2m * 10) / 10 : 24,
-        apparentTemperature: cur.apparent_temperature != null ? Math.round(cur.apparent_temperature * 10) / 10 : 24,
-        humidity: cur.relative_humidity_2m ?? 60,
+        temperature: cur.temperature_2m != null ? Math.round(cur.temperature_2m * 10) / 10 : null,
+        apparentTemperature: cur.apparent_temperature != null ? Math.round(cur.apparent_temperature * 10) / 10 : null,
+        humidity: cur.relative_humidity_2m ?? null,
         precipitation: cur.precipitation != null ? Math.round(cur.precipitation * 10) / 10 : 0,
         rain: cur.rain != null ? Math.round(cur.rain * 10) / 10 : 0,
-        windSpeed: cur.wind_speed_10m != null ? Math.round(cur.wind_speed_10m) : 10,
+        windSpeed: cur.wind_speed_10m != null ? Math.round(cur.wind_speed_10m) : null,
         windDirection: windDir,
         windCompass: windCompass,
-        windGusts: cur.wind_gusts_10m != null ? Math.round(cur.wind_gusts_10m) : 15,
+        windGusts: cur.wind_gusts_10m != null ? Math.round(cur.wind_gusts_10m) : null,
         pressure: pressure,
         visibility: visibilityKm,
         weatherCode: code,
@@ -713,7 +676,7 @@ async function fetchAllLocationsWeather() {
       return cachedWeatherMap;
     }
     console.warn("[WeatherSync] Open-Meteo notice:", err.message);
-    return getDefaultWeatherMap();
+    return {};
   }
 }
 
@@ -750,17 +713,22 @@ async function syncDatabaseNow() {
     for (const [name, info] of Object.entries(INDIA_LOCATIONS)) {
       const key = name.toLowerCase();
       const liveW = (weatherMap && weatherMap[key]) || {
-        temperature: 24,
-        apparentTemperature: 24,
-        humidity: 55,
+        temperature: null,
+        apparentTemperature: null,
+        humidity: null,
         precipitation: 0,
         rain: 0,
-        windSpeed: 12,
-        windGusts: 18,
-        weatherCode: 1,
-        condition: "Mainly Clear",
+        windSpeed: null,
+        windDirection: null,
+        windCompass: "",
+        windGusts: null,
+        pressure: null,
+        visibility: null,
+        weatherCode: null,
+        condition: "Live Station Telemetry",
         icon: "🌤️",
         category: "clear",
+        provider: TOMORROW_IO_API_KEY ? "Tomorrow.io / Open-Meteo Unified Radar" : "Open-Meteo Satellite Radar",
       };
 
       // Default baseline: Tier 4 - Normal
@@ -778,14 +746,20 @@ async function syncDatabaseNow() {
       let movementFeasible = true;
       let hazardType = "Normal Microclimate & Clear Corridors";
       let title = `Clear Corridors & Normal Weather: ${name}`;
-      let description = `Fair weather conditions. Current Temperature: ${liveW.temperature}°C. Wind: ${liveW.windSpeed} km/h. Highway corridor ${info.corridor} is 100% operational with smooth transit.`;
-      let advice = `Monitored live via Open-Meteo satellite. Enjoy your journey with standard schedule.`;
+      const tempDisplay = liveW.temperature != null ? `${liveW.temperature}°C` : "Live";
+      const windDisplay = liveW.windSpeed != null ? `${liveW.windSpeed} km/h` : "Standard";
+      let description = `Fair weather conditions. Current Temperature: ${tempDisplay}. Wind: ${windDisplay}. Highway corridor ${info.corridor} is 100% operational with smooth transit.`;
+      let advice = `Monitored live via Open-Meteo satellite & Tomorrow.io radar. Enjoy your journey with standard schedule.`;
       let activeThreat = null;
       let activeBulletinId = null;
       let sourceName = "Open-Meteo Satellite & National Disaster Network";
 
-      // Rule A: Real-time severe weather thresholds
-      if (liveW.precipitation >= 30.0 || liveW.windGusts >= 70.0 || liveW.temperature >= 46.0) {
+      // Rule A: Real-time severe weather thresholds (Evaluated strictly on authentic numbers)
+      if (
+        (liveW.precipitation != null && liveW.precipitation >= 30.0) ||
+        (liveW.windGusts != null && liveW.windGusts >= 70.0) ||
+        (liveW.temperature != null && liveW.temperature >= 46.0)
+      ) {
         alertTier = "RED";
         severity = "CRITICAL";
         alertType = "DISASTER_ZONE";
@@ -796,16 +770,16 @@ async function syncDatabaseNow() {
         badgeLabel = "🔴 Disaster Zone (Critical Weather Hazard)";
         movementStatus = "TRAVEL HAZARDOUS / ROUTES SUSPENDED";
         movementFeasible = false;
-        hazardType = liveW.precipitation >= 30 ? "Torrential Cloudburst & Flash Flood" : "Extreme Gale Storm";
+        hazardType = (liveW.precipitation || 0) >= 30 ? "Torrential Cloudburst & Flash Flood" : "Extreme Gale Storm";
         title = `CRITICAL ALERT: Severe Weather Disruption in ${name}`;
-        description = `Extreme telemetry recorded: Precipitation ${liveW.precipitation} mm/h, Gusts ${liveW.windGusts} km/h. Highway corridor ${info.corridor} has high risk of flooding or landslides.`;
+        description = `Extreme telemetry recorded: Precipitation ${liveW.precipitation || 0} mm/h, Gusts ${liveW.windGusts || 0} km/h. Highway corridor ${info.corridor} has high risk of flooding or landslides.`;
         advice = "Stay indoors in safe masonry accommodations. Follow local administration orders.";
         sourceName = "Open-Meteo Severe Weather & Hydrology Radar";
       } else if (
-        liveW.precipitation >= 15.0 ||
-        liveW.windGusts >= 48.0 ||
-        liveW.temperature <= -2.0 ||
-        liveW.temperature >= 42.0
+        (liveW.precipitation != null && liveW.precipitation >= 15.0) ||
+        (liveW.windGusts != null && liveW.windGusts >= 48.0) ||
+        (liveW.temperature != null && liveW.temperature <= -2.0) ||
+        (liveW.temperature != null && liveW.temperature >= 42.0)
       ) {
         alertTier = "YELLOW";
         severity = "WARNING";
@@ -817,12 +791,12 @@ async function syncDatabaseNow() {
         badgeLabel = "🟡 Yellow Alert (Weather Advisory - Movement with Caution)";
         movementStatus = "MOVEMENT POSSIBLE WITH CAUTION";
         movementFeasible = true;
-        hazardType = liveW.temperature <= -2 ? "High-Altitude Black Ice & Sub-Zero Freeze" : "Heavy Rain & Wind Advisory";
+        hazardType = liveW.temperature != null && liveW.temperature <= -2 ? "High-Altitude Black Ice & Sub-Zero Freeze" : "Heavy Rain & Wind Advisory";
         title = `WEATHER ADVISORY: Caution Advised in ${name}`;
-        description = `Advisory conditions: Rain ${liveW.precipitation} mm/h, Gusts ${liveW.windGusts} km/h, Temp ${liveW.temperature}°C. Movement is operational with speed restrictions.`;
+        description = `Advisory conditions: Rain ${liveW.precipitation || 0} mm/h, Gusts ${liveW.windGusts || 0} km/h, Temp ${tempDisplay}. Movement is operational with speed restrictions.`;
         advice = "Drive cautiously, avoid night driving, keep vehicle headlights on.";
         sourceName = "Open-Meteo Severe Weather & Hydrology Radar";
-      } else if (liveW.precipitation >= 1.0) {
+      } else if (liveW.precipitation != null && liveW.precipitation >= 1.0) {
         alertTier = "GREEN";
         severity = "GREEN_ALERT";
         alertType = "RAIN_ALERT";
@@ -835,7 +809,7 @@ async function syncDatabaseNow() {
         movementFeasible = true;
         hazardType = "Standard Seasonal Rainfall";
         title = `Rain Alert: Standard Rainfall in ${name} (${liveW.precipitation} mm/h)`;
-        description = `Intermittent rain showers (${liveW.precipitation} mm/h). Temperature: ${liveW.temperature}°C. No landslides or route blockages reported.`;
+        description = `Intermittent rain showers (${liveW.precipitation} mm/h). Temperature: ${tempDisplay}. No landslides or route blockages reported.`;
         advice = "Carry an umbrella. All transit, trains, and arterial highways are operating on time.";
         sourceName = "Open-Meteo Satellite Radar";
       }

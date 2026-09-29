@@ -157,12 +157,14 @@ export default function SafeTravelDestinations({
         const telemetry = alerts.find((a) => a.destination.toLowerCase() === name.toLowerCase());
         const rawDesc = telemetry?.description || "";
         const tempMatch = rawDesc.match(/Temperature:\s*([\d\.]+)°C/);
-        const temp = tempMatch ? `${tempMatch[1]}°C` : "24°C";
+        const liveTemp = telemetry?.liveWeather?.temp != null
+          ? `${telemetry.liveWeather.temp}°C`
+          : (tempMatch ? `${tempMatch[1]}°C` : "Live...");
 
         return {
           name,
           ...info,
-          liveTemp: temp,
+          liveTemp,
           isVerifiedClear: true,
         };
       });

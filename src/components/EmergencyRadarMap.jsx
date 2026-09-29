@@ -231,12 +231,7 @@ export default function EmergencyRadarMap({
       const severity = anyAlert?.severity || "NORMAL";
 
       // Live weather telemetry attached if available
-      const liveW = anyAlert?.liveWeather || {
-        temp: alertTier === "RED" ? 14 : alertTier === "YELLOW" ? 8 : 26,
-        precipitation: isRainAlert ? 4.5 : alertTier === "RED" ? 38.0 : 0,
-        windGust: alertTier === "RED" ? 75 : 18,
-        humidity: 65,
-      };
+      const liveW = anyAlert?.liveWeather || null;
 
       const layout = LABEL_LAYOUTS[name] || { dx: 8, dy: 4, anchor: "start", tag: "📍 Hub" };
 
@@ -829,9 +824,10 @@ export default function EmergencyRadarMap({
           {activeRadarLayer === "precipitation" && (
             <g id="radar-precipitation-layer" style={{ pointerEvents: "none" }}>
               {mappedPoints
-                .filter((p) => (p.liveWeather?.precipitation || 0) > 0 || p.alertTier === "RED" || p.isRainAlert)
+                .filter((p) => (p.liveWeather?.precipitation != null && p.liveWeather.precipitation > 0) || p.isRainAlert)
                 .map((p) => {
-                  const precip = p.liveWeather?.precipitation || (p.alertTier === "RED" ? 38 : 4.5);
+                  const precip = p.liveWeather?.precipitation != null ? p.liveWeather.precipitation : (p.isRainAlert ? 4.5 : 0);
+                  if (precip <= 0) return null;
                   const isTorrential = precip >= 30;
                   const isHeavy = precip >= 15;
                   const isModerate = precip >= 5;
@@ -890,7 +886,10 @@ export default function EmergencyRadarMap({
           {activeRadarLayer === "wind" && (
             <g id="radar-wind-layer" style={{ pointerEvents: "none" }}>
               {mappedPoints.map((p) => {
-                const wind = p.liveWeather?.windGust || p.liveWeather?.windSpeed || 15;
+                const wind = p.liveWeather?.windGust != null
+                  ? p.liveWeather.windGust
+                  : (p.liveWeather?.windSpeed != null ? p.liveWeather.windSpeed : 0);
+                if (wind <= 0) return null;
                 const arrowLength = Math.min(26, Math.max(12, wind * 0.45));
                 const strokeCol = wind >= 50 ? "#ef4444" : wind >= 30 ? "#f59e0b" : "#38bdf8";
                 return (
@@ -1139,7 +1138,7 @@ export default function EmergencyRadarMap({
             </div>
 
             <div style={{ fontSize: "12px", color: "#cbd5e1", marginBottom: "8px" }}>
-              {hoveredPoint.state} • Live Temp: <strong>{hoveredPoint.liveWeather?.temp ?? 24}°C</strong>
+              {hoveredPoint.state} • Live Temp: <strong>{hoveredPoint.liveWeather?.temp != null ? `${Math.round(hoveredPoint.liveWeather.temp)}°C` : "Connecting..."}</strong>
             </div>
 
             {/* Movement status guarantee */}
@@ -1293,22 +1292,22 @@ export default function EmergencyRadarMap({
 
             <div style={{ display: "flex", gap: "14px", flexWrap: "wrap", fontSize: "12px", marginTop: "8px" }}>
               <span style={{ fontWeight: "700", color: isEmergencyMode ? "#fca5a5" : "#475569" }}>
-                🌡️ Temp: <strong>{selectedPointObj.liveWeather?.temp ?? 24}°C</strong> {selectedPointObj.liveWeather?.apparentTemp != null && <span style={{ color: "#64748b" }}>(Feels {selectedPointObj.liveWeather?.apparentTemp}°C)</span>}
+                🌡️ Temp: <strong>{selectedPointObj.liveWeather?.temp != null ? `${selectedPointObj.liveWeather.temp}°C` : "Connecting..."}</strong> {selectedPointObj.liveWeather?.apparentTemp != null && <span style={{ color: "#64748b" }}>(Feels {selectedPointObj.liveWeather.apparentTemp}°C)</span>}
               </span>
               <span style={{ fontWeight: "700", color: isEmergencyMode ? "#fca5a5" : "#475569" }}>
-                🌧️ Rain: <strong>{selectedPointObj.liveWeather?.precipitation ?? 0} mm/h</strong>
+                🌧️ Rain: <strong>{selectedPointObj.liveWeather?.precipitation != null ? `${selectedPointObj.liveWeather.precipitation} mm/h` : "0 mm/h"}</strong>
               </span>
               <span style={{ fontWeight: "700", color: isEmergencyMode ? "#fca5a5" : "#475569" }}>
-                💨 Wind: <strong>{selectedPointObj.liveWeather?.windSpeed ?? 12} km/h {selectedPointObj.liveWeather?.windCompass || ""}</strong> (Gusts {selectedPointObj.liveWeather?.windGust ?? 18} km/h)
+                💨 Wind: <strong>{selectedPointObj.liveWeather?.windSpeed != null ? `${selectedPointObj.liveWeather.windSpeed} km/h` : "--"} {selectedPointObj.liveWeather?.windCompass || ""}</strong> {selectedPointObj.liveWeather?.windGust != null && `(Gusts ${selectedPointObj.liveWeather.windGust} km/h)`}
               </span>
               <span style={{ fontWeight: "700", color: isEmergencyMode ? "#fca5a5" : "#475569" }}>
-                💧 Humidity: <strong>{selectedPointObj.liveWeather?.humidity ?? 60}%</strong>
+                💧 Humidity: <strong>{selectedPointObj.liveWeather?.humidity != null ? `${selectedPointObj.liveWeather.humidity}%` : "--"}</strong>
               </span>
               <span style={{ fontWeight: "700", color: isEmergencyMode ? "#fca5a5" : "#475569" }}>
-                ⏱️ Pressure: <strong>{selectedPointObj.liveWeather?.pressure ?? 1013} hPa</strong>
+                ⏱️ Pressure: <strong>{selectedPointObj.liveWeather?.pressure != null ? `${selectedPointObj.liveWeather.pressure} hPa` : "--"}</strong>
               </span>
               <span style={{ fontWeight: "700", color: isEmergencyMode ? "#fca5a5" : "#475569" }}>
-                👁️ Visibility: <strong>{selectedPointObj.liveWeather?.visibility ?? 10} km</strong>
+                👁️ Visibility: <strong>{selectedPointObj.liveWeather?.visibility != null ? `${selectedPointObj.liveWeather.visibility} km` : "--"}</strong>
               </span>
               <span style={{ fontWeight: "800", color: selectedPointObj.alertTier === "RED" ? "#ef4444" : "#16a34a" }}>
                 🛣️ Corridor: {selectedPointObj.movementStatus}
