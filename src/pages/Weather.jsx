@@ -111,8 +111,11 @@ export default function Weather() {
     setModalLoading(true);
     try {
       const res = await fetchDestinationLiveWeather(dest.name);
-      if (res && res.forecast7Day) {
-        setDetailedForecast(res.forecast7Day);
+      if (res) {
+        if (res.destination) {
+          setSelectedDestination(res.destination);
+        }
+        setDetailedForecast(res);
       } else {
         setDetailedForecast(null);
       }
@@ -214,10 +217,16 @@ export default function Weather() {
       source: d.disaster.source,
       liveWeather: {
         temp: d.weather.temperature,
+        apparentTemp: d.weather.apparentTemperature,
         precipitation: d.weather.precipitation,
+        windSpeed: d.weather.windSpeed,
         windGust: d.weather.windGusts,
+        windCompass: d.weather.windCompass,
+        pressure: d.weather.pressure,
+        visibility: d.weather.visibility,
         humidity: d.weather.humidity,
         condition: d.weather.condition,
+        provider: d.weather.provider,
       },
     }));
   }, [destinations]);
@@ -1079,115 +1088,325 @@ export default function Weather() {
               </button>
             </div>
 
-            {/* Current Realtime Weather Telemetry */}
+            {/* Active Provider & Last Updated Bar */}
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                flexWrap: "wrap",
+                gap: "8px",
+                background: "#f1f5f9",
+                padding: "8px 14px",
+                borderRadius: "8px",
+                marginBottom: "18px",
+                fontSize: "12px",
+              }}
+            >
+              <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                <span style={{ width: "7px", height: "7px", borderRadius: "50%", background: "#10b981", display: "inline-block" }} />
+                <span style={{ color: "#475569" }}>Weather Provider:</span>
+                <strong style={{ color: "#0f172a" }}>
+                  {detailedForecast?.provider || selectedDestination.weather?.provider || "Tomorrow.io / Open-Meteo Unified Radar"}
+                </strong>
+              </div>
+              <div style={{ color: "#64748b" }}>
+                Last updated: <strong>{new Date(selectedDestination.weather?.lastUpdatedAt || Date.now()).toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" })}</strong>
+              </div>
+            </div>
+
+            {/* Current Realtime Weather Telemetry Grid (All Required Live Parameters) */}
             <div
               style={{
                 display: "grid",
-                gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-                gap: "12px",
+                gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
+                gap: "10px",
                 background: "#f8fafc",
+                border: "1px solid #e2e8f0",
                 padding: "16px",
                 borderRadius: "14px",
-                marginBottom: "24px",
+                marginBottom: "22px",
               }}
             >
               <div>
-                <span style={{ fontSize: "11px", color: "#64748b", textTransform: "uppercase" }}>Current Temperature</span>
-                <div style={{ fontSize: "24px", fontWeight: "900", color: "#0f172a" }}>
-                  {selectedDestination.weather.temperature}°C ({selectedDestination.weather.condition})
+                <span style={{ fontSize: "11px", color: "#64748b", textTransform: "uppercase", fontWeight: "700" }}>Temperature</span>
+                <div style={{ fontSize: "20px", fontWeight: "900", color: "#0f172a" }}>
+                  {selectedDestination.weather.temperature}°C
                 </div>
+                <span style={{ fontSize: "11px", color: "#64748b" }}>
+                  Feels like {selectedDestination.weather.apparentTemperature || selectedDestination.weather.temperature}°C
+                </span>
               </div>
+
               <div>
-                <span style={{ fontSize: "11px", color: "#64748b", textTransform: "uppercase" }}>Wind & Storm Gusts</span>
-                <div style={{ fontSize: "24px", fontWeight: "900", color: "#0f172a" }}>
-                  {selectedDestination.weather.windGusts} km/h
+                <span style={{ fontSize: "11px", color: "#64748b", textTransform: "uppercase", fontWeight: "700" }}>Condition</span>
+                <div style={{ fontSize: "16px", fontWeight: "800", color: "#0f172a", marginTop: "2px" }}>
+                  {selectedDestination.weather.icon} {selectedDestination.weather.condition}
                 </div>
+                <span style={{ fontSize: "11px", color: "#64748b" }}>Realtime atmospheric</span>
               </div>
+
               <div>
-                <span style={{ fontSize: "11px", color: "#64748b", textTransform: "uppercase" }}>Precipitation Rate</span>
-                <div style={{ fontSize: "24px", fontWeight: "900", color: "#0284c7" }}>
+                <span style={{ fontSize: "11px", color: "#64748b", textTransform: "uppercase", fontWeight: "700" }}>Precipitation</span>
+                <div style={{ fontSize: "20px", fontWeight: "900", color: "#0284c7" }}>
                   {selectedDestination.weather.precipitation} mm/h
+                </div>
+                <span style={{ fontSize: "11px", color: "#64748b" }}>
+                  {selectedDestination.weather.precipitation > 0 ? "Rain active" : "Dry radar scan"}
+                </span>
+              </div>
+
+              <div>
+                <span style={{ fontSize: "11px", color: "#64748b", textTransform: "uppercase", fontWeight: "700" }}>Wind & Compass</span>
+                <div style={{ fontSize: "18px", fontWeight: "900", color: "#0f172a" }}>
+                  {selectedDestination.weather.windSpeed} km/h {selectedDestination.weather.windCompass || ""}
+                </div>
+                <span style={{ fontSize: "11px", color: "#64748b" }}>
+                  Gusts: {selectedDestination.weather.windGusts} km/h
+                </span>
+              </div>
+
+              <div>
+                <span style={{ fontSize: "11px", color: "#64748b", textTransform: "uppercase", fontWeight: "700" }}>Humidity</span>
+                <div style={{ fontSize: "20px", fontWeight: "900", color: "#0f172a" }}>
+                  {selectedDestination.weather.humidity}%
+                </div>
+                <span style={{ fontSize: "11px", color: "#64748b" }}>Relative humidity</span>
+              </div>
+
+              <div>
+                <span style={{ fontSize: "11px", color: "#64748b", textTransform: "uppercase", fontWeight: "700" }}>Pressure</span>
+                <div style={{ fontSize: "18px", fontWeight: "900", color: "#0f172a" }}>
+                  {selectedDestination.weather.pressure || 1013} hPa
+                </div>
+                <span style={{ fontSize: "11px", color: "#64748b" }}>Surface barometric</span>
+              </div>
+
+              <div>
+                <span style={{ fontSize: "11px", color: "#64748b", textTransform: "uppercase", fontWeight: "700" }}>Visibility</span>
+                <div style={{ fontSize: "18px", fontWeight: "900", color: "#0f172a" }}>
+                  {selectedDestination.weather.visibility || 10} km
+                </div>
+                <span style={{ fontSize: "11px", color: "#64748b" }}>Surface optical</span>
+              </div>
+            </div>
+
+            {/* SEPARATION OF OFFICIAL EXTERNAL ALERT VS TRAVEL_GURUJI RISK INTERPRETATION */}
+            <div style={{ display: "flex", flexDirection: "column", gap: "16px", marginBottom: "24px" }}>
+              {/* Box 1: OFFICIAL GOVERNMENT / EXTERNAL ALERT */}
+              <div
+                style={{
+                  background: (detailedForecast?.officialAlert?.alertTier || selectedDestination.disaster.alertTier) === "RED"
+                    ? "#fef2f2"
+                    : (detailedForecast?.officialAlert?.alertTier || selectedDestination.disaster.alertTier) === "YELLOW"
+                    ? "#fffbeb"
+                    : "#f0fdf4",
+                  border: `1.5px solid ${
+                    (detailedForecast?.officialAlert?.alertTier || selectedDestination.disaster.alertTier) === "RED"
+                      ? "#ef4444"
+                      : (detailedForecast?.officialAlert?.alertTier || selectedDestination.disaster.alertTier) === "YELLOW"
+                      ? "#f59e0b"
+                      : "#10b981"
+                  }`,
+                  borderRadius: "14px",
+                  padding: "16px 18px",
+                }}
+              >
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "8px", marginBottom: "6px" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                    <span style={{ fontSize: "14px" }}>🏛️</span>
+                    <strong style={{ fontSize: "13px", color: "#0f172a", textTransform: "uppercase", letterSpacing: "0.5px" }}>
+                      OFFICIAL GOVERNMENT / EXTERNAL ALERT
+                    </strong>
+                  </div>
+                  <span
+                    style={{
+                      background: (detailedForecast?.officialAlert?.alertTier || selectedDestination.disaster.alertTier) === "RED"
+                        ? "#dc2626"
+                        : (detailedForecast?.officialAlert?.alertTier || selectedDestination.disaster.alertTier) === "YELLOW"
+                        ? "#d97706"
+                        : "#059669",
+                      color: "#ffffff",
+                      fontSize: "10px",
+                      fontWeight: "800",
+                      padding: "2px 8px",
+                      borderRadius: "4px",
+                    }}
+                  >
+                    Official Source: {detailedForecast?.officialAlert?.source || selectedDestination.officialAlert?.source || selectedDestination.disaster.source}
+                  </span>
+                </div>
+
+                <h4 style={{ margin: "6px 0 6px", fontSize: "15px", color: "#0f172a" }}>
+                  {detailedForecast?.officialAlert?.title || selectedDestination.officialAlert?.title || selectedDestination.disaster.title}
+                </h4>
+
+                <p style={{ margin: "0 0 8px", fontSize: "13px", lineHeight: "1.5", color: "#334155" }}>
+                  {detailedForecast?.officialAlert?.description || selectedDestination.officialAlert?.description || selectedDestination.disaster.description}
+                </p>
+
+                <div style={{ fontSize: "12px", color: "#1e293b", fontWeight: "600" }}>
+                  Official Directive / Action: {selectedDestination.disaster.advice}
+                </div>
+
+                <div style={{ marginTop: "6px", fontSize: "11px", color: "#64748b", fontStyle: "italic" }}>
+                  * This alert was issued by official government / international monitoring systems (IMD, NDMA, GDACS, USGS, NASA).
+                </div>
+              </div>
+
+              {/* Box 2: TRAVEL_GURUJI RISK INTERPRETATION */}
+              <div
+                style={{
+                  background: "#f8fafc",
+                  border: "1.5px solid #cbd5e1",
+                  borderRadius: "14px",
+                  padding: "16px 18px",
+                }}
+              >
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "8px", marginBottom: "8px" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                    <span style={{ fontSize: "14px" }}>🧭</span>
+                    <strong style={{ fontSize: "13px", color: "#0f172a", textTransform: "uppercase", letterSpacing: "0.5px" }}>
+                      TRAVEL_GURUJI RISK INTERPRETATION
+                    </strong>
+                  </div>
+                  <span
+                    style={{
+                      background: (detailedForecast?.travelGurujiRisk?.riskLevel || selectedDestination.travelGurujiRisk?.riskLevel) === "HIGH"
+                        ? "#dc2626"
+                        : (detailedForecast?.travelGurujiRisk?.riskLevel || selectedDestination.travelGurujiRisk?.riskLevel) === "MODERATE"
+                        ? "#d97706"
+                        : (detailedForecast?.travelGurujiRisk?.riskLevel || selectedDestination.travelGurujiRisk?.riskLevel) === "LOW"
+                        ? "#0284c7"
+                        : "#059669",
+                      color: "#ffffff",
+                      fontSize: "11px",
+                      fontWeight: "900",
+                      padding: "3px 10px",
+                      borderRadius: "6px",
+                    }}
+                  >
+                    Risk Level: {detailedForecast?.travelGurujiRisk?.riskLevel || selectedDestination.travelGurujiRisk?.riskLevel || "MINIMAL"}
+                  </span>
+                </div>
+
+                <div style={{ marginBottom: "8px" }}>
+                  <span style={{ fontSize: "12px", fontWeight: "700", color: "#475569" }}>Reason: </span>
+                  <span style={{ fontSize: "13px", color: "#0f172a" }}>
+                    {detailedForecast?.travelGurujiRisk?.reason || selectedDestination.travelGurujiRisk?.reason || "Synthesized analysis based on live weather radar telemetry and corridor accessibility."}
+                  </span>
+                </div>
+
+                <div style={{ marginBottom: "10px" }}>
+                  <span style={{ fontSize: "12px", fontWeight: "700", color: "#475569" }}>Recommendation: </span>
+                  <span style={{ fontSize: "13px", color: "#0f172a", fontWeight: "600" }}>
+                    {detailedForecast?.travelGurujiRisk?.recommendation || selectedDestination.travelGurujiRisk?.recommendation || "Proceed with your planned journey. Standard travel precautions apply."}
+                  </span>
+                </div>
+
+                <div
+                  style={{
+                    background: "rgba(241, 245, 249, 0.8)",
+                    borderLeft: "3px solid #64748b",
+                    padding: "6px 10px",
+                    fontSize: "11px",
+                    color: "#475569",
+                    lineHeight: "1.4",
+                  }}
+                >
+                  ⚠️ <strong>Disclaimer:</strong> {detailedForecast?.travelGurujiRisk?.disclaimer || selectedDestination.travelGurujiRisk?.disclaimer || "Travel_Guruji Risk Interpretation is an automated algorithmic assessment for travel decision support and is NOT an official government emergency warning. Always heed official directives from IMD, NDMA, and local district authorities."}
                 </div>
               </div>
             </div>
 
-            {/* Natural Disaster Bulletin Section */}
-            <div
-              style={{
-                background: selectedDestination.disaster.alertTier === "RED"
-                  ? "#fef2f2"
-                  : selectedDestination.disaster.alertTier === "YELLOW"
-                  ? "#fffbeb"
-                  : "#f0fdf4",
-                border: `1.5px solid ${
-                  selectedDestination.disaster.alertTier === "RED"
-                    ? "#ef4444"
-                    : selectedDestination.disaster.alertTier === "YELLOW"
-                    ? "#eab308"
-                    : "#10b981"
-                }`,
-                borderRadius: "14px",
-                padding: "18px",
-                marginBottom: "24px",
-              }}
-            >
-              <h4 style={{ margin: "0 0 8px", fontSize: "16px", color: "#0f172a" }}>
-                🛡️ Live Disaster & Movement Protocol: {selectedDestination.disaster.title}
-              </h4>
-              <p style={{ margin: "0 0 10px", fontSize: "13px", lineHeight: "1.6", color: "#334155" }}>
-                {selectedDestination.disaster.description}
-              </p>
-              <div style={{ fontSize: "13px", color: "#1e293b", fontWeight: "600" }}>
-                Advice: {selectedDestination.disaster.advice}
-              </div>
-              {selectedDestination.disaster.safeAlternativeHub && (
-                <div style={{ marginTop: "8px", fontSize: "12px", color: "#475569" }}>
-                  Alternative Safe Hub: <strong>{selectedDestination.disaster.safeAlternativeHub}</strong>
+            {/* 24-Hour Hourly Forecast Section */}
+            {detailedForecast?.hourlyForecast && detailedForecast.hourlyForecast.length > 0 && (
+              <div style={{ marginBottom: "24px" }}>
+                <h4 style={{ margin: "0 0 10px", fontSize: "16px", color: "#0f172a", fontWeight: "800" }}>
+                  ⏱️ 24-Hour Hourly Weather Forecast
+                </h4>
+                <div
+                  style={{
+                    display: "flex",
+                    gap: "10px",
+                    overflowX: "auto",
+                    paddingBottom: "8px",
+                  }}
+                >
+                  {detailedForecast.hourlyForecast.slice(0, 16).map((h, i) => (
+                    <div
+                      key={h.time || i}
+                      style={{
+                        flex: "0 0 88px",
+                        background: "#f8fafc",
+                        border: "1px solid #e2e8f0",
+                        borderRadius: "10px",
+                        padding: "10px 8px",
+                        textAlign: "center",
+                      }}
+                    >
+                      <div style={{ fontSize: "11px", color: "#64748b", fontWeight: "700" }}>
+                        {new Date(h.time).toLocaleTimeString("en-IN", { hour: "numeric", hour12: true })}
+                      </div>
+                      <div style={{ fontSize: "16px", fontWeight: "900", color: "#0f172a", margin: "4px 0" }}>
+                        {h.temperature}°C
+                      </div>
+                      <div style={{ fontSize: "11px", color: h.precipitationProbability > 30 ? "#0284c7" : "#64748b" }}>
+                        💧 {h.precipitationProbability}%
+                      </div>
+                      <div style={{ fontSize: "10px", color: "#64748b", marginTop: "2px" }}>
+                        💨 {h.windSpeed} km/h
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              )}
-            </div>
+              </div>
+            )}
 
             {/* 7-Day Meteorological Projections */}
             <div>
-              <h4 style={{ margin: "0 0 14px", fontSize: "17px", color: "#0f172a", fontWeight: "800" }}>
-                🌦️ 7-Day Meteorological Projections (Open-Meteo Satellite Feed)
+              <h4 style={{ margin: "0 0 14px", fontSize: "16px", color: "#0f172a", fontWeight: "800" }}>
+                🌦️ 7-Day Meteorological Projections (Live Forecast Feed)
               </h4>
 
               {modalLoading ? (
                 <div style={{ textAlign: "center", padding: "30px", color: "#64748b" }}>
-                  Loading 7-day satellite telemetry...
+                  Loading satellite & radar telemetry...
                 </div>
-              ) : detailedForecast?.daily?.time ? (
+              ) : (detailedForecast?.forecast7Day?.daily?.time || detailedForecast?.daily?.time) ? (
                 <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-                  {detailedForecast.daily.time.map((dayDate, idx) => (
-                    <div
-                      key={dayDate}
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                        padding: "10px 14px",
-                        background: "#f8fafc",
-                        borderRadius: "10px",
-                        fontSize: "13px",
-                      }}
-                    >
-                      <strong style={{ minWidth: "100px", color: "#0f172a" }}>
-                        {new Date(dayDate).toLocaleDateString("en-IN", { weekday: "short", month: "short", day: "numeric" })}
-                      </strong>
-                      <div style={{ display: "flex", gap: "16px", color: "#475569" }}>
-                        <span>
-                          High: <strong>{detailedForecast.daily.temperature_2m_max[idx]}°C</strong>
-                        </span>
-                        <span>
-                          Low: <strong>{detailedForecast.daily.temperature_2m_min[idx]}°C</strong>
-                        </span>
-                        <span>
-                          🌧️ {detailedForecast.daily.precipitation_sum[idx]} mm ({detailedForecast.daily.precipitation_probability_max?.[idx] || 0}%)
-                        </span>
+                  {((detailedForecast?.forecast7Day?.daily || detailedForecast?.daily).time).map((dayDate, idx) => {
+                    const dailyData = detailedForecast?.forecast7Day?.daily || detailedForecast?.daily;
+                    return (
+                      <div
+                        key={dayDate}
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                          padding: "10px 14px",
+                          background: "#f8fafc",
+                          borderRadius: "10px",
+                          fontSize: "13px",
+                        }}
+                      >
+                        <strong style={{ minWidth: "100px", color: "#0f172a" }}>
+                          {new Date(dayDate).toLocaleDateString("en-IN", { weekday: "short", month: "short", day: "numeric" })}
+                        </strong>
+                        <div style={{ display: "flex", gap: "16px", color: "#475569" }}>
+                          <span>
+                            High: <strong>{dailyData.temperature_2m_max[idx]}°C</strong>
+                          </span>
+                          <span>
+                            Low: <strong>{dailyData.temperature_2m_min[idx]}°C</strong>
+                          </span>
+                          <span>
+                            🌧️ {dailyData.precipitation_sum?.[idx] ?? 0} mm ({dailyData.precipitation_probability_max?.[idx] || 0}%)
+                          </span>
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               ) : (
                 <p style={{ fontSize: "13px", color: "#64748b" }}>

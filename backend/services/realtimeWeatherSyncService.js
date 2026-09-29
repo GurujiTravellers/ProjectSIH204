@@ -511,6 +511,14 @@ async function fetchRainViewerRadarFrames() {
   }
 }
 
+// Compass direction resolver
+function getWindCompass(deg) {
+  if (deg == null) return "VAR";
+  const dirs = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"];
+  const idx = Math.round(deg / 22.5) % 16;
+  return dirs[idx] || "N";
+}
+
 /**
  * 3.6 Fetch Tomorrow.io Real-Time Weather for a single coordinate
  */
@@ -534,13 +542,36 @@ async function fetchTomorrowIoWeather(lat, lon) {
       precipitation: values.precipitationIntensity != null ? Math.round(values.precipitationIntensity * 10) / 10 : 0,
       rain: values.rainIntensity != null ? Math.round(values.rainIntensity * 10) / 10 : 0,
       windSpeed: values.windSpeed != null ? Math.round(values.windSpeed * 3.6) : 10, // m/s to km/h
+      windDirection: values.windDirection != null ? values.windDirection : 0,
+      windCompass: getWindCompass(values.windDirection),
       windGusts: values.windGust != null ? Math.round(values.windGust * 3.6) : 15,
+      pressure: values.pressureSurfaceLevel != null ? Math.round(values.pressureSurfaceLevel) : 1013,
+      visibility: values.visibility != null ? Math.round(values.visibility * 10) / 10 : 10.0,
+      uvIndex: values.uvIndex != null ? Math.round(values.uvIndex) : 5,
       weatherCode: code,
       condition: mapped.label,
       icon: mapped.icon,
       category: mapped.category,
       provider: "Tomorrow.io Realtime API",
+      isLive: true,
+      lastUpdatedAt: new Date().toISOString(),
     };
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * 3.7 Fetch Tomorrow.io Forecast (Hourly & Daily) for a destination
+ */
+async function fetchTomorrowIoForecast(lat, lon) {
+  if (!TOMORROW_IO_API_KEY) return null;
+  try {
+    const url = `https://api.tomorrow.io/v4/weather/forecast?location=${lat},${lon}&apikey=${TOMORROW_IO_API_KEY}&units=metric`;
+    const res = await fetch(url, { signal: AbortSignal.timeout(9000) });
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data;
   } catch {
     return null;
   }
@@ -624,7 +655,7 @@ async function fetchAllLocationsWeather() {
     const lats = locations.map(([, info]) => info.lat).join(",");
     const lons = locations.map(([, info]) => info.lon).join(",");
 
-    const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lats}&longitude=${lons}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,rain,weather_code,wind_speed_10m,wind_gusts_10m&timezone=Asia%2FKolkata`;
+    const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lats}&longitude=${lons}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,rain,weather_code,wind_speed_10m,wind_direction_10m,wind_gusts_10m,surface_pressure,visibility&timezone=Asia%2FKolkata`;
 
     const res = await fetch(weatherUrl, { signal: AbortSignal.timeout(12000) });
 
@@ -647,6 +678,11 @@ async function fetchAllLocationsWeather() {
 
       const code = cur.weather_code ?? 0;
       const weatherInfo = mapWeatherCode(code);
+      const windDir = cur.wind_direction_10m != null ? cur.wind_direction_10m : 0;
+      const windCompass = getWindCompass(windDir);
+      const pressure = cur.surface_pressure != null ? Math.round(cur.surface_pressure) : 1013;
+      // visibility in open-meteo is in meters, convert to km
+      const visibilityKm = cur.visibility != null ? Math.round((cur.visibility / 1000) * 10) / 10 : 10.0;
 
       weatherMap[destName.toLowerCase()] = {
         temperature: cur.temperature_2m != null ? Math.round(cur.temperature_2m * 10) / 10 : 24,
@@ -655,12 +691,17 @@ async function fetchAllLocationsWeather() {
         precipitation: cur.precipitation != null ? Math.round(cur.precipitation * 10) / 10 : 0,
         rain: cur.rain != null ? Math.round(cur.rain * 10) / 10 : 0,
         windSpeed: cur.wind_speed_10m != null ? Math.round(cur.wind_speed_10m) : 10,
+        windDirection: windDir,
+        windCompass: windCompass,
         windGusts: cur.wind_gusts_10m != null ? Math.round(cur.wind_gusts_10m) : 15,
+        pressure: pressure,
+        visibility: visibilityKm,
         weatherCode: code,
         condition: weatherInfo.label,
         icon: weatherInfo.icon,
         category: weatherInfo.category,
         provider: TOMORROW_IO_API_KEY ? "Tomorrow.io / Open-Meteo Unified Radar" : "Open-Meteo Satellite Radar",
+        lastUpdatedAt: new Date().toISOString(),
       };
     });
 
@@ -894,6 +935,43 @@ async function syncDatabaseNow() {
       else if (isRainAlert) rainAlertsCount++;
       else normalClearCount++;
 
+      const isOfficialAlertPresent = alertTier === "RED" || alertTier === "YELLOW" || isRainAlert;
+      const officialAlert = {
+        isPresent: isOfficialAlertPresent,
+        isOfficialGovernmentAlert: true,
+        source: sourceName,
+        alertTier,
+        severity,
+        title: isOfficialAlertPresent ? title : `No Active Government Warning for ${name}`,
+        description: isOfficialAlertPresent
+          ? description
+          : `Official monitoring network (IMD, NDMA, USGS, GDACS) reports normal atmospheric & seismic conditions across ${info.state}.`,
+        issuedAt: new Date().toISOString(),
+        bulletinId: activeBulletinId || null,
+        activeThreat: activeThreat || null,
+      };
+
+      const travelGurujiRisk = {
+        isOfficialWarning: false,
+        riskLevel: alertTier === "RED" ? "HIGH" : alertTier === "YELLOW" ? "MODERATE" : isRainAlert ? "LOW" : "MINIMAL",
+        colorCode,
+        reason: alertTier === "RED"
+          ? `Severe meteorological / hazard alert detected near ${name} along corridor ${info.corridor}. Telemetry: Rain ${liveW.precipitation} mm/h, Wind Gusts ${liveW.windGusts} km/h.`
+          : alertTier === "YELLOW"
+          ? `Moderate weather or hazard advisory active near ${name} along ${info.corridor}. Caution recommended on transit corridors.`
+          : isRainAlert
+          ? `Intermittent precipitation (${liveW.precipitation} mm/h) detected. Road corridors operational with wet surfaces.`
+          : `Corridors open and clear. Microclimate favorable for tourist travel.`,
+        recommendation: alertTier === "RED"
+          ? `Postpone non-essential travel to ${name}. Follow official district emergency directives and stay in safe accommodation.`
+          : alertTier === "YELLOW"
+          ? `Exercise caution and check official travel advisories before travelling. Avoid night journeys on mountain passes or coastal corridors.`
+          : isRainAlert
+          ? `Carry rain protection. Standard highway speeds recommended.`
+          : `Proceed with your journey according to planned itinerary. Standard travel safety precautions apply.`,
+        disclaimer: "Travel_Guruji Risk Interpretation is an automated algorithmic assessment for travel decision support and is NOT an official government emergency warning. Always heed official directives from IMD, NDMA, and local district authorities.",
+      };
+
       destinationMap[name] = {
         name,
         state: info.state,
@@ -905,6 +983,8 @@ async function syncDatabaseNow() {
           ...liveW,
           lastUpdatedAt: new Date().toISOString(),
         },
+        officialAlert,
+        travelGurujiRisk,
         disaster: {
           alertTier,
           severity,
@@ -1274,4 +1354,6 @@ module.exports = {
   getAllRealtimeAlerts,
   getRadarCapabilities,
   fetchRainViewerRadarFrames,
+  fetchTomorrowIoWeather,
+  fetchTomorrowIoForecast,
 };

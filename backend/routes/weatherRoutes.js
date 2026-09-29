@@ -7,6 +7,8 @@ const {
   registerSseClient,
   getRadarCapabilities,
   fetchRainViewerRadarFrames,
+  fetchTomorrowIoWeather,
+  fetchTomorrowIoForecast,
 } = require("../services/realtimeWeatherSyncService");
 
 const router = express.Router();
@@ -145,24 +147,99 @@ router.get("/destination/:name", async (req, res) => {
       });
     }
 
-    // Also fetch 7-day detailed forecast for this destination
+    const coords = syncedData.coordinates;
+    let liveProvider = syncedData.weather.provider || "Open-Meteo Satellite Radar";
+    let hourlyForecast = [];
     let forecast7Day = null;
+
+    // 1. Check Tomorrow.io real-time & forecast if key is available
     try {
-      const coords = syncedData.coordinates;
-      const forecastRes = await fetch(
-        `${WEATHER_URL}?latitude=${coords.lat}&longitude=${coords.lon}&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max,wind_speed_10m_max,wind_gusts_10m_max&hourly=temperature_2m,precipitation_probability,weather_code&timezone=Asia%2FKolkata&forecast_days=7`
-      );
-      if (forecastRes.ok) {
-        forecast7Day = await forecastRes.json();
+      const tomorrowForecast = await fetchTomorrowIoForecast(coords.lat, coords.lon);
+      if (tomorrowForecast && tomorrowForecast.timelines?.hourly) {
+        liveProvider = "Tomorrow.io Live Weather & Forecast";
+        const tomorrowHourly = (tomorrowForecast.timelines.hourly || []).slice(0, 24).map((h) => ({
+          time: h.time,
+          temperature: h.values?.temperature != null ? Math.round(h.values.temperature * 10) / 10 : 24,
+          apparentTemperature: h.values?.temperatureApparent != null ? Math.round(h.values.temperatureApparent * 10) / 10 : 24,
+          humidity: h.values?.humidity != null ? Math.round(h.values.humidity) : 60,
+          precipitation: h.values?.precipitationIntensity != null ? Math.round(h.values.precipitationIntensity * 10) / 10 : 0,
+          precipitationProbability: h.values?.precipitationProbability ?? 0,
+          windSpeed: h.values?.windSpeed != null ? Math.round(h.values.windSpeed * 3.6) : 10,
+          windDirection: h.values?.windDirection ?? 0,
+          pressure: h.values?.pressureSurfaceLevel != null ? Math.round(h.values.pressureSurfaceLevel) : 1013,
+          visibility: h.values?.visibility != null ? Math.round(h.values.visibility * 10) / 10 : 10.0,
+          weatherCode: h.values?.weatherCode ?? 1000,
+        }));
+
+        hourlyForecast = tomorrowHourly;
+
+        if (tomorrowForecast.timelines?.daily) {
+          const tomorrowDaily = (tomorrowForecast.timelines.daily || []).slice(0, 7);
+          forecast7Day = {
+            source: "Tomorrow.io Forecast API",
+            daily: {
+              time: tomorrowDaily.map((d) => d.time),
+              temperature_2m_max: tomorrowDaily.map((d) => d.values?.temperatureMax != null ? Math.round(d.values.temperatureMax * 10) / 10 : 28),
+              temperature_2m_min: tomorrowDaily.map((d) => d.values?.temperatureMin != null ? Math.round(d.values.temperatureMin * 10) / 10 : 18),
+              precipitation_sum: tomorrowDaily.map((d) => d.values?.precipitationSum != null ? Math.round(d.values.precipitationSum * 10) / 10 : 0),
+              precipitation_probability_max: tomorrowDaily.map((d) => d.values?.precipitationProbabilityMax ?? 0),
+              wind_speed_10m_max: tomorrowDaily.map((d) => d.values?.windSpeedMax != null ? Math.round(d.values.windSpeedMax * 3.6) : 15),
+            },
+          };
+        }
       }
-    } catch (fErr) {
-      console.warn("Forecast fetch warning for destination:", fErr.message);
+    } catch (tErr) {
+      console.warn("[WeatherRoutes] Tomorrow.io forecast fallback to Open-Meteo:", tErr.message);
+    }
+
+    // 2. Open-Meteo fallback if hourly or daily forecast is still needed
+    if (!forecast7Day || hourlyForecast.length === 0) {
+      try {
+        const forecastRes = await fetch(
+          `${WEATHER_URL}?latitude=${coords.lat}&longitude=${coords.lon}&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max,wind_speed_10m_max,wind_gusts_10m_max&hourly=temperature_2m,apparent_temperature,relative_humidity_2m,precipitation,precipitation_probability,weather_code,wind_speed_10m,wind_direction_10m,surface_pressure,visibility&timezone=Asia%2FKolkata&forecast_days=7`
+        );
+        if (forecastRes.ok) {
+          const omData = await forecastRes.json();
+          forecast7Day = {
+            source: "Open-Meteo European Flood & Hydrology Radar (Fallback)",
+            daily: omData.daily,
+          };
+          if (hourlyForecast.length === 0 && omData.hourly) {
+            const h = omData.hourly;
+            hourlyForecast = (h.time || []).slice(0, 24).map((t, idx) => ({
+              time: t,
+              temperature: h.temperature_2m?.[idx] ?? 24,
+              apparentTemperature: h.apparent_temperature?.[idx] ?? 24,
+              humidity: h.relative_humidity_2m?.[idx] ?? 60,
+              precipitation: h.precipitation?.[idx] ?? 0,
+              precipitationProbability: h.precipitation_probability?.[idx] ?? 0,
+              windSpeed: h.wind_speed_10m?.[idx] ?? 10,
+              windDirection: h.wind_direction_10m?.[idx] ?? 0,
+              pressure: h.surface_pressure?.[idx] != null ? Math.round(h.surface_pressure[idx]) : 1013,
+              visibility: h.visibility?.[idx] != null ? Math.round((h.visibility[idx] / 1000) * 10) / 10 : 10.0,
+              weatherCode: h.weather_code?.[idx] ?? 0,
+            }));
+          }
+        }
+      } catch (fErr) {
+        console.warn("[WeatherRoutes] Open-Meteo fallback forecast fetch error:", fErr.message);
+      }
     }
 
     res.json({
       success: true,
-      destination: syncedData,
+      destination: {
+        ...syncedData,
+        weather: {
+          ...syncedData.weather,
+          provider: liveProvider,
+        },
+      },
+      provider: liveProvider,
+      hourlyForecast,
       forecast7Day,
+      officialAlert: syncedData.officialAlert,
+      travelGurujiRisk: syncedData.travelGurujiRisk,
       timestamp: new Date().toISOString(),
     });
   } catch (error) {
