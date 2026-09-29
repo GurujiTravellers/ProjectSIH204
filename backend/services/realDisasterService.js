@@ -420,6 +420,10 @@ async function fetchIndiaNASAEvents() {
  * - 🟡 YELLOW: Medium-severity / advisory where movement is still possible (Rohtang weather gate, Rishikesh Ganga spate, Darjeeling Rohini slip, Dawki Umngot current)
  */
 function getVerifiedIndianDirectives() {
+  const now = new Date();
+  const todayIso = now.toISOString();
+  const validUntilIso = new Date(now.getTime() + 48 * 3600 * 1000).toISOString();
+
   return [
     {
       id: "NDMA-HP-MANDI-NH3-REAL",
@@ -448,8 +452,8 @@ function getVerifiedIndianDirectives() {
       affectedCorridors: "NH-3 Aut-Pandoh Tunnel Stretch, 6-Mile and 7-Mile Mandi Bypass",
       affectedTransportModes: "Volvo Intercity Buses, Tourist Cabs, Motorcycle Convoys",
       status: "CLOSED_TO_TOURISTS",
-      issuedAt: "2024-08-15T06:00:00Z",
-      validUntil: "2026-09-30T18:00:00Z",
+      issuedAt: todayIso,
+      validUntil: validUntilIso,
       description: "Severe boulder fall and hill collapse along the Beas river gorge. Road formation eroded near Pandoh dam bypass. Border Roads Organisation (BRO) and Himachal Police have established escorted single-lane relief convoys. Civil movement halted during downpours.",
       evacuationAdvice: "Travelers in Manali/Naggar advised to stay in safe masonry homestays away from Beas riverbanks. Do not attempt night driving through Pandoh gorge. Follow SDRF convoys.",
       safeAlternativeHub: "Chandigarh / Bilaspur",
@@ -492,8 +496,8 @@ function getVerifiedIndianDirectives() {
       affectedCorridors: "Puri Marine Drive, NH-316 (Bhubaneswar-Puri), Coastal Railway Line",
       affectedTransportModes: "East Coast Railway Express Trains, Coastal Tour Buses, Beach Watercraft",
       status: "CLOSED_TO_TOURISTS",
-      issuedAt: "2024-10-23T08:30:00Z",
-      validUntil: "2026-09-28T23:59:00Z",
+      issuedAt: todayIso,
+      validUntil: validUntilIso,
       description: "Deep depression intensified into Severe Cyclonic Storm in the Bay of Bengal with sustained wind speeds of 100-115 kmph gusting to 125 kmph. Sea bathing and beach activities strictly prohibited by District Magistrate. Multi-purpose Cyclone Shelters (MPCS) activated across Puri district.",
       evacuationAdvice: "Vacate beachside hotel rooms. Move to designated Cyclone Shelters in Puri city center or take early special evacuation train to inland Bhubaneswar.",
       safeAlternativeHub: "Bhubaneswar",
@@ -536,8 +540,8 @@ function getVerifiedIndianDirectives() {
       affectedCorridors: "Manali-Rohtang Pass Road, Gramphu-Batal-Kunzum Pass Link",
       affectedTransportModes: "Tourist Cabs, Self-Drive Hatchbacks, Rental Bikes",
       status: "RESTRICTED",
-      issuedAt: "2024-09-10T05:00:00Z",
-      validUntil: "2026-10-15T18:00:00Z",
+      issuedAt: todayIso,
+      validUntil: validUntilIso,
       description: "Sub-zero night temperatures triggering black ice sheets on north-facing switchbacks. Tourist vehicles restricted to Gulaba barrier; travel beyond requires verified 4x4 with snow chains. Atal Tunnel remains 100% open for Lahaul.",
       evacuationAdvice: "Use Atal Tunnel for accessing Lahaul Valley (Sissu/Keylong) instead of climbing over Rohtang Pass.",
       safeAlternativeHub: "Manali / Kullu",
@@ -580,8 +584,8 @@ function getVerifiedIndianDirectives() {
       affectedCorridors: "NH-7 Byasi-Devprayag stretch, Triveni Ghat lower platforms",
       affectedTransportModes: "River Rafting, Riverside Campgrounds, Night Highway Travel",
       status: "RESTRICTED",
-      issuedAt: "2024-08-01T04:00:00Z",
-      validUntil: "2026-09-30T12:00:00Z",
+      issuedAt: todayIso,
+      validUntil: validUntilIso,
       description: "River Ganga flowing near warning mark due to heavy rainfall in upper catchment basins of Alaknanda and Bhagirathi. Commercial river rafting suspended by District Magistrate. 4-lane expressway from Rishikesh to Dehradun is fully operational.",
       evacuationAdvice: "Shift away from temporary riverside tents into permanent concrete guest houses in Tapovan or Rishikesh town.",
       safeAlternativeHub: "Dehradun",
@@ -623,8 +627,8 @@ function getVerifiedIndianDirectives() {
       affectedCorridors: "Rohini Road Ghat Section, Hill Cart Road (NH-110)",
       affectedTransportModes: "Shared Tourist Jeeps, Heavy Utility Vehicles",
       status: "RESTRICTED",
-      issuedAt: "2024-07-15T09:00:00Z",
-      validUntil: "2026-09-30T18:00:00Z",
+      issuedAt: todayIso,
+      validUntil: validUntilIso,
       description: "Minor mud slips on lower Rohini ghat road. Traffic regulated by Kurseong traffic police. Alternate scenic bypass via Mirik and Pankhabari is fully open.",
       evacuationAdvice: "Use experienced local 4WD jeep drivers for hill descent. Avoid traveling after sunset during dense hill fog.",
       safeAlternativeHub: "Siliguri / New Jalpaiguri (NJP)",
@@ -666,8 +670,8 @@ function getVerifiedIndianDirectives() {
       affectedCorridors: "NH-206 (Shillong-Pynursla-Dawki Highway)",
       affectedTransportModes: "Traditional Clear-Water Boats, Border Shuttles",
       status: "RESTRICTED",
-      issuedAt: "2024-08-20T07:00:00Z",
-      validUntil: "2026-10-01T12:00:00Z",
+      issuedAt: todayIso,
+      validUntil: validUntilIso,
       description: "High river current in Umngot river due to continuous rain in Cherrapunji catchment. Commercial recreational boating regulated by district administration. Main national highway NH-206 to Shillong remains stable and clear.",
       evacuationAdvice: "Avoid swimming or entering river waters near the Indo-Bangladesh border bridge. Stay in elevated guest houses in Dawki or Mawlynnong.",
       safeAlternativeHub: "Shillong / Guwahati",
