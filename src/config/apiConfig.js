@@ -28,10 +28,10 @@ export function getApiBaseUrl() {
     }
 
     // Production / Deployed environment (Render, Cloud VPS, Custom Domain):
-    return `${window.location.origin}/api`;
+    return "/api";
   }
 
-  return "http://localhost:5000/api";
+  return "/api";
 }
 
 export function getIntelligenceBaseUrl() {
