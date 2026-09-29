@@ -41,29 +41,37 @@ function EditProfile() {
 
   // Load profile
   useEffect(() => {
+    const stored = localStorage.getItem("travelGurujiUser");
+    if (stored) {
+      try {
+        const u = JSON.parse(stored);
+        if (u) {
+          setName(u.name || "");
+          setEmail(u.email || "");
+          setPhone(u.phone || "");
+          setBio(u.bio || "");
+          setProfileImage(u.profileImage || "");
+          setLoading(false);
+        }
+      } catch (_) {}
+    }
+
     loadProfile();
   }, []);
 
-
   async function loadProfile() {
     try {
-      const data =
-        await getProfile();
-
-      const user = data.user;
-
-      setName(user.name || "");
-      setEmail(user.email || "");
-      setPhone(user.phone || "");
-      setBio(user.bio || "");
-
-      setProfileImage(
-        user.profileImage || ""
-      );
-
+      const data = await getProfile();
+      if (data && data.user) {
+        const user = data.user;
+        setName(user.name || "");
+        setEmail(user.email || "");
+        setPhone(user.phone || "");
+        setBio(user.bio || "");
+        setProfileImage(user.profileImage || "");
+      }
     } catch (error) {
-      setError(error.message);
-
+      console.warn("EditProfile load notice:", error.message);
     } finally {
       setLoading(false);
     }

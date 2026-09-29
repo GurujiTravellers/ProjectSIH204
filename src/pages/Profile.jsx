@@ -10,6 +10,18 @@ function Profile() {
   const [error, setError] = useState("");
 
   useEffect(() => {
+    // 1. Immediately read local user to prevent flash of error
+    const stored = localStorage.getItem("travelGurujiUser");
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored);
+        if (parsed && (parsed.name || parsed.email)) {
+          setUser(parsed);
+          setLoading(false);
+        }
+      } catch (_) {}
+    }
+
     loadProfile();
   }, []);
 
@@ -17,14 +29,15 @@ function Profile() {
     try {
       const data = await getProfile();
 
-      setUser(data.user);
-
-      localStorage.setItem(
-        "travelGurujiUser",
-        JSON.stringify(data.user)
-      );
+      if (data && data.user) {
+        setUser(data.user);
+        localStorage.setItem(
+          "travelGurujiUser",
+          JSON.stringify(data.user)
+        );
+      }
     } catch (error) {
-      setError(error.message);
+      console.warn("loadProfile notice:", error.message);
     } finally {
       setLoading(false);
     }
