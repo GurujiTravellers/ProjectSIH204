@@ -326,11 +326,12 @@ export default function Weather() {
     <div style={{ background: "#f8fafc", minHeight: "100vh", paddingBottom: "80px" }}>
       {/* 1. TOP LIVE REALTIME DATABASE SYNC HEADER */}
       <div
+        className="weather-header-banner"
         style={{
-          background: "linear-gradient(135deg, #091b2c 0%, #0f2d4a 60%, #1e3a5f 100%)",
+          background: "#18221d",
           color: "#ffffff",
           padding: "48px 24px 36px",
-          borderBottom: "1px solid rgba(255,255,255,0.1)",
+          borderBottom: "2px solid #43d79c",
         }}
       >
         <div style={{ maxWidth: "1280px", margin: "0 auto" }}>
@@ -351,9 +352,9 @@ export default function Weather() {
                   display: "inline-flex",
                   alignItems: "center",
                   gap: "6px",
-                  background: "rgba(16, 185, 129, 0.15)",
-                  border: "1px solid rgba(16, 185, 129, 0.4)",
-                  color: "#34d399",
+                  background: "rgba(67, 215, 156, 0.15)",
+                  border: "1px solid rgba(67, 215, 156, 0.4)",
+                  color: "#43d79c",
                   padding: "6px 14px",
                   borderRadius: "20px",
                   fontSize: "12px",
@@ -366,8 +367,8 @@ export default function Weather() {
                     width: "8px",
                     height: "8px",
                     borderRadius: "50%",
-                    background: "#10b981",
-                    boxShadow: "0 0 10px #10b981",
+                    background: "#43d79c",
+                    boxShadow: "0 0 10px #43d79c",
                     display: "inline-block",
                   }}
                 ></span>
@@ -446,7 +447,7 @@ export default function Weather() {
               <div style={{ fontSize: "28px", fontWeight: "900", color: "#ffffff", marginTop: "4px" }}>
                 {stats.total}
               </div>
-              <div style={{ fontSize: "11px", color: "#38bdf8", marginTop: "4px" }}>
+              <div style={{ fontSize: "11px", color: "#43d79c", marginTop: "4px" }}>
                 Monitored 24x7 in Database
               </div>
             </div>
@@ -491,19 +492,19 @@ export default function Weather() {
 
             <div
               style={{
-                background: "rgba(16, 185, 129, 0.12)",
-                border: "1px solid rgba(16, 185, 129, 0.3)",
+                background: "rgba(67, 215, 156, 0.12)",
+                border: "1px solid rgba(67, 215, 156, 0.35)",
                 borderRadius: "14px",
                 padding: "16px",
               }}
             >
-              <div style={{ fontSize: "12px", color: "#86efac", fontWeight: "700", textTransform: "uppercase" }}>
+              <div style={{ fontSize: "12px", color: "#43d79c", fontWeight: "700", textTransform: "uppercase" }}>
                 🟢 All Clear & Verified
               </div>
-              <div style={{ fontSize: "28px", fontWeight: "900", color: "#10b981", marginTop: "4px" }}>
+              <div style={{ fontSize: "28px", fontWeight: "900", color: "#43d79c", marginTop: "4px" }}>
                 {stats.green}
               </div>
-              <div style={{ fontSize: "11px", color: "#4ade80", marginTop: "4px" }}>
+              <div style={{ fontSize: "11px", color: "#43d79c", marginTop: "4px" }}>
                 100% Clear Corridors & Fair Weather
               </div>
             </div>

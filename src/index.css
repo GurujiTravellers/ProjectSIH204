@@ -26359,15 +26359,23 @@ body * {
 }
 
 /* =========================================================
-   EMERGENCY HUB - UNIFORM ACTION BUTTONS (IDENTICAL AT REST)
-   All action buttons look completely identical in their resting state.
-   They smoothly reveal their corresponding theme colors ONLY on cursor hover.
+   EMERGENCY HUB - UNIFORM ACTION BUTTONS (2-COLOR BRAND SYSTEM)
+   Strictly following Travel_Guruji 2-color website brand rules:
+   Base: #18221d (Deep Slate Forest / Charcoal Black)
+   Hover: #43d79c (Mint Emerald Green bottom-to-up transition)
    ========================================================= */
 
 .emg-hub-btn {
-  background: #ffffff !important;
-  color: #1e293b !important;
-  border: 1.5px solid #cbd5e1 !important;
+  position: relative !important;
+  overflow: hidden !important;
+  z-index: 1 !important;
+  background-color: #18221d !important;
+  background-image: linear-gradient(to top, #43d79c, #43d79c) !important;
+  background-repeat: no-repeat !important;
+  background-position: bottom center !important;
+  background-size: 100% 0% !important;
+  color: #ffffff !important;
+  border: 1.5px solid #18221d !important;
   border-radius: 8px !important;
   padding: 10px 18px !important;
   font-size: 13px !important;
@@ -26377,60 +26385,40 @@ body * {
   align-items: center !important;
   justify-content: center !important;
   gap: 8px !important;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
-  transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  box-shadow: 0 2px 6px rgba(24, 34, 29, 0.15) !important;
+  transition: background-size 0.38s cubic-bezier(0.2, 0.9, 0.3, 1),
+              transform 0.25s cubic-bezier(0.2, 0.9, 0.3, 1),
+              color 0.25s ease,
+              border-color 0.25s ease,
+              box-shadow 0.3s ease !important;
   text-decoration: none !important;
   white-space: nowrap !important;
   user-select: none !important;
 }
 
-/* Hover variants showing corresponding colors only on cursor hover */
-.emg-hub-btn.btn-red:hover {
-  background: #ef4444 !important;
-  color: #ffffff !important;
-  border-color: #ef4444 !important;
-  box-shadow: 0 6px 18px rgba(239, 68, 68, 0.35) !important;
-  transform: translateY(-2px) !important;
-}
-
-.emg-hub-btn.btn-dark:hover {
-  background: #0f172a !important;
-  color: #ffffff !important;
-  border-color: #0f172a !important;
-  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.35) !important;
-  transform: translateY(-2px) !important;
-}
-
-.emg-hub-btn.btn-blue:hover {
-  background: #0284c7 !important;
-  color: #ffffff !important;
-  border-color: #0284c7 !important;
-  box-shadow: 0 6px 18px rgba(2, 132, 199, 0.35) !important;
-  transform: translateY(-2px) !important;
-}
-
-.emg-hub-btn.btn-green:hover {
-  background: #16a34a !important;
-  color: #ffffff !important;
-  border-color: #16a34a !important;
-  box-shadow: 0 6px 18px rgba(22, 163, 74, 0.35) !important;
-  transform: translateY(-2px) !important;
-}
-
-.emg-hub-btn.btn-teal:hover {
-  background: #059669 !important;
-  color: #ffffff !important;
-  border-color: #059669 !important;
-  box-shadow: 0 6px 18px rgba(5, 150, 105, 0.35) !important;
-  transform: translateY(-2px) !important;
-}
-
+/* Universal bottom-to-up brand hover across all emergency button roles */
+.emg-hub-btn:hover,
+.emg-hub-btn.btn-red:hover,
+.emg-hub-btn.btn-dark:hover,
+.emg-hub-btn.btn-blue:hover,
+.emg-hub-btn.btn-green:hover,
+.emg-hub-btn.btn-teal:hover,
 .emg-hub-btn.btn-amber:hover {
-  background: #d97706 !important;
-  color: #ffffff !important;
-  border-color: #d97706 !important;
-  box-shadow: 0 6px 18px rgba(217, 119, 6, 0.35) !important;
+  background-size: 100% 100% !important;
+  color: #000000 !important;
+  border-color: #000000 !important;
+  box-shadow: 0 6px 18px rgba(67, 215, 156, 0.38) !important;
   transform: translateY(-2px) !important;
+}
+
+.emg-hub-btn:hover *,
+.emg-hub-btn.btn-red:hover *,
+.emg-hub-btn.btn-dark:hover *,
+.emg-hub-btn.btn-blue:hover *,
+.emg-hub-btn.btn-green:hover *,
+.emg-hub-btn.btn-teal:hover *,
+.emg-hub-btn.btn-amber:hover * {
+  color: #000000 !important;
 }
 
 .emg-hub-btn:active {
@@ -26439,52 +26427,23 @@ body * {
 
 /* Dark Emergency Mode resting state */
 .emergency-mode-active .emg-hub-btn {
-  background: #1e1313 !important;
-  color: #f1f5f9 !important;
-  border-color: #4a1e1e !important;
+  background-color: #18221d !important;
+  color: #43d79c !important;
+  border-color: #43d79c !important;
 }
 
 /* Dark Emergency Mode hover state */
-.emergency-mode-active .emg-hub-btn.btn-red:hover {
-  background: #ef4444 !important;
-  color: #ffffff !important;
-  border-color: #ef4444 !important;
-  box-shadow: 0 6px 20px rgba(239, 68, 68, 0.5) !important;
-}
-
-.emergency-mode-active .emg-hub-btn.btn-dark:hover {
-  background: #0f172a !important;
-  color: #ffffff !important;
-  border-color: #38bdf8 !important;
-  box-shadow: 0 6px 20px rgba(56, 189, 248, 0.25) !important;
-}
-
-.emergency-mode-active .emg-hub-btn.btn-blue:hover {
-  background: #0284c7 !important;
-  color: #ffffff !important;
-  border-color: #0284c7 !important;
-  box-shadow: 0 6px 20px rgba(2, 132, 199, 0.5) !important;
-}
-
-.emergency-mode-active .emg-hub-btn.btn-green:hover {
-  background: #16a34a !important;
-  color: #ffffff !important;
-  border-color: #16a34a !important;
-  box-shadow: 0 6px 20px rgba(22, 163, 74, 0.5) !important;
-}
-
-.emergency-mode-active .emg-hub-btn.btn-teal:hover {
-  background: #059669 !important;
-  color: #ffffff !important;
-  border-color: #059669 !important;
-  box-shadow: 0 6px 20px rgba(5, 150, 105, 0.5) !important;
-}
-
+.emergency-mode-active .emg-hub-btn:hover,
+.emergency-mode-active .emg-hub-btn.btn-red:hover,
+.emergency-mode-active .emg-hub-btn.btn-dark:hover,
+.emergency-mode-active .emg-hub-btn.btn-blue:hover,
+.emergency-mode-active .emg-hub-btn.btn-green:hover,
+.emergency-mode-active .emg-hub-btn.btn-teal:hover,
 .emergency-mode-active .emg-hub-btn.btn-amber:hover {
-  background: #d97706 !important;
-  color: #ffffff !important;
-  border-color: #d97706 !important;
-  box-shadow: 0 6px 20px rgba(217, 119, 6, 0.5) !important;
+  background-size: 100% 100% !important;
+  color: #000000 !important;
+  border-color: #43d79c !important;
+  box-shadow: 0 6px 20px rgba(67, 215, 156, 0.45) !important;
 }
 
 
@@ -27852,143 +27811,311 @@ h1, h2, h3, .section-heading h2 {
   color: #000000 !important;
 }
 
-/* 2. Weather & Radar Page Buttons (Bottom-to-Up Hover) */
+/* =========================================================
+   2. WEATHER & RADAR MODULE (WEBSITE 2-COLOR BRAND SYSTEM)
+   Strictly following Travel_Guruji 2-color brand rules:
+   Base: #18221d (Deep Slate Forest / Charcoal Black)
+   Accent: #43d79c (Mint Emerald Green)
+   Hover: Bottom-to-Up slide-up transition into #43d79c
+   ========================================================= */
+
+.weather-header-banner {
+  background: #18221d !important;
+  color: #ffffff !important;
+  border-bottom: 2px solid #43d79c !important;
+}
+
 .weather-sync-btn {
-  background-color: rgba(59, 130, 246, 0.18) !important;
-  border: 1px solid rgba(96, 165, 250, 0.4) !important;
-  color: #93c5fd !important;
-  background-image: linear-gradient(to top, #0284c7, #0284c7) !important;
+  background-color: #18221d !important;
+  border: 1.5px solid #43d79c !important;
+  color: #43d79c !important;
+  background-image: linear-gradient(to top, #43d79c, #43d79c) !important;
 }
 .weather-sync-btn:hover {
   background-size: 100% 100% !important;
-  color: #ffffff !important;
-  border-color: #38bdf8 !important;
-  box-shadow: 0 6px 20px rgba(2, 132, 199, 0.45) !important;
+  color: #000000 !important;
+  border-color: #43d79c !important;
+  box-shadow: 0 6px 20px rgba(67, 215, 156, 0.38) !important;
   transform: translateY(-2px) !important;
 }
 .weather-sync-btn:hover * {
-  color: #ffffff !important;
+  color: #000000 !important;
 }
 
 .weather-radar-action-btn {
-  background-color: #0f172a !important;
-  border: 1.5px solid #0f172a !important;
+  background-color: #18221d !important;
+  border: 1.5px solid #18221d !important;
   color: #ffffff !important;
-  background-image: linear-gradient(to top, #dc2626, #dc2626) !important;
+  background-image: linear-gradient(to top, #43d79c, #43d79c) !important;
 }
 .weather-radar-action-btn:hover {
   background-size: 100% 100% !important;
-  color: #ffffff !important;
-  border-color: #ef4444 !important;
-  box-shadow: 0 8px 24px rgba(220, 38, 38, 0.45) !important;
+  color: #000000 !important;
+  border-color: #000000 !important;
+  box-shadow: 0 6px 18px rgba(67, 215, 156, 0.4) !important;
   transform: translateY(-2px) !important;
 }
 .weather-radar-action-btn:hover * {
-  color: #ffffff !important;
+  color: #000000 !important;
 }
 
 .weather-filter-btn {
-  background-color: #f1f5f9 !important;
-  border: 1px solid #cbd5e1 !important;
-  color: #334155 !important;
-  background-image: linear-gradient(to top, #0f172a, #0f172a) !important;
+  background-color: #ffffff !important;
+  border: 1.5px solid #cbd5e1 !important;
+  color: #18221d !important;
+  background-image: linear-gradient(to top, #43d79c, #43d79c) !important;
 }
 .weather-filter-btn:hover {
   background-size: 100% 100% !important;
-  color: #ffffff !important;
-  border-color: #0f172a !important;
-  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.25) !important;
+  color: #000000 !important;
+  border-color: #000000 !important;
+  box-shadow: 0 4px 14px rgba(67, 215, 156, 0.3) !important;
   transform: translateY(-2px) !important;
 }
 .weather-filter-btn:hover * {
-  color: #ffffff !important;
+  color: #000000 !important;
 }
 .weather-filter-btn.active {
-  background-color: #0f172a !important;
-  color: #ffffff !important;
-  border-color: #0f172a !important;
-  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.25) !important;
+  background-color: #18221d !important;
+  color: #43d79c !important;
+  border-color: #18221d !important;
+  box-shadow: 0 4px 12px rgba(24, 34, 29, 0.25) !important;
 }
 
 .weather-forecast-btn {
   background-color: #ffffff !important;
-  border: 1.5px solid #cbd5e1 !important;
-  color: #0f172a !important;
-  background-image: linear-gradient(to top, #0284c7, #0284c7) !important;
+  border: 1.5px solid #18221d !important;
+  color: #18221d !important;
+  background-image: linear-gradient(to top, #43d79c, #43d79c) !important;
 }
 .weather-forecast-btn:hover {
   background-size: 100% 100% !important;
-  color: #ffffff !important;
-  border-color: #0284c7 !important;
-  box-shadow: 0 6px 18px rgba(2, 132, 199, 0.35) !important;
+  color: #000000 !important;
+  border-color: #000000 !important;
+  box-shadow: 0 6px 18px rgba(67, 215, 156, 0.35) !important;
   transform: translateY(-2px) !important;
 }
 .weather-forecast-btn:hover * {
-  color: #ffffff !important;
+  color: #000000 !important;
 }
 
 .weather-plan-btn {
-  background-color: #0284c7 !important;
-  border: 1.5px solid #0284c7 !important;
+  background-color: #18221d !important;
+  border: 1.5px solid #18221d !important;
   color: #ffffff !important;
-  background-image: linear-gradient(to top, #0369a1, #0369a1) !important;
+  background-image: linear-gradient(to top, #43d79c, #43d79c) !important;
 }
 .weather-plan-btn:hover {
   background-size: 100% 100% !important;
-  color: #ffffff !important;
-  border-color: #0369a1 !important;
-  box-shadow: 0 6px 18px rgba(2, 132, 199, 0.45) !important;
+  color: #000000 !important;
+  border-color: #000000 !important;
+  box-shadow: 0 6px 18px rgba(67, 215, 156, 0.4) !important;
   transform: translateY(-2px) !important;
+}
+.weather-plan-btn:hover * {
+  color: #000000 !important;
 }
 
 .weather-detour-btn {
-  background-color: #dc2626 !important;
-  border: 1.5px solid #dc2626 !important;
-  color: #ffffff !important;
-  background-image: linear-gradient(to top, #991b1b, #991b1b) !important;
+  background-color: #18221d !important;
+  border: 1.5px solid #18221d !important;
+  color: #43d79c !important;
+  background-image: linear-gradient(to top, #43d79c, #43d79c) !important;
 }
 .weather-detour-btn:hover {
   background-size: 100% 100% !important;
-  color: #ffffff !important;
-  border-color: #991b1b !important;
-  box-shadow: 0 6px 18px rgba(220, 38, 38, 0.45) !important;
+  color: #000000 !important;
+  border-color: #000000 !important;
+  box-shadow: 0 6px 18px rgba(67, 215, 156, 0.4) !important;
   transform: translateY(-2px) !important;
+}
+.weather-detour-btn:hover * {
+  color: #000000 !important;
 }
 
 .weather-reset-btn {
-  background-color: #f1f5f9 !important;
-  border: 1.5px solid #cbd5e1 !important;
-  color: #1e293b !important;
-  background-image: linear-gradient(to top, #0f172a, #0f172a) !important;
+  background-color: #ffffff !important;
+  border: 1.5px solid #18221d !important;
+  color: #18221d !important;
+  background-image: linear-gradient(to top, #43d79c, #43d79c) !important;
 }
 .weather-reset-btn:hover {
   background-size: 100% 100% !important;
-  color: #ffffff !important;
-  border-color: #0f172a !important;
+  color: #000000 !important;
+  border-color: #000000 !important;
+  box-shadow: 0 4px 14px rgba(67, 215, 156, 0.3) !important;
   transform: translateY(-2px) !important;
+}
+.weather-reset-btn:hover * {
+  color: #000000 !important;
 }
 
 .weather-modal-dismiss-btn {
-  background-color: #e2e8f0 !important;
+  background-color: #ffffff !important;
   border: 1.5px solid #cbd5e1 !important;
-  color: #1e293b !important;
-  background-image: linear-gradient(to top, #0f172a, #0f172a) !important;
+  color: #18221d !important;
+  background-image: linear-gradient(to top, #43d79c, #43d79c) !important;
 }
 .weather-modal-dismiss-btn:hover {
   background-size: 100% 100% !important;
-  color: #ffffff !important;
-  border-color: #0f172a !important;
+  color: #000000 !important;
+  border-color: #000000 !important;
   transform: translateY(-2px) !important;
 }
+.weather-modal-dismiss-btn:hover * {
+  color: #000000 !important;
+}
 
-/* 3. Emergency Hub Buttons (Bottom-to-Up Hover) */
-.emg-hub-btn {
+/* Radar Map Interactive Controls (Zoom, Layers, Havens) */
+.radar-control-btn {
+  position: relative !important;
+  overflow: hidden !important;
+  background-color: #ffffff !important;
+  color: #18221d !important;
+  border: 1.5px solid #cbd5e1 !important;
+  border-radius: 6px !important;
+  padding: 5px 11px !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+}
+.radar-control-btn:hover {
+  background-color: #18221d !important;
+  color: #43d79c !important;
+  border-color: #18221d !important;
+  transform: translateY(-1px) !important;
+}
+.radar-control-btn.active {
+  background-color: #18221d !important;
+  color: #43d79c !important;
+  border-color: #18221d !important;
+  box-shadow: 0 2px 8px rgba(24, 34, 29, 0.25) !important;
+}
+
+.radar-layer-btn {
+  position: relative !important;
+  overflow: hidden !important;
+  background-color: rgba(24, 34, 29, 0.85) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  border-radius: 8px !important;
+  padding: 5px 12px !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  cursor: pointer !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  transition: all 0.2s ease !important;
+}
+.radar-layer-btn:hover {
+  border-color: #43d79c !important;
+  color: #43d79c !important;
+  transform: translateY(-1px) !important;
+}
+.radar-layer-btn.active {
+  background-color: #43d79c !important;
+  color: #18221d !important;
+  border-color: #43d79c !important;
+  font-weight: 800 !important;
+  box-shadow: 0 2px 10px rgba(67, 215, 156, 0.4) !important;
+}
+
+.radar-haven-btn {
+  background-color: #ffffff !important;
+  border: 1.5px solid #18221d !important;
+  color: #18221d !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  padding: 3px 10px !important;
+  border-radius: 20px !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+}
+.radar-haven-btn:hover {
+  background-color: #18221d !important;
+  color: #43d79c !important;
+  border-color: #18221d !important;
+  transform: translateY(-1px) !important;
+}
+
+/* =========================================================
+   3. DISASTER & RISK INTELLIGENCE MODULE (2-COLOR BRAND SYSTEM)
+   Strictly following Travel_Guruji 2-color brand rules:
+   Base: #18221d (Deep Slate Forest / Charcoal Black)
+   Accent: #43d79c (Mint Emerald Green)
+   ========================================================= */
+
+.disaster-header-banner {
+  background: #18221d !important;
+  color: #ffffff !important;
+  border-bottom: 2px solid #43d79c !important;
+}
+
+.disaster-tab-btn {
+  background: transparent !important;
+  border: none !important;
+  border-bottom: 3px solid transparent !important;
+  padding: 12px 18px !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  color: #64748b !important;
+  cursor: pointer !important;
+  white-space: nowrap !important;
+  transition: all 0.2s ease !important;
+}
+.disaster-tab-btn:hover {
+  color: #18221d !important;
+  border-bottom-color: rgba(67, 215, 156, 0.4) !important;
+}
+.disaster-tab-btn.active {
+  color: #18221d !important;
+  border-bottom: 3px solid #43d79c !important;
+  font-weight: 800 !important;
+}
+
+.disaster-status-badge {
+  background: #18221d !important;
+  color: #43d79c !important;
+  border: 1px solid #43d79c !important;
+  padding: 3px 10px !important;
+  border-radius: 12px !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+}
+
+/* Emergency Hub Buttons - Uniform 2-color Brand Behavior */
+.emg-hub-btn,
+.emg-hub-btn.btn-red,
+.emg-hub-btn.btn-blue,
+.emg-hub-btn.btn-green,
+.emg-hub-btn.btn-teal,
+.emg-hub-btn.btn-amber,
+.emg-hub-btn.btn-dark {
   position: relative !important;
   overflow: hidden !important;
   z-index: 1 !important;
+  background-color: #18221d !important;
+  background-image: linear-gradient(to top, #43d79c, #43d79c) !important;
   background-repeat: no-repeat !important;
   background-position: bottom center !important;
   background-size: 100% 0% !important;
+  color: #ffffff !important;
+  border: 1.5px solid #18221d !important;
+  border-radius: 8px !important;
+  padding: 10px 18px !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  cursor: pointer !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  box-shadow: 0 2px 6px rgba(24, 34, 29, 0.12) !important;
   transition: background-size 0.38s cubic-bezier(0.2, 0.9, 0.3, 1),
               transform 0.25s cubic-bezier(0.2, 0.9, 0.3, 1),
               color 0.25s ease,
@@ -27996,70 +28123,28 @@ h1, h2, h3, .section-heading h2 {
               box-shadow 0.3s ease !important;
 }
 
-.emg-hub-btn.btn-red {
-  background-image: linear-gradient(to top, #ef4444, #ef4444) !important;
-}
-.emg-hub-btn.btn-red:hover {
-  background-size: 100% 100% !important;
-  color: #ffffff !important;
-  border-color: #ef4444 !important;
-  box-shadow: 0 6px 20px rgba(239, 68, 68, 0.45) !important;
-  transform: translateY(-2px) !important;
-}
-
-.emg-hub-btn.btn-blue {
-  background-image: linear-gradient(to top, #0284c7, #0284c7) !important;
-}
-.emg-hub-btn.btn-blue:hover {
-  background-size: 100% 100% !important;
-  color: #ffffff !important;
-  border-color: #0284c7 !important;
-  box-shadow: 0 6px 20px rgba(2, 132, 199, 0.45) !important;
-  transform: translateY(-2px) !important;
-}
-
-.emg-hub-btn.btn-green {
-  background-image: linear-gradient(to top, #16a34a, #16a34a) !important;
-}
-.emg-hub-btn.btn-green:hover {
-  background-size: 100% 100% !important;
-  color: #ffffff !important;
-  border-color: #16a34a !important;
-  box-shadow: 0 6px 20px rgba(22, 163, 74, 0.45) !important;
-  transform: translateY(-2px) !important;
-}
-
-.emg-hub-btn.btn-teal {
-  background-image: linear-gradient(to top, #059669, #059669) !important;
-}
-.emg-hub-btn.btn-teal:hover {
-  background-size: 100% 100% !important;
-  color: #ffffff !important;
-  border-color: #059669 !important;
-  box-shadow: 0 6px 20px rgba(5, 150, 105, 0.45) !important;
-  transform: translateY(-2px) !important;
-}
-
-.emg-hub-btn.btn-amber {
-  background-image: linear-gradient(to top, #d97706, #d97706) !important;
-}
-.emg-hub-btn.btn-amber:hover {
-  background-size: 100% 100% !important;
-  color: #ffffff !important;
-  border-color: #d97706 !important;
-  box-shadow: 0 6px 20px rgba(217, 119, 6, 0.45) !important;
-  transform: translateY(-2px) !important;
-}
-
-.emg-hub-btn.btn-dark {
-  background-image: linear-gradient(to top, #0f172a, #0f172a) !important;
-}
+.emg-hub-btn:hover,
+.emg-hub-btn.btn-red:hover,
+.emg-hub-btn.btn-blue:hover,
+.emg-hub-btn.btn-green:hover,
+.emg-hub-btn.btn-teal:hover,
+.emg-hub-btn.btn-amber:hover,
 .emg-hub-btn.btn-dark:hover {
   background-size: 100% 100% !important;
-  color: #ffffff !important;
-  border-color: #0f172a !important;
-  box-shadow: 0 6px 20px rgba(15, 23, 42, 0.45) !important;
+  color: #000000 !important;
+  border-color: #000000 !important;
+  box-shadow: 0 6px 18px rgba(67, 215, 156, 0.38) !important;
   transform: translateY(-2px) !important;
+}
+
+.emg-hub-btn:hover *,
+.emg-hub-btn.btn-red:hover *,
+.emg-hub-btn.btn-blue:hover *,
+.emg-hub-btn.btn-green:hover *,
+.emg-hub-btn.btn-teal:hover *,
+.emg-hub-btn.btn-amber:hover *,
+.emg-hub-btn.btn-dark:hover * {
+  color: #000000 !important;
 }
 
 /* =========================================================

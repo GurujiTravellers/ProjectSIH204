@@ -496,17 +496,7 @@ export default function EmergencyRadarMap({
             <button
               key={reg.id}
               onClick={() => setCurrentRegion(reg.id)}
-              style={{
-                background: currentRegion === reg.id ? "#3b82f6" : isEmergencyMode ? "#2a1212" : "#ffffff",
-                color: currentRegion === reg.id ? "#ffffff" : isEmergencyMode ? "#e5e7eb" : "#334155",
-                border: currentRegion === reg.id ? "1px solid #2563eb" : "1px solid #cbd5e1",
-                borderRadius: "6px",
-                padding: "5px 10px",
-                fontSize: "12px",
-                fontWeight: "700",
-                cursor: "pointer",
-                transition: "all 0.15s ease",
-              }}
+              className={`radar-control-btn ${currentRegion === reg.id ? "active" : ""}`}
             >
               {reg.name}
             </button>
@@ -517,15 +507,8 @@ export default function EmergencyRadarMap({
         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
           <button
             onClick={() => setShowWeatherOverlay(!showWeatherOverlay)}
+            className={`radar-control-btn ${showWeatherOverlay ? "active" : ""}`}
             style={{
-              background: showWeatherOverlay ? "#10b981" : isEmergencyMode ? "#2a1212" : "#ffffff",
-              color: showWeatherOverlay ? "#ffffff" : isEmergencyMode ? "#e5e7eb" : "#334155",
-              border: showWeatherOverlay ? "1px solid #059669" : "1px solid #cbd5e1",
-              borderRadius: "6px",
-              padding: "5px 12px",
-              fontSize: "12px",
-              fontWeight: "800",
-              cursor: "pointer",
               display: "inline-flex",
               alignItems: "center",
               gap: "6px",
@@ -611,20 +594,7 @@ export default function EmergencyRadarMap({
               <button
                 key={layer.id}
                 onClick={() => setActiveRadarLayer(layer.id)}
-                style={{
-                  background: isActive ? "#38bdf8" : "rgba(255,255,255,0.08)",
-                  color: isActive ? "#0f172a" : "#e2e8f0",
-                  border: isActive ? "1px solid #7dd3fc" : "1px solid rgba(255,255,255,0.12)",
-                  borderRadius: "8px",
-                  padding: "5px 11px",
-                  fontSize: "12px",
-                  fontWeight: "800",
-                  cursor: "pointer",
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: "5px",
-                  transition: "all 0.15s ease",
-                }}
+                className={`radar-layer-btn ${isActive ? "active" : ""}`}
               >
                 <span>{layer.icon}</span> {layer.label}
               </button>
@@ -636,9 +606,9 @@ export default function EmergencyRadarMap({
         <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
           <div
             style={{
-              background: "rgba(56, 189, 248, 0.12)",
-              color: "#38bdf8",
-              border: "1px solid rgba(56, 189, 248, 0.3)",
+              background: "rgba(67, 215, 156, 0.12)",
+              color: "#43d79c",
+              border: "1px solid rgba(67, 215, 156, 0.35)",
               borderRadius: "8px",
               padding: "5px 12px",
               fontSize: "11px",
@@ -648,15 +618,15 @@ export default function EmergencyRadarMap({
               gap: "6px",
             }}
           >
-            <span style={{ width: "7px", height: "7px", borderRadius: "50%", background: "#38bdf8" }} />
+            <span style={{ width: "7px", height: "7px", borderRadius: "50%", background: "#43d79c" }} />
             Provider: {radarProvidersStatus?.tomorrowIo?.isConfigured ? "Tomorrow.io Live Radar & Tiles" : "Tomorrow.io Maps / Open-Meteo Unified Radar"}
           </div>
 
           <div
             style={{
-              background: "rgba(16, 185, 129, 0.12)",
-              color: "#34d399",
-              border: "1px solid rgba(16, 185, 129, 0.3)",
+              background: "rgba(67, 215, 156, 0.12)",
+              color: "#43d79c",
+              border: "1px solid rgba(67, 215, 156, 0.35)",
               borderRadius: "8px",
               padding: "5px 12px",
               fontSize: "11px",
@@ -1318,16 +1288,13 @@ export default function EmergencyRadarMap({
           <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
             <button
               onClick={() => navigate(`/emergency?dest=${encodeURIComponent(selectedPointObj.name)}&tab=REPLAN`)}
+              className="weather-radar-action-btn tg-btn-slide-up"
               style={{
-                background: selectedPointObj.alertTier === "RED" ? "#dc2626" : "#2563eb",
-                color: "#ffffff",
-                border: "none",
                 borderRadius: "8px",
                 padding: "9px 16px",
                 fontSize: "13px",
                 fontWeight: "800",
                 cursor: "pointer",
-                boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
                 display: "inline-flex",
                 alignItems: "center",
                 gap: "6px",
@@ -1338,10 +1305,8 @@ export default function EmergencyRadarMap({
 
             <button
               onClick={() => navigate(`/weather?dest=${encodeURIComponent(selectedPointObj.name)}`)}
+              className="weather-forecast-btn tg-btn-slide-up"
               style={{
-                background: "#ffffff",
-                color: "#0f172a",
-                border: "1px solid #cbd5e1",
                 borderRadius: "8px",
                 padding: "9px 14px",
                 fontSize: "13px",
@@ -1382,25 +1347,7 @@ export default function EmergencyRadarMap({
             <button
               key={safeName}
               onClick={() => onSelectDestination && onSelectDestination(safeName)}
-              style={{
-                background: "#ffffff",
-                border: "1px solid #bbf7d0",
-                color: "#15803d",
-                fontSize: "12px",
-                fontWeight: "700",
-                padding: "3px 10px",
-                borderRadius: "20px",
-                cursor: "pointer",
-                transition: "all 0.15s ease",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = "#15803d";
-                e.currentTarget.style.color = "#ffffff";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = "#ffffff";
-                e.currentTarget.style.color = "#15803d";
-              }}
+              className="radar-haven-btn"
             >
               ✓ {safeName}
             </button>

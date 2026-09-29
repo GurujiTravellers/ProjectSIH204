@@ -326,8 +326,9 @@ export default function EmergencyHub() {
     >
       {/* TOP EMERGENCY MODE STRIP */}
       <div
+        className="disaster-header-banner"
         style={{
-          background: isEmergencyMode ? "#7f1d1d" : "#0f172a",
+          background: isEmergencyMode ? "#7f1d1d" : "#18221d",
           color: "#ffffff",
           padding: "12px 24px",
           display: "flex",
@@ -335,7 +336,7 @@ export default function EmergencyHub() {
           alignItems: "center",
           flexWrap: "wrap",
           gap: "12px",
-          borderBottom: isEmergencyMode ? "2px solid #ef4444" : "none",
+          borderBottom: isEmergencyMode ? "2px solid #ef4444" : "2px solid #43d79c",
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
@@ -350,8 +351,9 @@ export default function EmergencyHub() {
                 fontSize: "12px",
                 padding: "2px 8px",
                 borderRadius: "12px",
-                background: isEmergencyMode ? "#ef4444" : "#1e293b",
-                color: "#ffffff",
+                background: isEmergencyMode ? "#ef4444" : "#18221d",
+                color: isEmergencyMode ? "#ffffff" : "#43d79c",
+                border: isEmergencyMode ? "none" : "1px solid #43d79c",
                 fontWeight: "700",
               }}
             >
@@ -367,11 +369,11 @@ export default function EmergencyHub() {
               alignItems: "center",
               gap: "6px",
               fontSize: "12px",
-              color: "#34d399",
-              background: "rgba(16, 185, 129, 0.15)",
+              color: "#43d79c",
+              background: "rgba(67, 215, 156, 0.15)",
               padding: "4px 10px",
               borderRadius: "20px",
-              border: "1px solid rgba(16, 185, 129, 0.3)",
+              border: "1px solid rgba(67, 215, 156, 0.35)",
             }}
           >
             <span>●</span> Offline Ready Cached
@@ -1110,18 +1112,17 @@ export default function EmergencyHub() {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
+                className={`disaster-tab-btn ${isSelected ? "active" : ""}`}
                 style={{
                   background: "transparent",
                   border: "none",
-                  borderBottom: isSelected ? "3px solid #ef4444" : "3px solid transparent",
+                  borderBottom: isSelected ? "3px solid #43d79c" : "3px solid transparent",
                   padding: "12px 18px",
                   fontSize: "14px",
                   fontWeight: isSelected ? "800" : "600",
                   color: isSelected
-                    ? "#ef4444"
-                    : isEmergencyMode
-                    ? "#9ca3af"
-                    : "#64748b",
+                    ? (isEmergencyMode ? "#43d79c" : "#18221d")
+                    : (isEmergencyMode ? "#9ca3af" : "#64748b"),
                   cursor: "pointer",
                   whiteSpace: "nowrap",
                   transition: "all 0.15s",
