@@ -19,12 +19,13 @@ export default function Weather() {
   const [lastSyncTime, setLastSyncTime] = useState(null);
   const [secondsAgo, setSecondsAgo] = useState(0);
 
-  // View Mode: RADAR_MAP or GRID_CARDS
-  const [viewMode, setViewMode] = useState("RADAR_MAP"); // RADAR_MAP, GRID_CARDS, SPLIT
+  // View Mode: SPLIT by default so both Real-Time Radar Map AND the Live Temperature Section are visible immediately!
+  const [viewMode, setViewMode] = useState("SPLIT"); // SPLIT, GRID_CARDS, RADAR_MAP
 
   // Filters & Search
   const [searchQuery, setSearchQuery] = useState(searchParams.get("search") || "");
   const [tierFilter, setTierFilter] = useState(searchParams.get("tier") || "ALL"); // ALL, RED, YELLOW, GREEN, RAIN
+  const [tempBandFilter, setTempBandFilter] = useState("ALL"); // ALL, FREEZE, PLEASANT, WARM
   const [regionFilter, setRegionFilter] = useState("ALL"); // ALL, HIMALAYAS, SOUTH, EAST, WEST, NORTHEAST
 
   // Modal for destination forecast details
@@ -138,6 +139,86 @@ export default function Weather() {
     return { red, yellow, rain, green, total: destinations.length };
   }, [destinations]);
 
+  // Real-time temperature analytics derived 100% authentically from live API feeds
+  const temperaturePulse = useMemo(() => {
+    const valid = destinations.filter(
+      (d) => d.weather && typeof d.weather.temperature === "number" && !isNaN(d.weather.temperature)
+    );
+
+    if (valid.length === 0) {
+      return {
+        coldest: null,
+        warmest: null,
+        average: null,
+        freezingCount: 0,
+        pleasantCount: 0,
+        warmCount: 0,
+        totalWithTemp: 0,
+      };
+    }
+
+    let coldest = valid[0];
+    let warmest = valid[0];
+    let sumTemp = 0;
+    let freezingCount = 0; // < 10°C
+    let pleasantCount = 0; // 10°C to 24°C
+    let warmCount = 0; // > 24°C
+
+    valid.forEach((d) => {
+      const t = d.weather.temperature;
+      sumTemp += t;
+      if (t < coldest.weather.temperature) coldest = d;
+      if (t > warmest.weather.temperature) warmest = d;
+
+      if (t < 10) freezingCount++;
+      else if (t <= 24) pleasantCount++;
+      else warmCount++;
+    });
+
+    const average = Math.round((sumTemp / valid.length) * 10) / 10;
+
+    return {
+      coldest,
+      warmest,
+      average,
+      freezingCount,
+      pleasantCount,
+      warmCount,
+      totalWithTemp: valid.length,
+    };
+  }, [destinations]);
+
+  // Key notable destinations across India for quick-glance temperature ticker
+  const popularHubNames = useMemo(
+    () => [
+      "Manali",
+      "Rohtang Pass",
+      "Puri",
+      "Rishikesh",
+      "Goa",
+      "Jaipur",
+      "Darjeeling",
+      "Leh Ladakh",
+      "Bengaluru",
+      "Mumbai",
+      "Srinagar",
+      "Chitkul",
+      "Shimla",
+      "Gangtok",
+      "Dawki",
+      "Delhi",
+      "Varanasi",
+      "Agra",
+    ],
+    []
+  );
+
+  const quickGlanceDestinations = useMemo(() => {
+    return popularHubNames
+      .map((name) => destinations.find((d) => d.name.toLowerCase() === name.toLowerCase()))
+      .filter(Boolean);
+  }, [destinations, popularHubNames]);
+
   // Filtered destinations
   const filteredDestinations = useMemo(() => {
     return destinations.filter((d) => {
@@ -146,6 +227,11 @@ export default function Weather() {
       if (tierFilter === "YELLOW" && d.disaster.alertTier !== "YELLOW") return false;
       if (tierFilter === "RAIN" && !d.disaster.isRainAlert) return false;
       if (tierFilter === "GREEN" && (d.disaster.alertTier !== "GREEN" || d.disaster.isRainAlert)) return false;
+
+      // Temperature Band filter
+      if (tempBandFilter === "FREEZE" && (d.weather?.temperature == null || d.weather.temperature >= 10)) return false;
+      if (tempBandFilter === "PLEASANT" && (d.weather?.temperature == null || d.weather.temperature < 10 || d.weather.temperature > 24)) return false;
+      if (tempBandFilter === "WARM" && (d.weather?.temperature == null || d.weather.temperature <= 24)) return false;
 
       // Region filter
       if (regionFilter !== "ALL") {
@@ -187,7 +273,7 @@ export default function Weather() {
 
       return true;
     });
-  }, [destinations, tierFilter, regionFilter, searchQuery]);
+  }, [destinations, tierFilter, tempBandFilter, regionFilter, searchQuery]);
 
   // Active Disaster Warnings (RED & YELLOW alerts)
   const activeCriticalAlerts = useMemo(() => {
@@ -439,10 +525,10 @@ export default function Weather() {
         >
           <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
             <button
-              onClick={() => setViewMode("RADAR_MAP")}
+              onClick={() => setViewMode("SPLIT")}
               style={{
-                background: viewMode === "RADAR_MAP" ? "#0f172a" : "#f1f5f9",
-                color: viewMode === "RADAR_MAP" ? "#ffffff" : "#475569",
+                background: viewMode === "SPLIT" ? "#0f172a" : "#f1f5f9",
+                color: viewMode === "SPLIT" ? "#ffffff" : "#475569",
                 border: "none",
                 borderRadius: "10px",
                 padding: "8px 16px",
@@ -455,7 +541,7 @@ export default function Weather() {
                 transition: "all 0.15s ease",
               }}
             >
-              <span>🗺️</span> Real-Time Weather Radar Map
+              <span>📊</span> Radar & Live Temperatures (Default)
             </button>
 
             <button
@@ -475,14 +561,14 @@ export default function Weather() {
                 transition: "all 0.15s ease",
               }}
             >
-              <span>📋</span> All Destination Telemetry Cards ({filteredDestinations.length})
+              <span>🌡️</span> Destination Temperatures ({filteredDestinations.length})
             </button>
 
             <button
-              onClick={() => setViewMode("SPLIT")}
+              onClick={() => setViewMode("RADAR_MAP")}
               style={{
-                background: viewMode === "SPLIT" ? "#0f172a" : "#f1f5f9",
-                color: viewMode === "SPLIT" ? "#ffffff" : "#475569",
+                background: viewMode === "RADAR_MAP" ? "#0f172a" : "#f1f5f9",
+                color: viewMode === "RADAR_MAP" ? "#ffffff" : "#475569",
                 border: "none",
                 borderRadius: "10px",
                 padding: "8px 16px",
@@ -495,7 +581,7 @@ export default function Weather() {
                 transition: "all 0.15s ease",
               }}
             >
-              <span>📊</span> Full Split View
+              <span>🗺️</span> Real-Time Radar Map Focus
             </button>
           </div>
 
@@ -518,6 +604,337 @@ export default function Weather() {
               }
             }}
           />
+        )}
+
+        {/* 1.8 DEDICATED LIVE DESTINATION TEMPERATURES SECTION (ALWAYS VISIBLE) */}
+        <div
+          id="temperature-telemetry-section"
+          style={{
+            background: "#ffffff",
+            border: "1px solid #e2e8f0",
+            borderRadius: "16px",
+            padding: "24px",
+            marginBottom: "28px",
+            marginTop: (viewMode === "RADAR_MAP" || viewMode === "SPLIT") ? "24px" : "0",
+            boxShadow: "0 4px 16px rgba(0,0,0,0.04)",
+          }}
+        >
+          {/* Section Header */}
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              flexWrap: "wrap",
+              gap: "12px",
+              marginBottom: "20px",
+              borderBottom: "1px solid #f1f5f9",
+              paddingBottom: "16px",
+            }}
+          >
+            <div>
+              <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
+                <span style={{ fontSize: "24px" }}>🌡️</span>
+                <h3 style={{ margin: 0, fontSize: "20px", fontWeight: "900", color: "#0f172a" }}>
+                  Live Destination Temperatures & Microclimate Telemetry
+                </h3>
+                <span
+                  style={{
+                    background: "#ecfdf5",
+                    color: "#059669",
+                    border: "1px solid #a7f3d0",
+                    fontSize: "11px",
+                    fontWeight: "800",
+                    padding: "3px 10px",
+                    borderRadius: "20px",
+                  }}
+                >
+                  🟢 100% Live External API Telemetry
+                </span>
+              </div>
+              <p style={{ margin: "6px 0 0", fontSize: "13px", color: "#64748b" }}>
+                Real-time ambient temperatures, thermal comfort indices, and altitude chill metrics streamed from Tomorrow.io and Open-Meteo across 55 Indian destinations.
+              </p>
+            </div>
+
+            <div style={{ fontSize: "12px", color: "#475569", fontWeight: "700" }}>
+              Active Monitored Feeds: <strong style={{ color: "#0f172a" }}>{temperaturePulse.totalWithTemp} Stations</strong>
+            </div>
+          </div>
+
+          {/* 4 Telemetry KPI Cards */}
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
+              gap: "16px",
+              marginBottom: "20px",
+            }}
+          >
+            {/* Card 1: Coldest Recorded Spot */}
+            <div
+              style={{
+                background: "linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%)",
+                border: "1.5px solid #bae6fd",
+                borderRadius: "14px",
+                padding: "16px 18px",
+              }}
+            >
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+                <div>
+                  <span style={{ fontSize: "11px", fontWeight: "800", color: "#0369a1", textTransform: "uppercase", letterSpacing: "0.5px" }}>
+                    ❄️ Coldest Recorded Pass
+                  </span>
+                  <div style={{ fontSize: "16px", fontWeight: "800", color: "#0f172a", marginTop: "4px" }}>
+                    {temperaturePulse.coldest ? `${temperaturePulse.coldest.name} (${temperaturePulse.coldest.state})` : "Connecting..."}
+                  </div>
+                </div>
+                <div style={{ fontSize: "28px", fontWeight: "900", color: "#0284c7" }}>
+                  {temperaturePulse.coldest?.weather?.temperature != null
+                    ? `${temperaturePulse.coldest.weather.temperature}°C`
+                    : "--"}
+                </div>
+              </div>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "10px", fontSize: "12px", color: "#0369a1" }}>
+                <span>
+                  Feels like {temperaturePulse.coldest?.weather?.apparentTemperature != null ? `${temperaturePulse.coldest.weather.apparentTemperature}°C` : "--"}
+                </span>
+                {temperaturePulse.coldest && (
+                  <button
+                    onClick={() => handleOpenDetails(temperaturePulse.coldest)}
+                    style={{
+                      background: "#0284c7",
+                      color: "#ffffff",
+                      border: "none",
+                      borderRadius: "6px",
+                      padding: "4px 10px",
+                      fontSize: "11px",
+                      fontWeight: "700",
+                      cursor: "pointer",
+                    }}
+                  >
+                    View Forecast
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* Card 2: Warmest Destination */}
+            <div
+              style={{
+                background: "linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%)",
+                border: "1.5px solid #fde68a",
+                borderRadius: "14px",
+                padding: "16px 18px",
+              }}
+            >
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+                <div>
+                  <span style={{ fontSize: "11px", fontWeight: "800", color: "#b45309", textTransform: "uppercase", letterSpacing: "0.5px" }}>
+                    ☀️ Warmest Corridor
+                  </span>
+                  <div style={{ fontSize: "16px", fontWeight: "800", color: "#0f172a", marginTop: "4px" }}>
+                    {temperaturePulse.warmest ? `${temperaturePulse.warmest.name} (${temperaturePulse.warmest.state})` : "Connecting..."}
+                  </div>
+                </div>
+                <div style={{ fontSize: "28px", fontWeight: "900", color: "#d97706" }}>
+                  {temperaturePulse.warmest?.weather?.temperature != null
+                    ? `${temperaturePulse.warmest.weather.temperature}°C`
+                    : "--"}
+                </div>
+              </div>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "10px", fontSize: "12px", color: "#b45309" }}>
+                <span>
+                  Feels like {temperaturePulse.warmest?.weather?.apparentTemperature != null ? `${temperaturePulse.warmest.weather.apparentTemperature}°C` : "--"}
+                </span>
+                {temperaturePulse.warmest && (
+                  <button
+                    onClick={() => handleOpenDetails(temperaturePulse.warmest)}
+                    style={{
+                      background: "#d97706",
+                      color: "#ffffff",
+                      border: "none",
+                      borderRadius: "6px",
+                      padding: "4px 10px",
+                      fontSize: "11px",
+                      fontWeight: "700",
+                      cursor: "pointer",
+                    }}
+                  >
+                    View Forecast
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* Card 3: National Corridor Average */}
+            <div
+              style={{
+                background: "linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)",
+                border: "1.5px solid #bbf7d0",
+                borderRadius: "14px",
+                padding: "16px 18px",
+              }}
+            >
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+                <div>
+                  <span style={{ fontSize: "11px", fontWeight: "800", color: "#15803d", textTransform: "uppercase", letterSpacing: "0.5px" }}>
+                    🌡️ National Corridor Mean
+                  </span>
+                  <div style={{ fontSize: "13px", fontWeight: "700", color: "#166534", marginTop: "4px" }}>
+                    Across 55 Active Circuits
+                  </div>
+                </div>
+                <div style={{ fontSize: "28px", fontWeight: "900", color: "#16a34a" }}>
+                  {temperaturePulse.average != null ? `${temperaturePulse.average}°C` : "--"}
+                </div>
+              </div>
+              <div style={{ marginTop: "10px", fontSize: "12px", color: "#15803d", fontWeight: "600" }}>
+                {temperaturePulse.pleasantCount} destinations in optimal comfort range (10-24°C)
+              </div>
+            </div>
+
+            {/* Card 4: Thermal Distribution Breakdown */}
+            <div
+              style={{
+                background: "linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%)",
+                border: "1.5px solid #e9d5ff",
+                borderRadius: "14px",
+                padding: "16px 18px",
+              }}
+            >
+              <span style={{ fontSize: "11px", fontWeight: "800", color: "#7e22ce", textTransform: "uppercase", letterSpacing: "0.5px" }}>
+                🏔️ Thermal Zones Watch
+              </span>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "8px" }}>
+                <div style={{ textAlign: "center" }}>
+                  <div style={{ fontSize: "18px", fontWeight: "900", color: "#0284c7" }}>
+                    {temperaturePulse.freezingCount}
+                  </div>
+                  <div style={{ fontSize: "11px", color: "#475569", fontWeight: "700" }}>❄️ &lt; 10°C</div>
+                </div>
+                <div style={{ textAlign: "center" }}>
+                  <div style={{ fontSize: "18px", fontWeight: "900", color: "#16a34a" }}>
+                    {temperaturePulse.pleasantCount}
+                  </div>
+                  <div style={{ fontSize: "11px", color: "#475569", fontWeight: "700" }}>🍃 10-24°C</div>
+                </div>
+                <div style={{ textAlign: "center" }}>
+                  <div style={{ fontSize: "18px", fontWeight: "900", color: "#ea580c" }}>
+                    {temperaturePulse.warmCount}
+                  </div>
+                  <div style={{ fontSize: "11px", color: "#475569", fontWeight: "700" }}>☀️ &gt; 24°C</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Popular Hubs Realtime Temperature Quick-Glance Ticker */}
+          <div>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "10px" }}>
+              <span style={{ fontSize: "12px", fontWeight: "800", color: "#475569", textTransform: "uppercase" }}>
+                ⚡ Quick Glance: Current Temperatures at Key Hubs (Click to view 7-Day Forecast)
+              </span>
+              <span style={{ fontSize: "11px", color: "#64748b" }}>
+                Scroll horizontally ➔
+              </span>
+            </div>
+            <div
+              style={{
+                display: "flex",
+                gap: "10px",
+                overflowX: "auto",
+                paddingBottom: "8px",
+              }}
+            >
+              {quickGlanceDestinations.map((d) => {
+                const temp = d.weather.temperature;
+                const isCold = temp != null && temp < 10;
+                const isWarm = temp != null && temp > 24;
+                return (
+                  <button
+                    key={d.name}
+                    onClick={() => handleOpenDetails(d)}
+                    style={{
+                      flex: "0 0 auto",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "8px",
+                      background: isCold ? "#f0f9ff" : isWarm ? "#fffbeb" : "#f8fafc",
+                      border: `1.5px solid ${isCold ? "#7dd3fc" : isWarm ? "#fde68a" : "#e2e8f0"}`,
+                      borderRadius: "10px",
+                      padding: "8px 12px",
+                      cursor: "pointer",
+                      transition: "transform 0.15s ease, box-shadow 0.15s ease",
+                    }}
+                    title={`Click to open 7-day forecast for ${d.name}`}
+                  >
+                    <span style={{ fontSize: "18px" }}>{d.weather.icon || "🌤️"}</span>
+                    <div style={{ textAlign: "left" }}>
+                      <div style={{ fontSize: "13px", fontWeight: "800", color: "#0f172a" }}>
+                        {d.name}
+                      </div>
+                      <div style={{ fontSize: "11px", color: "#64748b" }}>
+                        {d.state}
+                      </div>
+                    </div>
+                    <div
+                      style={{
+                        marginLeft: "6px",
+                        fontSize: "15px",
+                        fontWeight: "900",
+                        color: isCold ? "#0284c7" : isWarm ? "#d97706" : "#0f172a",
+                      }}
+                    >
+                      {temp != null ? `${temp}°C` : "--"}
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+
+        {/* View Mode Prompt if in Radar Map Focus */}
+        {viewMode === "RADAR_MAP" && (
+          <div
+            style={{
+              background: "#ffffff",
+              border: "1px dashed #cbd5e1",
+              borderRadius: "14px",
+              padding: "16px 20px",
+              marginBottom: "28px",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              flexWrap: "wrap",
+              gap: "12px",
+            }}
+          >
+            <div>
+              <strong style={{ fontSize: "14px", color: "#0f172a" }}>
+                Viewing Radar Map & Live Temperature Telemetry Highlights
+              </strong>
+              <p style={{ margin: "2px 0 0", fontSize: "12px", color: "#64748b" }}>
+                Switch to Split View or Grid View to inspect all {filteredDestinations.length} destination weather cards and highway safety statuses.
+              </p>
+            </div>
+            <button
+              onClick={() => setViewMode("SPLIT")}
+              style={{
+                background: "#0f172a",
+                color: "#ffffff",
+                border: "none",
+                borderRadius: "8px",
+                padding: "8px 16px",
+                fontSize: "13px",
+                fontWeight: "800",
+                cursor: "pointer",
+              }}
+            >
+              Open Full Split View ➔
+            </button>
+          </div>
         )}
 
         {/* 2. REAL-TIME DISASTER WARNING TICKER (IF ACTIVE) */}
@@ -687,42 +1104,76 @@ export default function Weather() {
             </div>
           </div>
 
-          {/* Tier Filter Buttons */}
+          {/* Tier Filter Buttons & Temperature Band Filters */}
           <div
             style={{
               display: "flex",
-              gap: "10px",
-              marginTop: "16px",
+              justifyContent: "space-between",
+              alignItems: "center",
               flexWrap: "wrap",
+              gap: "14px",
+              marginTop: "16px",
               borderTop: "1px solid #f1f5f9",
               paddingTop: "14px",
             }}
           >
-            {[
-              { id: "ALL", label: `All Destinations (${stats.total})`, color: "#0f172a" },
-              { id: "RED", label: `🔴 Disaster Zones (${stats.red})`, color: "#ef4444" },
-              { id: "YELLOW", label: `🟡 Advisories (${stats.yellow})`, color: "#eab308" },
-              { id: "RAIN", label: `🌧️ Rain Alerts (${stats.rain})`, color: "#0284c7" },
-              { id: "GREEN", label: `🟢 Clear & Sunny (${stats.green})`, color: "#10b981" },
-            ].map((btn) => (
-              <button
-                key={btn.id}
-                onClick={() => setTierFilter(btn.id)}
-                className={`weather-filter-btn tg-btn-slide-up ${tierFilter === btn.id ? "active" : ""}`}
-                style={{
-                  padding: "8px 16px",
-                  borderRadius: "20px",
-                  border: tierFilter === btn.id ? `2px solid ${btn.color}` : "1px solid #cbd5e1",
-                  background: tierFilter === btn.id ? btn.color : "#ffffff",
-                  color: tierFilter === btn.id ? "#ffffff" : "#475569",
-                  fontSize: "13px",
-                  fontWeight: "700",
-                  cursor: "pointer",
-                }}
-              >
-                {btn.label}
-              </button>
-            ))}
+            {/* Left: Hazard / Safety Filters */}
+            <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", alignItems: "center" }}>
+              <span style={{ fontSize: "12px", fontWeight: "800", color: "#64748b" }}>Safety:</span>
+              {[
+                { id: "ALL", label: `All (${stats.total})`, color: "#0f172a" },
+                { id: "RED", label: `🔴 Disaster (${stats.red})`, color: "#ef4444" },
+                { id: "YELLOW", label: `🟡 Advisory (${stats.yellow})`, color: "#eab308" },
+                { id: "RAIN", label: `🌧️ Rain (${stats.rain})`, color: "#0284c7" },
+                { id: "GREEN", label: `🟢 Fair (${stats.green})`, color: "#10b981" },
+              ].map((btn) => (
+                <button
+                  key={btn.id}
+                  onClick={() => setTierFilter(btn.id)}
+                  className={`weather-filter-btn tg-btn-slide-up ${tierFilter === btn.id ? "active" : ""}`}
+                  style={{
+                    padding: "6px 14px",
+                    borderRadius: "20px",
+                    border: tierFilter === btn.id ? `2px solid ${btn.color}` : "1px solid #cbd5e1",
+                    background: tierFilter === btn.id ? btn.color : "#ffffff",
+                    color: tierFilter === btn.id ? "#ffffff" : "#475569",
+                    fontSize: "12px",
+                    fontWeight: "700",
+                    cursor: "pointer",
+                  }}
+                >
+                  {btn.label}
+                </button>
+              ))}
+            </div>
+
+            {/* Right: Temperature Band Filters */}
+            <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", alignItems: "center" }}>
+              <span style={{ fontSize: "12px", fontWeight: "800", color: "#64748b" }}>🌡️ Temperature:</span>
+              {[
+                { id: "ALL", label: `All Temps`, color: "#0f172a" },
+                { id: "FREEZE", label: `❄️ Alpine (<10°C) (${temperaturePulse.freezingCount})`, color: "#0284c7" },
+                { id: "PLEASANT", label: `🍃 Mild (10-24°C) (${temperaturePulse.pleasantCount})`, color: "#16a34a" },
+                { id: "WARM", label: `☀️ Warm (>24°C) (${temperaturePulse.warmCount})`, color: "#ea580c" },
+              ].map((tBtn) => (
+                <button
+                  key={tBtn.id}
+                  onClick={() => setTempBandFilter(tBtn.id)}
+                  style={{
+                    padding: "6px 12px",
+                    borderRadius: "20px",
+                    border: tempBandFilter === tBtn.id ? `2px solid ${tBtn.color}` : "1px solid #cbd5e1",
+                    background: tempBandFilter === tBtn.id ? tBtn.color : "#ffffff",
+                    color: tempBandFilter === tBtn.id ? "#ffffff" : "#475569",
+                    fontSize: "12px",
+                    fontWeight: "700",
+                    cursor: "pointer",
+                  }}
+                >
+                  {tBtn.label}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
 
@@ -768,6 +1219,7 @@ export default function Weather() {
               onClick={() => {
                 setSearchQuery("");
                 setTierFilter("ALL");
+                setTempBandFilter("ALL");
                 setRegionFilter("ALL");
               }}
               className="weather-reset-btn tg-btn-slide-up"
@@ -866,6 +1318,54 @@ export default function Weather() {
                         <span style={{ fontSize: "12px", color: "#64748b" }}>
                           Corridor: <strong>{item.corridor}</strong>
                         </span>
+                        {/* Thermal Comfort Badge */}
+                        {item.weather.temperature != null && (
+                          <div style={{ marginTop: "6px" }}>
+                            {item.weather.temperature < 5 ? (
+                              <span
+                                style={{
+                                  background: "#e0f2fe",
+                                  color: "#0369a1",
+                                  fontSize: "11px",
+                                  fontWeight: "800",
+                                  padding: "2px 8px",
+                                  borderRadius: "4px",
+                                  display: "inline-block",
+                                }}
+                              >
+                                ❄️ Sub-Zero / Alpine Freeze
+                              </span>
+                            ) : item.weather.temperature <= 22 ? (
+                              <span
+                                style={{
+                                  background: "#ecfdf5",
+                                  color: "#047857",
+                                  fontSize: "11px",
+                                  fontWeight: "800",
+                                  padding: "2px 8px",
+                                  borderRadius: "4px",
+                                  display: "inline-block",
+                                }}
+                              >
+                                🍃 Mountain Mild & Crisp
+                              </span>
+                            ) : (
+                              <span
+                                style={{
+                                  background: "#fffbeb",
+                                  color: "#b45309",
+                                  fontSize: "11px",
+                                  fontWeight: "800",
+                                  padding: "2px 8px",
+                                  borderRadius: "4px",
+                                  display: "inline-block",
+                                }}
+                              >
+                                ☀️ Warm Travel Corridor
+                              </span>
+                            )}
+                          </div>
+                        )}
                       </div>
 
                       {/* Live Temp & Icon */}
