@@ -5,7 +5,9 @@
   "type": "module",
   "proxy": "http://localhost:5000",
   "scripts": {
-    "dev": "vite",
+    "dev": "node scripts/devRunner.js",
+    "dev:vite": "vite",
+    "dev:server": "node backend/server.js",
     "build": "vite build",
     "postinstall": "npm --prefix backend install",
     "lint": "eslint .",

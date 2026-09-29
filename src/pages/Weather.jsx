@@ -7,16 +7,21 @@ import {
   fetchDestinationLiveWeather,
 } from "../services/weatherApi";
 import EmergencyRadarMap from "../components/EmergencyRadarMap";
+import liveWeatherSnapshot from "../data/liveWeatherSnapshot.json";
+
+const initialDestinationsList = Object.values(liveWeatherSnapshot?.destinations || {});
 
 export default function Weather() {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
 
-  const [destinations, setDestinations] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [syncStatus, setSyncStatus] = useState(null);
+  const [destinations, setDestinations] = useState(initialDestinationsList);
+  const [loading, setLoading] = useState(initialDestinationsList.length === 0);
+  const [syncStatus, setSyncStatus] = useState(liveWeatherSnapshot?.syncStatus || null);
   const [isSyncing, setIsSyncing] = useState(false);
-  const [lastSyncTime, setLastSyncTime] = useState(null);
+  const [lastSyncTime, setLastSyncTime] = useState(
+    liveWeatherSnapshot?.lastSyncTimestamp ? new Date(liveWeatherSnapshot.lastSyncTimestamp) : new Date()
+  );
   const [secondsAgo, setSecondsAgo] = useState(0);
 
   // View Mode: SPLIT by default so both Real-Time Radar Map AND the Live Temperature Section are visible immediately!

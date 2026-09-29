@@ -2,19 +2,22 @@ import React, { createContext, useContext, useState, useEffect, useRef, useCallb
 import { getApiBaseUrl } from "../config/apiConfig";
 import { showToast } from "../components/Toast";
 import { fetchLiveSyncedDestinations, forceWeatherSync } from "../services/weatherApi";
+import liveWeatherSnapshot from "../data/liveWeatherSnapshot.json";
+
+const initialDestList = Object.values(liveWeatherSnapshot?.destinations || {});
 
 const RealtimeDisasterContext = createContext(null);
 
 export function RealtimeDisasterProvider({ children }) {
-  const [destinations, setDestinations] = useState([]);
+  const [destinations, setDestinations] = useState(initialDestList);
   const [stats, setStats] = useState({
-    totalDestinations: 0,
-    disasterZones: 0,
-    moderateAdvisories: 0,
-    rainAlerts: 0,
-    normalClear: 0,
+    totalDestinations: initialDestList.length,
+    disasterZones: initialDestList.filter((d) => d.disaster?.alertTier === "RED").length,
+    moderateAdvisories: initialDestList.filter((d) => d.disaster?.alertTier === "YELLOW").length,
+    rainAlerts: initialDestList.filter((d) => d.disaster?.isRainAlert).length,
+    normalClear: initialDestList.filter((d) => d.disaster?.alertTier === "GREEN" && !d.disaster?.isRainAlert).length,
   });
-  const [lastSyncTimestamp, setLastSyncTimestamp] = useState(null);
+  const [lastSyncTimestamp, setLastSyncTimestamp] = useState(liveWeatherSnapshot?.lastSyncTimestamp || null);
   const [isLiveConnected, setIsLiveConnected] = useState(false);
   const [isSyncing, setIsSyncing] = useState(false);
   const [recentTimeline, setRecentTimeline] = useState([]);
