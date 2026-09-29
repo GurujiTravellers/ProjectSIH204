@@ -5,12 +5,49 @@ const {
   syncDatabaseNow,
   getDestinationByName,
   registerSseClient,
+  getRadarCapabilities,
+  fetchRainViewerRadarFrames,
 } = require("../services/realtimeWeatherSyncService");
 
 const router = express.Router();
 
 const GEOCODING_URL = "https://geocoding-api.open-meteo.com/v1/search";
 const WEATHER_URL = "https://api.open-meteo.com/v1/forecast";
+
+/**
+ * 0. GET REAL-TIME WEATHER RADAR CAPABILITIES & LIVE PROVIDER TILES
+ * GET /api/weather/radar/capabilities
+ * Supports Tomorrow.io Maps / Tiles & RainViewer Global Radar Frames
+ */
+router.get("/radar/capabilities", async (req, res) => {
+  try {
+    const capabilities = await getRadarCapabilities();
+    res.json({
+      success: true,
+      ...capabilities,
+    });
+  } catch (error) {
+    console.error("Radar capabilities error:", error);
+    res.status(500).json({ success: false, message: "Error fetching radar capabilities" });
+  }
+});
+
+/**
+ * 0.5 GET REAL-TIME RAINVIEWER RADAR ANIMATION FRAMES
+ * GET /api/weather/radar/frames
+ */
+router.get("/radar/frames", async (req, res) => {
+  try {
+    const framesData = await fetchRainViewerRadarFrames();
+    res.json({
+      success: true,
+      ...framesData,
+    });
+  } catch (error) {
+    console.error("Radar frames error:", error);
+    res.status(500).json({ success: false, message: "Error fetching radar frames" });
+  }
+});
 
 /**
  * 1. GET ALL DESTINATIONS WITH SYNCHRONIZED REAL-TIME WEATHER & DISASTERS

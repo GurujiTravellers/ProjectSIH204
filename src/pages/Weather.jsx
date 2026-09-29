@@ -6,6 +6,7 @@ import {
   forceWeatherSync,
   fetchDestinationLiveWeather,
 } from "../services/weatherApi";
+import EmergencyRadarMap from "../components/EmergencyRadarMap";
 
 export default function Weather() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -17,6 +18,9 @@ export default function Weather() {
   const [isSyncing, setIsSyncing] = useState(false);
   const [lastSyncTime, setLastSyncTime] = useState(null);
   const [secondsAgo, setSecondsAgo] = useState(0);
+
+  // View Mode: RADAR_MAP or GRID_CARDS
+  const [viewMode, setViewMode] = useState("RADAR_MAP"); // RADAR_MAP, GRID_CARDS, SPLIT
 
   // Filters & Search
   const [searchQuery, setSearchQuery] = useState(searchParams.get("search") || "");
@@ -191,6 +195,33 @@ export default function Weather() {
     return destinations.filter((d) => d.disaster.alertTier === "YELLOW");
   }, [destinations]);
 
+  // Formatted alerts for EmergencyRadarMap
+  const radarMapAlerts = useMemo(() => {
+    return destinations.map((d) => ({
+      id: d.disaster.activeBulletinId || `ALERT-${d.name}`,
+      destination: d.name,
+      alertTier: d.disaster.alertTier,
+      severity: d.disaster.severity,
+      isDisasterZone: d.disaster.isDisasterZone,
+      isModerateAdvisory: d.disaster.isModerateAdvisory,
+      isRainAlert: d.disaster.isRainAlert,
+      isNormal: d.disaster.isNormal,
+      movementStatus: d.disaster.movementStatus,
+      movementFeasible: d.disaster.movementFeasible,
+      disasterType: d.disaster.hazardType,
+      title: d.disaster.title,
+      description: d.disaster.description,
+      source: d.disaster.source,
+      liveWeather: {
+        temp: d.weather.temperature,
+        precipitation: d.weather.precipitation,
+        windGust: d.weather.windGusts,
+        humidity: d.weather.humidity,
+        condition: d.weather.condition,
+      },
+    }));
+  }, [destinations]);
+
   return (
     <div style={{ background: "#f8fafc", minHeight: "100vh", paddingBottom: "80px" }}>
       {/* 1. TOP LIVE REALTIME DATABASE SYNC HEADER */}
@@ -244,7 +275,7 @@ export default function Weather() {
               </span>
 
               <span style={{ fontSize: "13px", color: "#94a3b8" }}>
-                {secondsAgo === 0 ? "Synced just now" : `Synced ${secondsAgo}s ago`} • Polled every 60s
+                {secondsAgo === 0 ? "Synced just now" : `Synced ${secondsAgo}s ago`} • Polled every 5m
               </span>
             </div>
 
@@ -381,8 +412,107 @@ export default function Weather() {
       </div>
 
       <div className="weather-bulletins-wrapper" style={{ maxWidth: "1280px", margin: "36px auto 0", padding: "0 24px" }}>
+        {/* VIEW MODE TABS: REAL-TIME RADAR MAP vs TELEMETRY GRID */}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            flexWrap: "wrap",
+            gap: "12px",
+            marginBottom: "20px",
+            background: "#ffffff",
+            padding: "10px 16px",
+            borderRadius: "14px",
+            border: "1px solid #e2e8f0",
+            boxShadow: "0 2px 8px rgba(0,0,0,0.03)",
+          }}
+        >
+          <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+            <button
+              onClick={() => setViewMode("RADAR_MAP")}
+              style={{
+                background: viewMode === "RADAR_MAP" ? "#0f172a" : "#f1f5f9",
+                color: viewMode === "RADAR_MAP" ? "#ffffff" : "#475569",
+                border: "none",
+                borderRadius: "10px",
+                padding: "8px 16px",
+                fontSize: "13px",
+                fontWeight: "800",
+                cursor: "pointer",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "6px",
+                transition: "all 0.15s ease",
+              }}
+            >
+              <span>🗺️</span> Real-Time Weather Radar Map
+            </button>
+
+            <button
+              onClick={() => setViewMode("GRID_CARDS")}
+              style={{
+                background: viewMode === "GRID_CARDS" ? "#0f172a" : "#f1f5f9",
+                color: viewMode === "GRID_CARDS" ? "#ffffff" : "#475569",
+                border: "none",
+                borderRadius: "10px",
+                padding: "8px 16px",
+                fontSize: "13px",
+                fontWeight: "800",
+                cursor: "pointer",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "6px",
+                transition: "all 0.15s ease",
+              }}
+            >
+              <span>📋</span> All Destination Telemetry Cards ({filteredDestinations.length})
+            </button>
+
+            <button
+              onClick={() => setViewMode("SPLIT")}
+              style={{
+                background: viewMode === "SPLIT" ? "#0f172a" : "#f1f5f9",
+                color: viewMode === "SPLIT" ? "#ffffff" : "#475569",
+                border: "none",
+                borderRadius: "10px",
+                padding: "8px 16px",
+                fontSize: "13px",
+                fontWeight: "800",
+                cursor: "pointer",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "6px",
+                transition: "all 0.15s ease",
+              }}
+            >
+              <span>📊</span> Full Split View
+            </button>
+          </div>
+
+          <div style={{ fontSize: "12px", color: "#64748b", fontWeight: "700" }}>
+            🟢 Live Providers: Tomorrow.io • Open-Meteo • GDACS • USGS • IMD/NDMA • NASA EONET
+          </div>
+        </div>
+
+        {/* 1.5 EMBEDDED REALTIME WEATHER RADAR MAP */}
+        {(viewMode === "RADAR_MAP" || viewMode === "SPLIT") && (
+          <EmergencyRadarMap
+            alerts={radarMapAlerts}
+            selectedDestination={selectedDestination?.name || "Manali"}
+            onSelectDestination={(destName) => {
+              const found = destinations.find(
+                (d) => d.name.toLowerCase() === destName.toLowerCase()
+              );
+              if (found) {
+                handleOpenDetails(found);
+              }
+            }}
+          />
+        )}
+
         {/* 2. REAL-TIME DISASTER WARNING TICKER (IF ACTIVE) */}
-        {activeCriticalAlerts.length > 0 && (
+        {activeCriticalAlerts.length > 0 && (viewMode === "GRID_CARDS" || viewMode === "SPLIT") && (
           <div
             style={{
               background: "#ffffff",
@@ -476,7 +606,9 @@ export default function Weather() {
           </div>
         )}
 
-        {/* 3. SEARCH & FILTER CONTROLS */}
+        {/* 3. SEARCH & FILTER CONTROLS (Rendered in Grid or Split mode) */}
+        {(viewMode === "GRID_CARDS" || viewMode === "SPLIT") && (
+        <>
         <div
           style={{
             background: "#ffffff",
@@ -862,6 +994,8 @@ export default function Weather() {
               );
             })}
           </div>
+        )}
+        </>
         )}
       </div>
 

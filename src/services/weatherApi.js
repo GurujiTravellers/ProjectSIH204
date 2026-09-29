@@ -847,6 +847,42 @@ async function fetchDestinationLiveWeather(destinationName) {
   }
 }
 
+/**
+ * Fetch live weather radar capabilities, providers (Tomorrow.io, RainViewer), and available layers
+ */
+async function fetchRadarCapabilities() {
+  try {
+    const res = await fetch(`${getApiBaseUrl()}/weather/radar/capabilities`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return await res.json();
+  } catch (err) {
+    console.warn("fetchRadarCapabilities error:", err.message);
+    return {
+      success: false,
+      radarLayers: [
+        { id: "precipitation", label: "Precipitation Radar", icon: "🌧️" },
+        { id: "clouds", label: "Cloud Cover Satellite", icon: "☁️" },
+        { id: "wind", label: "Wind & Gale Storm Vectors", icon: "💨" },
+        { id: "temperature", label: "Thermal & Freeze Heatmap", icon: "🌡️" },
+      ],
+    };
+  }
+}
+
+/**
+ * Fetch live RainViewer real-time radar timestamp frames for animation
+ */
+async function fetchRainViewerRadarFrames() {
+  try {
+    const res = await fetch(`${getApiBaseUrl()}/weather/radar/frames`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return await res.json();
+  } catch (err) {
+    console.warn("fetchRainViewerRadarFrames error:", err.message);
+    return { success: false, frames: [] };
+  }
+}
+
 export {
   getLocation,
   getWeatherForecast,
@@ -856,4 +892,6 @@ export {
   fetchWeatherSyncStatus,
   forceWeatherSync,
   fetchDestinationLiveWeather,
+  fetchRadarCapabilities,
+  fetchRainViewerRadarFrames,
 };
