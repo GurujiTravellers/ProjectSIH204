@@ -89,7 +89,9 @@ function Navbar() {
 
     try {
       const parsedUser = JSON.parse(storedUser);
-      setUser(parsedUser);
+      if (parsedUser && (parsedUser.name || parsedUser.email)) {
+        setUser(parsedUser);
+      }
     } catch (error) {
       setUser(null);
     }
@@ -98,19 +100,31 @@ function Navbar() {
   // Verify user with backend
   async function verifyUser() {
     const token = localStorage.getItem("travelGurujiToken");
+    const storedUser = localStorage.getItem("travelGurujiUser");
+
     if (!token) {
       setUser(null);
       return;
     }
 
+    // Always preserve stored user in state immediately
+    if (storedUser) {
+      try {
+        const parsed = JSON.parse(storedUser);
+        if (parsed && (parsed.name || parsed.email)) {
+          setUser(parsed);
+        }
+      } catch (_) {}
+    }
+
     try {
       const data = await getCurrentUser();
-      setUser(data.user);
-      localStorage.setItem("travelGurujiUser", JSON.stringify(data.user));
+      if (data && data.user) {
+        setUser(data.user);
+        localStorage.setItem("travelGurujiUser", JSON.stringify(data.user));
+      }
     } catch (error) {
-      localStorage.removeItem("travelGurujiToken");
-      localStorage.removeItem("travelGurujiUser");
-      setUser(null);
+      console.warn("[Navbar] Background verify notice:", error.message);
     }
   }
 
@@ -120,7 +134,7 @@ function Navbar() {
     verifyUser();
   }, []);
 
-  // When a NEW user logs in
+  // When a user logs in or updates
   useEffect(() => {
     function handleLogin() {
       setShowMenu(false);
@@ -128,15 +142,25 @@ function Navbar() {
       verifyUser();
     }
 
+    function handleLogoutEvent() {
+      setUser(null);
+      setShowMenu(false);
+    }
+
     window.addEventListener("travelGurujiLogin", handleLogin);
+    window.addEventListener("travelGurujiLogout", handleLogoutEvent);
+    window.addEventListener("storage", handleLogin);
     return () => {
       window.removeEventListener("travelGurujiLogin", handleLogin);
+      window.removeEventListener("travelGurujiLogout", handleLogoutEvent);
+      window.removeEventListener("storage", handleLogin);
     };
   }, []);
 
   // When profile is updated
   useEffect(() => {
     function handleProfileUpdate() {
+      loadStoredUser();
       verifyUser();
     }
 

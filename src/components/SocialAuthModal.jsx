@@ -20,41 +20,20 @@ function SocialAuthModal({ isOpen, onClose, provider = "google", onSuccess }) {
       const cleanName = targetName.trim() || cleanEmail.split("@")[0];
 
       let data;
-      try {
-        if (isGoogle) {
-          data = await googleLoginUser({
-            email: cleanEmail,
-            name: cleanName,
-            googleId: `google_oauth_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`,
-            profileImage: `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(cleanName)}&backgroundColor=0f766e,0d9488`,
-          });
-        } else {
-          data = await facebookLoginUser({
-            email: cleanEmail,
-            name: cleanName,
-            facebookId: `fb_oauth_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`,
-            profileImage: `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(cleanName)}&backgroundColor=1877f2`,
-          });
-        }
-      } catch (networkErr) {
-        console.warn("Backend social auth offline / cold-start fallback:", networkErr.message);
-        // Instant verified sign-in fallback if backend is waking from cold start
-        const fallbackId = `user_${Date.now()}`;
-        data = {
-          message: `Signed in as ${cleanName}`,
-          token: `demo_jwt_token_${Date.now()}`,
-          user: {
-            id: fallbackId,
-            _id: fallbackId,
-            name: cleanName,
-            email: cleanEmail,
-            phone: "",
-            profileImage: `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(cleanName)}&backgroundColor=0f766e,0d9488`,
-            isEmailVerified: true,
-            isPhoneVerified: false,
-            authProvider: isGoogle ? "google" : "facebook",
-          },
-        };
+      if (isGoogle) {
+        data = await googleLoginUser({
+          email: cleanEmail,
+          name: cleanName,
+          googleId: `google_oauth_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`,
+          profileImage: `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(cleanName)}&backgroundColor=0f766e,0d9488`,
+        });
+      } else {
+        data = await facebookLoginUser({
+          email: cleanEmail,
+          name: cleanName,
+          facebookId: `fb_oauth_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`,
+          profileImage: `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(cleanName)}&backgroundColor=1877f2`,
+        });
       }
 
       localStorage.setItem("travelGurujiToken", data.token);

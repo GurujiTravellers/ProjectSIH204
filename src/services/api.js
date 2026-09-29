@@ -298,38 +298,43 @@ export async function registerUser(
 
 // GET CURRENT USER
 export async function getCurrentUser() {
-  const token =
-    localStorage.getItem("travelGurujiToken");
+  const token = localStorage.getItem("travelGurujiToken");
+  const storedUser = localStorage.getItem("travelGurujiUser");
 
   if (!token) {
-    window.location.href = "/login";
-    return;
+    return { user: null };
   }
 
-  const response = await fetch(
-    `${API_BASE_URL}/auth/me`,
-    {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
-
-  if (handleAuthError(response)) {
-    return;
-  }
-
-  const data = await readResponse(response);
-
-  if (!response.ok) {
-    throw new Error(
-      data.message ||
-        "Could not get current user"
+  try {
+    const response = await fetch(
+      `${getApiBaseUrl()}/auth/me`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
     );
+
+    if (response.ok) {
+      const data = await readResponse(response);
+      return data;
+    }
+  } catch (err) {
+    console.warn("Backend /auth/me verification notice:", err.message);
   }
 
-  return data;
+  // Graceful fallback to stored user session so UI remains authenticated
+  if (storedUser) {
+    try {
+      const parsed = JSON.parse(storedUser);
+      if (parsed && (parsed.name || parsed.email)) {
+        return { user: parsed };
+      }
+    } catch (_) {}
+  }
+
+  return { user: null };
 }
 
 
