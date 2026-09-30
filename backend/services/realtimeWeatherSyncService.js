@@ -923,7 +923,7 @@ async function fetchAllLocationsWeather() {
     const lats = locations.map(([, info]) => info.lat).join(",");
     const lons = locations.map(([, info]) => info.lon).join(",");
 
-    const weatherUrl = `${OPEN_METEO_API_URL}?latitude=${lats}&longitude=${lons}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,rain,weather_code,wind_speed_10m,wind_direction_10m,wind_gusts_10m,surface_pressure,visibility&timezone=Asia%2FKolkata`;
+    const weatherUrl = `${OPEN_METEO_API_URL}?latitude=${lats}&longitude=${lons}&current=temperature_2m,relative_humidity_2m,apparent_temperature,dew_point_2m,is_day,cloud_cover,precipitation,rain,weather_code,wind_speed_10m,wind_direction_10m,wind_gusts_10m,surface_pressure,visibility&timezone=Asia%2FKolkata`;
 
     const res = await safeHttpRequest(weatherUrl, { timeout: 10000, accept: "application/json" });
 
@@ -960,11 +960,19 @@ async function fetchAllLocationsWeather() {
       const pressure = cur.surface_pressure != null ? Math.round(cur.surface_pressure) : null;
       // visibility in open-meteo is in meters, convert to km
       const visibilityKm = cur.visibility != null ? Math.round((cur.visibility / 1000) * 10) / 10 : null;
+      const dewPoint = cur.dew_point_2m != null ? Math.round(cur.dew_point_2m * 10) / 10 : null;
+      const isDay = cur.is_day != null ? cur.is_day : 0;
+      const cloudCover = cur.cloud_cover != null ? Math.round(cur.cloud_cover) : 0;
+      const elevation = item.elevation != null ? item.elevation : null;
 
       weatherMap[destName.toLowerCase()] = {
         temperature: cur.temperature_2m != null ? Math.round(cur.temperature_2m * 10) / 10 : null,
         apparentTemperature: cur.apparent_temperature != null ? Math.round(cur.apparent_temperature * 10) / 10 : null,
         humidity: cur.relative_humidity_2m ?? null,
+        dewPoint: dewPoint,
+        isDay: isDay,
+        cloudCover: cloudCover,
+        elevation: elevation,
         precipitation: cur.precipitation != null ? Math.round(cur.precipitation * 10) / 10 : 0,
         rain: cur.rain != null ? Math.round(cur.rain * 10) / 10 : 0,
         windSpeed: cur.wind_speed_10m != null ? Math.round(cur.wind_speed_10m) : null,
@@ -1057,12 +1065,12 @@ async function syncDatabaseNow() {
       console.warn("[WeatherSync] Python disaster intelligence notice:", pyErr.message);
     }
 
-    // Step 1: Pre-validate all destination weather observations through Python Intelligence concurrently
-    const validationPromises = Object.entries(INDIA_LOCATIONS).map(([name, info]) => {
+    // Step 1: Microclimate downscaling & validation of destination weather observations via Python Intelligence
+    const validationPromises = Object.entries(INDIA_LOCATIONS).map(async ([name, info]) => {
       const key = name.toLowerCase();
-      const rawW = (weatherMap && weatherMap[key]) || null;
+      let rawW = (weatherMap && weatherMap[key]) || null;
       if (!rawW || rawW.temperature == null) {
-        return Promise.resolve({
+        return {
           name,
           info,
           rawW,
@@ -1076,30 +1084,52 @@ async function syncDatabaseNow() {
             dataAgeMinutes: null,
             qualityScore: 0.0,
           },
-        });
+        };
       }
 
-      return pythonClient.validateWeather({
-        temperature: rawW.temperature,
-        apparentTemperature: rawW.apparentTemperature,
-        humidity: rawW.humidity,
-        windSpeed: rawW.windSpeed,
-        windDirection: rawW.windDirection,
-        windCompass: rawW.windCompass,
-        windGusts: rawW.windGusts,
-        pressure: rawW.pressure,
-        visibility: rawW.visibility,
-        precipitation: rawW.precipitation,
-        rain: rawW.rain,
-        weatherCode: rawW.weatherCode,
-        condition: rawW.condition,
-        icon: rawW.icon,
-        source: rawW.provider || (TOMORROW_IO_API_KEY ? "Tomorrow.io" : "Open-Meteo"),
-        timestamp: rawW.lastUpdatedAt || new Date().toISOString(),
+      // Physics-based microclimate downscaling (Himalayan katabatic drainage, high-altitude radiative cooling)
+      let calibratedW = rawW;
+      try {
+        calibratedW = await pythonClient.calibrateWeather({
+          ...rawW,
+          latitude: info.lat,
+          longitude: info.lon,
+          destination: name,
+        }, name);
+        if (weatherMap) {
+          weatherMap[key] = calibratedW;
+        }
+      } catch (calErr) {
+        console.warn(`[WeatherSync] Microclimate calibration notice for ${name}:`, calErr.message);
+      }
+
+      const validation = await pythonClient.validateWeather({
+        temperature: calibratedW.temperature,
+        apparentTemperature: calibratedW.apparentTemperature,
+        humidity: calibratedW.humidity,
+        windSpeed: calibratedW.windSpeed,
+        windDirection: calibratedW.windDirection,
+        windCompass: calibratedW.windCompass,
+        windGusts: calibratedW.windGusts,
+        pressure: calibratedW.pressure,
+        visibility: calibratedW.visibility,
+        precipitation: calibratedW.precipitation,
+        rain: calibratedW.rain,
+        weatherCode: calibratedW.weatherCode,
+        condition: calibratedW.condition,
+        icon: calibratedW.icon,
+        source: calibratedW.provider || (TOMORROW_IO_API_KEY ? "Tomorrow.io" : "Open-Meteo"),
+        timestamp: calibratedW.lastUpdatedAt || new Date().toISOString(),
         latitude: info.lat,
         longitude: info.lon,
         destination: name,
-      }).then((validation) => ({ name, info, rawW, validation }));
+        dewPoint: calibratedW.dewPoint,
+        isDay: calibratedW.isDay,
+        cloudCover: calibratedW.cloudCover,
+        elevation: calibratedW.elevation,
+      });
+
+      return { name, info, rawW: calibratedW, validation };
     });
 
     const validatedObservations = await Promise.all(validationPromises);

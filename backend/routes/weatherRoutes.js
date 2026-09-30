@@ -254,6 +254,13 @@ router.get("/destination/:name", async (req, res) => {
       }
     }
 
+    if (directCurrent && syncedData.weather?.temperature != null) {
+      directCurrent.temperature_2m = syncedData.weather.temperature;
+      if (syncedData.weather.apparentTemperature != null) {
+        directCurrent.apparent_temperature = syncedData.weather.apparentTemperature;
+      }
+    }
+
     res.json({
       success: true,
       destination: {
@@ -332,7 +339,7 @@ router.get("/", async (req, res) => {
     }
 
     const weatherResponse = await fetch(
-      `${WEATHER_URL}?latitude=${location.latitude}&longitude=${location.longitude}&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,precipitation,rain,weather_code,wind_speed_10m&hourly=temperature_2m,precipitation_probability,precipitation,weather_code,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset,precipitation_probability_max,rain_sum&timezone=auto&forecast_days=7`
+      `${WEATHER_URL}?latitude=${location.latitude}&longitude=${location.longitude}&current=temperature_2m,relative_humidity_2m,apparent_temperature,dew_point_2m,is_day,cloud_cover,precipitation,rain,weather_code,wind_speed_10m&hourly=temperature_2m,precipitation_probability,precipitation,weather_code,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset,precipitation_probability_max,rain_sum&timezone=auto&forecast_days=7`
     );
 
     if (!weatherResponse.ok) {
@@ -340,6 +347,28 @@ router.get("/", async (req, res) => {
     }
 
     const weatherData = await weatherResponse.json();
+
+    if (weatherData.current) {
+      try {
+        const calibrated = await pythonClient.calibrateWeather({
+          temperature: weatherData.current.temperature_2m,
+          apparentTemperature: weatherData.current.apparent_temperature,
+          humidity: weatherData.current.relative_humidity_2m,
+          dewPoint: weatherData.current.dew_point_2m,
+          isDay: weatherData.current.is_day,
+          cloudCover: weatherData.current.cloud_cover,
+          windSpeed: weatherData.current.wind_speed_10m,
+          latitude: location.latitude,
+          longitude: location.longitude,
+          destination: location.name,
+        }, location.name);
+        weatherData.current.temperature_2m = calibrated.temperature;
+        weatherData.current.apparent_temperature = calibrated.apparentTemperature;
+        weatherData.current.microclimateCalibration = calibrated.microclimateCalibration;
+      } catch (calErr) {
+        console.warn("[WeatherRoutes] Microclimate calibration notice for single city:", calErr.message);
+      }
+    }
 
     return res.json({
       location: {

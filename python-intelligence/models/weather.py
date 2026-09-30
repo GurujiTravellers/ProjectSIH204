@@ -28,6 +28,10 @@ class WeatherObservation(BaseModel):
     latitude: float = Field(..., description="Geographic latitude")
     longitude: float = Field(..., description="Geographic longitude")
     destination: Optional[str] = Field(None, description="Target destination name")
+    dewPoint: Optional[float] = Field(None, description="Dew point in Celsius from API")
+    isDay: Optional[int] = Field(None, description="Day (1) or Night (0) indicator from API")
+    cloudCover: Optional[float] = Field(None, description="Cloud cover percentage from API")
+    elevation: Optional[float] = Field(None, description="Elevation in meters")
 
 
 class WeatherValidationRequest(BaseModel):
@@ -99,3 +103,29 @@ class WeatherDiscrepancyResponse(BaseModel):
     primary_timestamp: Optional[str] = None
     secondary_timestamp: Optional[str] = None
     note: str = "Diagnostic discrepancy comparison only. Authoritative primary source is never modified or averaged."
+
+
+class WeatherCalibrationRequest(BaseModel):
+    """Request to calibrate a single live weather observation for microclimate downscaling."""
+    observation: Dict[str, Any]
+    destination: Optional[str] = None
+
+
+class WeatherCalibrationResponse(BaseModel):
+    """Response containing calibrated temperature and physical downscaling explanation."""
+    calibrated: Dict[str, Any]
+    destination: Optional[str] = None
+    appliedDelta: float = 0.0
+    terrainType: str = "plains_coastal"
+    physicsMechanism: str = ""
+
+
+class WeatherBatchCalibrationRequest(BaseModel):
+    """Request to calibrate multiple live weather observations in a single cycle."""
+    observations: List[Dict[str, Any]]
+
+
+class WeatherBatchCalibrationResponse(BaseModel):
+    """Response containing batch of calibrated observations."""
+    calibratedObservations: List[Dict[str, Any]]
+    count: int = 0

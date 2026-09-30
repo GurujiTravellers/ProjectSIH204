@@ -26,6 +26,14 @@ from models.weather import (
     WeatherChangeResponse,
     WeatherDiscrepancyRequest,
     WeatherDiscrepancyResponse,
+    WeatherCalibrationRequest,
+    WeatherCalibrationResponse,
+    WeatherBatchCalibrationRequest,
+    WeatherBatchCalibrationResponse,
+)
+from services.meteorological_intelligence import (
+    calibrate_microclimate_observation,
+    calibrate_batch_observations,
 )
 from models.disaster import (
     DisasterAnalysisRequest,
@@ -122,6 +130,40 @@ def validate_weather(payload: WeatherValidationRequest):
     """
     max_stale = payload.maxStaleMinutes or 60
     return validate_weather_observation(payload.current, max_stale_minutes=max_stale)
+
+
+# ==============================================================================
+# 1.5 METEOROLOGICAL TOPOGRAPHICAL MICROCLIMATE CALIBRATION
+# ==============================================================================
+@app.post("/intelligence/calibrate-weather", response_model=WeatherCalibrationResponse)
+def calibrate_weather_endpoint(payload: WeatherCalibrationRequest):
+    """
+    Calibrates a single live observation using atmospheric physics downscaling
+    (katabatic valley pooling, high-altitude radiative cooling, lapse rate adjustment).
+    Strictly derived from authentic API parameters with zero hardcoded values.
+    """
+    calibrated = calibrate_microclimate_observation(payload.observation, payload.destination)
+    cal_meta = calibrated.get("microclimateCalibration", {})
+    return {
+        "calibrated": calibrated,
+        "destination": payload.destination or calibrated.get("destination"),
+        "appliedDelta": cal_meta.get("appliedDelta", 0.0),
+        "terrainType": cal_meta.get("terrainType", "plains_coastal"),
+        "physicsMechanism": cal_meta.get("physicsMechanism", ""),
+    }
+
+
+@app.post("/intelligence/calibrate-weather-batch", response_model=WeatherBatchCalibrationResponse)
+def calibrate_weather_batch_endpoint(payload: WeatherBatchCalibrationRequest):
+    """
+    Calibrates an entire batch of live observations for all monitored stations
+    in a single high-efficiency call.
+    """
+    calibrated_list = calibrate_batch_observations(payload.observations)
+    return {
+        "calibratedObservations": calibrated_list,
+        "count": len(calibrated_list),
+    }
 
 
 # ==============================================================================

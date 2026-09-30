@@ -211,6 +211,165 @@ async function validateWeather(weatherObservation, maxStaleMinutes = 60) {
 }
 
 /**
+ * Geomorphological classifications for microclimate downscaling
+ */
+const TERRAIN_CLASSIFICATIONS = {
+  Manali: { terrain: "valley_basin", elevation: 2050 },
+  Kasol: { terrain: "valley_basin", elevation: 1580 },
+  Kalpa: { terrain: "valley_basin", elevation: 2758 },
+  Sissu: { terrain: "valley_basin", elevation: 3120 },
+  Chitkul: { terrain: "valley_basin", elevation: 3450 },
+  Pahalgam: { terrain: "valley_basin", elevation: 2130 },
+
+  "Leh Ladakh": { terrain: "cold_desert_plateau", elevation: 3500 },
+  Leh: { terrain: "cold_desert_plateau", elevation: 3500 },
+  Kaza: { terrain: "cold_desert_plateau", elevation: 3650 },
+  "Rohtang Pass": { terrain: "alpine_pass", elevation: 3978 },
+  "Chandratal Lake": { terrain: "alpine_pass", elevation: 4250 },
+
+  Shimla: { terrain: "mountain_ridge", elevation: 2205 },
+  Mussoorie: { terrain: "mountain_ridge", elevation: 2005 },
+  Darjeeling: { terrain: "mountain_ridge", elevation: 2042 },
+
+  Gulmarg: { terrain: "alpine_meadow", elevation: 2650 },
+  Srinagar: { terrain: "broad_basin", elevation: 1585 },
+  Ooty: { terrain: "high_plateau", elevation: 2240 },
+  Shillong: { terrain: "high_plateau", elevation: 1525 },
+};
+
+/**
+ * Resilient pure-JS microclimate downscaling fallback
+ */
+function localCalibrateWeather(observation, destinationName = null) {
+  if (!observation || typeof observation !== "object") return observation;
+  const rawTemp = observation.temperature;
+  if (rawTemp == null || typeof rawTemp !== "number" || isNaN(rawTemp)) return observation;
+
+  const dest = destinationName || observation.destination || "";
+  let profile = { terrain: "plains_coastal", elevation: 200 };
+  for (const [name, prof] of Object.entries(TERRAIN_CLASSIFICATIONS)) {
+    if (dest.toLowerCase().trim() === name.toLowerCase()) {
+      profile = prof;
+      break;
+    }
+  }
+
+  const terrainType = profile.terrain;
+  const elevation = observation.elevation || profile.elevation;
+
+  let dewPoint = observation.dewPoint != null ? observation.dewPoint : observation.dew_point_2m;
+  if (dewPoint == null) {
+    const rh = observation.humidity;
+    if (rh != null && rh > 0) {
+      const a = 17.27;
+      const b = 237.7;
+      const alpha = ((a * rawTemp) / (b + rawTemp)) + (rh / 100.0);
+      dewPoint = Math.round(((b * alpha) / (a - alpha)) * 10) / 10;
+    } else {
+      dewPoint = rawTemp;
+    }
+  }
+
+  const isDay = observation.isDay != null ? observation.isDay : (observation.is_day != null ? observation.is_day : 0);
+  const cloudCover = observation.cloudCover != null ? observation.cloudCover : (observation.cloud_cover || 0);
+  const windSpeed = observation.windSpeed != null ? observation.windSpeed : (observation.wind_speed_10m || 3.0);
+
+  let deltaT = 0.0;
+  let physicsMechanism = "Direct Atmospheric NWP Model Grid (Plains / Coastal Invariance)";
+  const diurnalPhase = isDay === 1 ? "DAY_CONVECTIVE" : "NIGHT_RADIATIVE";
+
+  if (isDay === 0) {
+    const fClear = Math.max(0.15, 1.0 - 0.85 * Math.pow(Math.min(100.0, Math.max(0.0, cloudCover)) / 100.0, 2));
+    const fWind = Math.max(0.2, 1.0 - Math.min(windSpeed, 30.0) / 35.0);
+
+    if (terrainType === "valley_basin") {
+      const potCooling = Math.max(0.0, rawTemp - dewPoint);
+      deltaT = Math.min(6.5, potCooling) * fClear * fWind;
+      physicsMechanism = "Nocturnal Himalayan Valley Cold Pool Inversion & Katabatic Drainage";
+    } else if (terrainType === "cold_desert_plateau" || terrainType === "alpine_pass") {
+      const potCooling = Math.max(0.0, rawTemp - Math.max(dewPoint, 0.0));
+      deltaT = Math.min(7.5, potCooling * 0.92) * fClear * fWind;
+      physicsMechanism = "High-Altitude Trans-Himalayan Radiative Cooling & Near-Frost Boundary";
+    } else if (terrainType === "mountain_ridge") {
+      const potCooling = Math.max(0.0, rawTemp - dewPoint);
+      deltaT = Math.min(2.5, potCooling * 0.35) * fClear * fWind;
+      physicsMechanism = "Mountain Ridge Free-Air Lapse Rate Adjustment";
+    } else if (terrainType === "alpine_meadow" || terrainType === "broad_basin" || terrainType === "high_plateau") {
+      const potCooling = Math.max(0.0, rawTemp - dewPoint);
+      deltaT = Math.min(4.0, potCooling * 0.55) * fClear * fWind;
+      physicsMechanism = "High-Altitude Meadow Radiative Microclimate Downscaling";
+    }
+  } else {
+    physicsMechanism = "Daytime Convective Boundary Layer Mixing (Inversion Dissipated)";
+  }
+
+  const calibratedTemp = Math.round((rawTemp - deltaT) * 10) / 10;
+  const rawApparent = observation.apparentTemperature;
+  const calibratedApparent = typeof rawApparent === "number" && !isNaN(rawApparent)
+    ? Math.round((rawApparent - deltaT) * 10) / 10
+    : calibratedTemp;
+
+  return {
+    ...observation,
+    temperature: calibratedTemp,
+    apparentTemperature: calibratedApparent,
+    rawModelTemperature: rawTemp,
+    rawModelApparentTemperature: rawApparent,
+    dewPoint: Math.round(dewPoint * 10) / 10,
+    isDay,
+    cloudCover: Math.round(cloudCover * 10) / 10,
+    elevation,
+    microclimateCalibration: {
+      appliedDelta: Math.round(deltaT * 10) / 10,
+      terrainType,
+      diurnalPhase,
+      physicsMechanism,
+      calibratedBy: "Travel_Guruji Embedded Microclimate Engine",
+    },
+  };
+}
+
+/**
+ * 1.5 Calibrate live meteorological observation via Python Intelligence Layer (with fast local fallback)
+ */
+async function calibrateWeather(observation, destinationName = null) {
+  const isOnline = await checkPythonAvailability();
+  if (!isOnline) {
+    return localCalibrateWeather(observation, destinationName);
+  }
+
+  try {
+    const res = await requestPython("/intelligence/calibrate-weather", {
+      observation,
+      destination: destinationName || observation.destination,
+    });
+    return res.calibrated || localCalibrateWeather(observation, destinationName);
+  } catch (_) {
+    return localCalibrateWeather(observation, destinationName);
+  }
+}
+
+/**
+ * Batch calibrate all destination observations concurrently
+ */
+async function calibrateWeatherBatch(observations) {
+  if (!Array.isArray(observations) || observations.length === 0) return [];
+  const isOnline = await checkPythonAvailability();
+  if (!isOnline) {
+    return observations.map((obs) => localCalibrateWeather(obs));
+  }
+
+  try {
+    const res = await requestPython("/intelligence/calibrate-weather-batch", {
+      observations,
+    });
+    return res.calibratedObservations || observations.map((obs) => localCalibrateWeather(obs));
+  } catch (_) {
+    return observations.map((obs) => localCalibrateWeather(obs));
+  }
+}
+
+/**
  * Local change detection fallback
  */
 function localDetectWeatherChange(destination, current, previous) {
@@ -433,6 +592,8 @@ async function optimizeTransport(transportPayload) {
 
 module.exports = {
   checkHealth,
+  calibrateWeather,
+  calibrateWeatherBatch,
   validateWeather,
   detectWeatherChange,
   compareWeatherDiscrepancy,

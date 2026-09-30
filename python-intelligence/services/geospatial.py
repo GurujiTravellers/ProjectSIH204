@@ -13,7 +13,7 @@ from models.disaster import DestinationPoint, ProximityAssessment
 DEFAULT_DESTINATIONS: Dict[str, Dict[str, Any]] = {
     # Himachal Pradesh
     "Shimla": {"lat": 31.1048, "lon": 77.1734, "state": "Himachal Pradesh", "corridor": "NH-5 Himalayan Expressway"},
-    "Manali": {"lat": 32.2396, "lon": 77.1887, "state": "Himachal Pradesh", "corridor": "NH-3 Chandigarh-Manali Highway"},
+    "Manali": {"lat": 32.2574, "lon": 77.1748, "state": "Himachal Pradesh", "corridor": "NH-3 Chandigarh-Manali Highway"},
     "Rohtang Pass": {"lat": 32.3716, "lon": 77.2466, "state": "Himachal Pradesh", "corridor": "Manali-Leh Highway (13,058 ft)"},
     "Kasol": {"lat": 32.0100, "lon": 77.3150, "state": "Himachal Pradesh", "corridor": "Bhuntar-Kasol-Manikaran Road"},
     "Chitkul": {"lat": 31.3533, "lon": 78.4354, "state": "Himachal Pradesh", "corridor": "Kinnaur Valley Indo-Tibet Border Road"},
