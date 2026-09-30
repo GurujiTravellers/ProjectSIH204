@@ -25,6 +25,7 @@ const {
   findNearestIndiaLocation,
   haversineDistanceKm,
 } = require("./realDisasterService");
+const pythonClient = require("./pythonIntelligenceClient");
 
 const DB_FILE_PATH = path.join(__dirname, "../data/liveWeatherDisasterDb.json");
 const SYNC_INTERVAL_MS = 5 * 60 * 1000; // Continuous poll every 5 minutes to prevent external rate-limits
@@ -712,6 +713,16 @@ async function syncDatabaseNow() {
       fetchAllLocationsWeather(),
     ]);
 
+    // Pass authentic events to Python Intelligence Layer for geospatial & lifecycle analysis
+    const allRawDisasterEvents = [...usgsEvents, ...nasaEvents, ...gdacsEvents];
+    let disasterIntelligence = null;
+    try {
+      const prevEvents = liveDatabase.recentEventsTimeline || [];
+      disasterIntelligence = await pythonClient.analyzeDisasters(allRawDisasterEvents, prevEvents);
+    } catch (pyErr) {
+      console.warn("[WeatherSync] Python disaster intelligence notice:", pyErr.message);
+    }
+
     const destinationMap = {};
 
     let disasterZonesCount = 0;
@@ -933,6 +944,35 @@ async function syncDatabaseNow() {
         disclaimer: "Travel_Guruji Risk Interpretation is an automated algorithmic assessment for travel decision support and is NOT an official government emergency warning. Always heed official directives from IMD, NDMA, and local district authorities.",
       };
 
+      // Weather change detection via Python Intelligence Layer
+      const prevObs = liveDatabase.destinations?.[name]?.weather || null;
+      let weatherChangeInfo = null;
+      if (prevObs && liveW && liveW.temperature != null) {
+        try {
+          weatherChangeInfo = await pythonClient.detectWeatherChange(name, liveW, prevObs);
+        } catch (_) {}
+      }
+
+      // Grounded risk interpretation from Python Intelligence Layer
+      let pythonRiskAnalysis = null;
+      try {
+        const destDisasters = allRawDisasterEvents.filter(
+          (ev) => ev.destination && ev.destination.toLowerCase() === key
+        );
+        pythonRiskAnalysis = await pythonClient.analyzeRisk(
+          name,
+          liveW,
+          destDisasters,
+          info.lat,
+          info.lon
+        );
+      } catch (_) {
+        pythonRiskAnalysis = {
+          status: "unavailable",
+          message: "Intelligence analysis temporarily unavailable",
+        };
+      }
+
       destinationMap[name] = {
         name,
         state: info.state,
@@ -943,9 +983,14 @@ async function syncDatabaseNow() {
         weather: {
           ...liveW,
           lastUpdatedAt: new Date().toISOString(),
+          changeDetection: weatherChangeInfo,
         },
         officialAlert,
         travelGurujiRisk,
+        intelligence: pythonRiskAnalysis || {
+          status: "unavailable",
+          message: "Intelligence analysis temporarily unavailable",
+        },
         disaster: {
           alertTier,
           severity,
@@ -1009,6 +1054,11 @@ async function syncDatabaseNow() {
       rainAlerts: rainAlertsCount,
       normalClear: normalClearCount,
     };
+    liveDatabase.intelligenceSummary = {
+      status: disasterIntelligence && !disasterIntelligence.fallback ? "active" : "unavailable",
+      lastAnalyzedAt: new Date().toISOString(),
+      disasterSummary: disasterIntelligence,
+    };
 
     // Persist to disk backup
     try {
@@ -1025,6 +1075,7 @@ async function syncDatabaseNow() {
       stats: liveDatabase.stats,
       destinations: Object.values(liveDatabase.destinations),
       timeline: liveDatabase.recentEventsTimeline,
+      intelligenceSummary: liveDatabase.intelligenceSummary,
     });
 
     const elapsed = Date.now() - startTime;
