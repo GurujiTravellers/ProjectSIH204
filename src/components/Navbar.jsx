@@ -202,13 +202,15 @@ function Navbar() {
   return (
     <>
       <nav className={`navbar ${isScrolled ? "navbar-scrolled" : ""}`}>
-        {/* LOGO */}
-        <Link
-          to="/"
-          className="logo"
-          onMouseEnter={triggerLogoAnimation}
-          title="Travel Guruji - Click for Home"
-        >
+        {/* BRAND & NAVIGATION GROUP */}
+        <div className="navbar-brand-nav-group">
+          {/* LOGO */}
+          <Link
+            to="/"
+            className="logo"
+            onMouseEnter={triggerLogoAnimation}
+            title="Travel Guruji - Click for Home"
+          >
           <img
             src="/favicon.svg"
             alt="Travel Guruji"
@@ -358,6 +360,7 @@ function Navbar() {
             </>
           )}
         </div>
+      </div>
 
         {/* RIGHT SIDE / USER AREA */}
         <div className="navbar-right-container">
