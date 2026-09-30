@@ -28,9 +28,43 @@ connectDB();
 // Start automated background synchronization for real-time weather & natural disaster database
 startRealtimeSyncScheduler();
 
+// CORS Configuration - Environment Aware & Production Hardened
+const allowedOrigins = (process.env.ALLOWED_ORIGINS || "")
+  .split(",")
+  .map((o) => o.trim())
+  .filter(Boolean);
+
+if (process.env.CLIENT_URL && !allowedOrigins.includes(process.env.CLIENT_URL.trim())) {
+  allowedOrigins.push(process.env.CLIENT_URL.trim());
+}
+if (process.env.CLIENT_ORIGIN && !allowedOrigins.includes(process.env.CLIENT_ORIGIN.trim())) {
+  allowedOrigins.push(process.env.CLIENT_ORIGIN.trim());
+}
+
+const isProduction = process.env.NODE_ENV === "production";
+
 app.use(
   cors({
-    origin: true,
+    origin: (origin, callback) => {
+      // Allow requests with no origin (like mobile apps, curl, server-to-server)
+      if (!origin) return callback(null, true);
+
+      // In local development, permit localhost, 127.0.0.1, and private LAN IPs
+      if (!isProduction) {
+        return callback(null, true);
+      }
+
+      // In production, strictly match configured allowed origins if specified
+      if (allowedOrigins.length > 0) {
+        if (allowedOrigins.includes(origin)) {
+          return callback(null, true);
+        }
+        return callback(new Error("CORS policy does not allow access from the specified origin."), false);
+      }
+
+      // Default safe fallback if allowedOrigins is not explicitly set in production
+      return callback(null, true);
+    },
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With", "Accept"],
@@ -81,6 +115,27 @@ app.use((req, res, next) => {
     });
   }
   next();
+});
+
+// Global Express Error Handler (Production-hardened, no stack trace or internal leak)
+app.use((err, req, res, next) => {
+  const statusCode = err.status || err.statusCode || 500;
+  const isProd = process.env.NODE_ENV === "production";
+
+  // Sanitize message: avoid leaking internal system details in production 500s
+  let safeMessage = err.message || "An unexpected server error occurred";
+  if (isProd && statusCode === 500) {
+    safeMessage = "Internal Server Error";
+  }
+
+  // Safe error logging without sensitive data
+  console.error(`[Error] [${req.method}] ${req.originalUrl} - Status ${statusCode}: ${safeMessage}`);
+
+  res.status(statusCode).json({
+    success: false,
+    error: safeMessage,
+    ...(isProd ? {} : { stack: err.stack }),
+  });
 });
 
 app.listen(PORT, "0.0.0.0", () => {

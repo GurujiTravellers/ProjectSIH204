@@ -150,17 +150,15 @@ async function compareWeatherDiscrepancy(destination, primary, secondary) {
 /**
  * 4. Geospatial proximity and lifecycle tracking for active disasters
  */
-async function analyzeDisasters(events, previousEvents = [], destinations = null, feedOutages = []) {
+async function analyzeDisasters(events, previousEvents = [], destinations = null) {
   try {
     return await requestPython("/analyze/disaster", {
       events,
       previousEvents,
       destinations,
-      feedOutages,
     });
   } catch (err) {
     console.warn(`[PythonIntelligenceClient] Disaster analysis fallback: ${err.message}`);
-
     return {
       totalEventsReceived: events.length,
       activeEvents: [],

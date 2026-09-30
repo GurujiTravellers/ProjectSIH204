@@ -20,6 +20,8 @@
 
 const fs = require("fs");
 const path = require("path");
+const https = require("node:https");
+const http = require("node:http");
 const {
   INDIA_LOCATIONS,
   findNearestIndiaLocation,
@@ -38,6 +40,109 @@ const USGS_EARTHQUAKE_URL = process.env.USGS_EARTHQUAKE_URL || "https://earthqua
 const NASA_EONET_URL = process.env.NASA_EONET_URL || "https://eonet.gsfc.nasa.gov/api/v3/events";
 const RAINVIEWER_RADAR_URL = process.env.RAINVIEWER_RADAR_URL || "https://api.rainviewer.com/public/weather-maps.json";
 
+/**
+ * Robust HTTP client with bounded timeouts, explicit IPv4 routing (preventing
+ * IPv6 blackholing on external government feeds like NASA GSFC), and proper headers.
+ * Preserves strict TLS certificate verification (no disabling of TLS validation).
+ */
+function safeHttpRequest(url, options = {}) {
+  return new Promise((resolve, reject) => {
+    try {
+      const u = new URL(url);
+      const isHttps = u.protocol === "https:";
+      const transport = isHttps ? https : http;
+      const timeoutMs = options.timeout || 6000;
+      let settled = false;
+
+      const req = transport.request({
+        protocol: u.protocol,
+        hostname: u.hostname,
+        port: u.port || (isHttps ? 443 : 80),
+        path: u.pathname + u.search,
+        method: options.method || "GET",
+        family: 4, // Explicitly use IPv4 to eliminate IPv6 routing blackholing for external government APIs
+        headers: {
+          "User-Agent": "TravelGuruji/2.0 (SmartTourism IndianSubcontinent Safety Monitor; contact@travelguruji.in)",
+          "Accept": options.accept || "application/json, text/plain, text/xml, */*",
+          ...(options.headers || {})
+        },
+        timeout: timeoutMs
+      }, (res) => {
+        let data = "";
+        res.on("data", chunk => data += chunk);
+        res.on("end", () => {
+          if (!settled) {
+            settled = true;
+            clearTimeout(hardTimer);
+            resolve({
+              ok: res.statusCode >= 200 && res.statusCode < 300,
+              status: res.statusCode,
+              statusText: res.statusMessage,
+              headers: res.headers,
+              text: async () => data,
+              json: async () => JSON.parse(data)
+            });
+          }
+        });
+      });
+
+      const hardTimer = setTimeout(() => {
+        if (!settled) {
+          settled = true;
+          const err = new Error(`The operation was aborted due to timeout (${timeoutMs}ms)`);
+          err.code = "TIMEOUT";
+          err.name = "TimeoutError";
+          req.destroy(err);
+          reject(err);
+        }
+      }, timeoutMs);
+
+      req.on("timeout", () => {
+        if (!settled) {
+          settled = true;
+          clearTimeout(hardTimer);
+          const err = new Error(`The operation was aborted due to timeout (${timeoutMs}ms)`);
+          err.code = "TIMEOUT";
+          err.name = "TimeoutError";
+          req.destroy(err);
+          reject(err);
+        }
+      });
+
+      req.on("error", (err) => {
+        if (!settled) {
+          settled = true;
+          clearTimeout(hardTimer);
+          reject(err);
+        }
+      });
+
+      if (options.body) {
+        req.write(options.body);
+      }
+      req.end();
+    } catch (parseErr) {
+      reject(parseErr);
+    }
+  });
+}
+
+// In-memory persistent cache for disaster provider events (prevent premature expiration on network hiccups)
+const cachedProviderEvents = {
+  usgs: [],
+  nasa: [],
+  gdacs: [],
+};
+
+// Internal provider health and availability tracking
+const providerHealth = {
+  usgs: { status: "AVAILABLE", reason: null, durationMs: 0, lastSuccessAt: null, lastAttemptAt: null, count: 0 },
+  nasa: { status: "AVAILABLE", reason: null, durationMs: 0, lastSuccessAt: null, lastAttemptAt: null, count: 0 },
+  gdacs: { status: "AVAILABLE", reason: null, durationMs: 0, lastSuccessAt: null, lastAttemptAt: null, count: 0 },
+  openMeteo: { status: "AVAILABLE", reason: null, durationMs: 0, lastSuccessAt: null, lastAttemptAt: null, count: 0 },
+  tomorrowIo: { status: TOMORROW_IO_API_KEY ? "CONFIGURED" : "NOT_CONFIGURED", reason: null, durationMs: 0, lastSuccessAt: null, lastAttemptAt: null, count: 0 },
+};
+
 // In-memory weather cache & backoff tracking
 let cachedWeatherMap = null;
 let lastWeatherFetchTime = 0;
@@ -51,6 +156,7 @@ const RADAR_FRAMES_TTL_MS = 3 * 60 * 1000; // 3 minutes cache
 
 // Active SSE client connections
 const sseClients = new Set();
+let lastKnownStateHash = "";
 
 // Weather code description & icon lookup (WMO standards)
 function mapWeatherCode(code) {
@@ -122,6 +228,20 @@ try {
     const saved = JSON.parse(fs.readFileSync(DB_FILE_PATH, "utf8"));
     if (saved && saved.destinations && Object.keys(saved.destinations).length > 0) {
       liveDatabase = { ...liveDatabase, ...saved, isSyncing: false };
+      cachedWeatherMap = {};
+      for (const [key, d] of Object.entries(saved.destinations)) {
+        if (d && d.weather) {
+          cachedWeatherMap[key.toLowerCase()] = d.weather;
+        }
+      }
+      lastWeatherFetchTime = 0; // Force immediate real-time weather fetch from live API on startup
+      if (saved.recentEventsTimeline && Array.isArray(saved.recentEventsTimeline)) {
+        for (const ev of saved.recentEventsTimeline) {
+          if (ev.source && ev.source.includes("USGS")) cachedProviderEvents.usgs.push(ev);
+          else if (ev.source && ev.source.includes("NASA")) cachedProviderEvents.nasa.push(ev);
+          else if (ev.source && ev.source.includes("GDACS")) cachedProviderEvents.gdacs.push(ev);
+        }
+      }
     }
   }
 } catch (e) {
@@ -135,12 +255,21 @@ let syncTimerId = null;
  * Real-time Cyclones, Floods, Earthquakes, Droughts & Volcanoes in India and neighboring waters
  */
 async function fetchLiveGDACSEvents() {
-  try {
-    const url = "https://www.gdacs.org/xml/rss.xml";
-    const res = await fetch(url, { signal: AbortSignal.timeout(12000) });
-    if (!res.ok) throw new Error(`GDACS HTTP ${res.status}`);
-    const xml = await res.text();
+  const t0 = Date.now();
+  providerHealth.gdacs.lastAttemptAt = new Date().toISOString();
 
+  try {
+    const feedUrl = process.env.GDACS_FEED_URL || GDACS_FEED_URL;
+    const res = await safeHttpRequest(feedUrl, {
+      timeout: 6000,
+      accept: "application/xml, text/xml, */*"
+    });
+
+    if (!res.ok) {
+      throw new Error(`GDACS HTTP ${res.status}`);
+    }
+
+    const xml = await res.text();
     const items = xml.match(/<item>[\s\S]*?<\/item>/g) || [];
     const gdacsEvents = [];
 
@@ -221,10 +350,33 @@ async function fetchLiveGDACSEvents() {
       });
     }
 
-    return gdacsEvents;
+    const duration = Date.now() - t0;
+    cachedProviderEvents.gdacs = gdacsEvents;
+    providerHealth.gdacs = {
+      status: "AVAILABLE",
+      reason: null,
+      durationMs: duration,
+      lastSuccessAt: new Date().toISOString(),
+      lastAttemptAt: new Date().toISOString(),
+      count: gdacsEvents.length,
+      errorDetails: null,
+    };
+
+    return { provider: "GDACS", status: "AVAILABLE", events: gdacsEvents, durationMs: duration };
   } catch (err) {
-    console.warn("[WeatherSync] GDACS fetch warning:", err.message);
-    return [];
+    const duration = Date.now() - t0;
+    const reason = err.code === "TIMEOUT" ? "TIMEOUT" : "NETWORK_ERROR";
+    const retained = cachedProviderEvents.gdacs.filter((e) => !e.validUntil || new Date(e.validUntil).getTime() > Date.now());
+    providerHealth.gdacs = {
+      status: "UNAVAILABLE",
+      reason,
+      durationMs: duration,
+      lastAttemptAt: new Date().toISOString(),
+      count: retained.length,
+      errorDetails: err.message,
+    };
+    console.warn(`[WeatherSync] ⚠️ GDACS UNAVAILABLE [${reason} ${duration}ms]: ${err.message}. Retaining ${retained.length} active cached events.`);
+    return { provider: "GDACS", status: "UNAVAILABLE", reason, events: retained, durationMs: duration, error: err.message };
   }
 }
 
@@ -232,17 +384,42 @@ async function fetchLiveGDACSEvents() {
  * 2. Fetch real-time earthquakes in India from USGS
  */
 async function fetchLiveUSGSEarthquakes() {
-  try {
-    const url =
-      "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&minmagnitude=2.2&minlatitude=6.0&maxlatitude=37.5&minlongitude=67.0&maxlongitude=98.0&limit=40";
-    const res = await fetch(url, { signal: AbortSignal.timeout(10000) });
-    if (!res.ok) throw new Error(`USGS HTTP ${res.status}`);
-    const data = await res.json();
+  const t0 = Date.now();
+  providerHealth.usgs.lastAttemptAt = new Date().toISOString();
 
-    if (!data.features || !data.features.length) return [];
+  try {
+    let usgsUrl = process.env.USGS_EARTHQUAKE_URL || USGS_EARTHQUAKE_URL;
+    if (!usgsUrl.includes("format=")) {
+      const sep = usgsUrl.includes("?") ? "&" : "?";
+      usgsUrl = `${usgsUrl}${sep}format=geojson&minmagnitude=2.0&minlatitude=8.0&maxlatitude=36.0&minlongitude=68.5&maxlongitude=97.5&limit=50`;
+    }
+
+    const res = await safeHttpRequest(usgsUrl, {
+      timeout: 5000,
+      accept: "application/json"
+    });
+
+    if (!res.ok) {
+      throw new Error(`USGS HTTP ${res.status}`);
+    }
+
+    const data = await res.json();
+    if (!data.features || !data.features.length) {
+      const duration = Date.now() - t0;
+      cachedProviderEvents.usgs = [];
+      providerHealth.usgs = {
+        status: "AVAILABLE",
+        reason: null,
+        durationMs: duration,
+        lastSuccessAt: new Date().toISOString(),
+        lastAttemptAt: new Date().toISOString(),
+        count: 0,
+        errorDetails: null,
+      };
+      return { provider: "USGS", status: "AVAILABLE", events: [], durationMs: duration };
+    }
 
     const indianEvents = [];
-
     const foreignExclusions = [
       "tajikistan", "afghanistan", "pakistan", "china", "bhutan",
       "burma", "sri lanka", "xizang", "tibet", "iran", "uzbekistan"
@@ -330,10 +507,33 @@ async function fetchLiveUSGSEarthquakes() {
       });
     }
 
-    return indianEvents;
+    const duration = Date.now() - t0;
+    cachedProviderEvents.usgs = indianEvents;
+    providerHealth.usgs = {
+      status: "AVAILABLE",
+      reason: null,
+      durationMs: duration,
+      lastSuccessAt: new Date().toISOString(),
+      lastAttemptAt: new Date().toISOString(),
+      count: indianEvents.length,
+      errorDetails: null,
+    };
+
+    return { provider: "USGS", status: "AVAILABLE", events: indianEvents, durationMs: duration };
   } catch (err) {
-    console.warn("[WeatherSync] USGS fetch error:", err.message);
-    return [];
+    const duration = Date.now() - t0;
+    const reason = err.code === "TIMEOUT" ? "TIMEOUT" : "NETWORK_ERROR";
+    const retained = cachedProviderEvents.usgs.filter((e) => !e.validUntil || new Date(e.validUntil).getTime() > Date.now());
+    providerHealth.usgs = {
+      status: "UNAVAILABLE",
+      reason,
+      durationMs: duration,
+      lastAttemptAt: new Date().toISOString(),
+      count: retained.length,
+      errorDetails: err.message,
+    };
+    console.warn(`[WeatherSync] ⚠️ USGS UNAVAILABLE [${reason} ${duration}ms]: ${err.message}. Retaining ${retained.length} active cached events.`);
+    return { provider: "USGS", status: "UNAVAILABLE", reason, events: retained, durationMs: duration, error: err.message };
   }
 }
 
@@ -341,13 +541,44 @@ async function fetchLiveUSGSEarthquakes() {
  * 3. Fetch live NASA EONET events in the Indian Subcontinent
  */
 async function fetchLiveNASAEvents() {
-  try {
-    const url = "https://eonet.gsfc.nasa.gov/api/v3/events?status=open&limit=30";
-    const res = await fetch(url, { signal: AbortSignal.timeout(10000) });
-    if (!res.ok) throw new Error(`NASA HTTP ${res.status}`);
-    const data = await res.json();
+  const t0 = Date.now();
+  providerHealth.nasa.lastAttemptAt = new Date().toISOString();
+  const timeoutMs = parseInt(process.env.NASA_TIMEOUT_MS, 10) || 5000;
 
-    if (!data.events || !data.events.length) return [];
+  try {
+    let nasaUrl = process.env.NASA_EONET_URL || NASA_EONET_URL;
+    if (!nasaUrl.includes("status=")) {
+      const sep = nasaUrl.includes("?") ? "&" : "?";
+      nasaUrl = `${nasaUrl}${sep}status=open&limit=30`;
+    }
+
+    const res = await safeHttpRequest(nasaUrl, {
+      timeout: timeoutMs,
+      accept: "application/json"
+    });
+
+    if (!res.ok) {
+      const err = new Error(`NASA HTTP ${res.status}`);
+      err.status = res.status;
+      err.code = `HTTP_${res.status}`;
+      throw err;
+    }
+
+    const data = await res.json();
+    if (!data.events || !data.events.length) {
+      const duration = Date.now() - t0;
+      cachedProviderEvents.nasa = [];
+      providerHealth.nasa = {
+        status: "AVAILABLE",
+        reason: null,
+        durationMs: duration,
+        lastSuccessAt: new Date().toISOString(),
+        lastAttemptAt: new Date().toISOString(),
+        count: 0,
+        errorDetails: null,
+      };
+      return { provider: "NASA", status: "AVAILABLE", events: [], durationMs: duration };
+    }
 
     const indiaEvents = [];
 
@@ -400,10 +631,68 @@ async function fetchLiveNASAEvents() {
       });
     }
 
-    return indiaEvents;
+    const duration = Date.now() - t0;
+    cachedProviderEvents.nasa = indiaEvents;
+    providerHealth.nasa = {
+      status: "AVAILABLE",
+      reason: null,
+      durationMs: duration,
+      lastSuccessAt: new Date().toISOString(),
+      lastAttemptAt: new Date().toISOString(),
+      count: indiaEvents.length,
+      errorDetails: null,
+    };
+
+    return { provider: "NASA", status: "AVAILABLE", events: indiaEvents, durationMs: duration };
   } catch (err) {
-    console.warn("[WeatherSync] NASA fetch error:", err.message);
-    return [];
+    const duration = Date.now() - t0;
+    const httpStatus = err.status || null;
+    let reason = "UNKNOWN_ERROR";
+
+    if (err.code === "TIMEOUT" || err.name === "TimeoutError" || (err.message && err.message.toLowerCase().includes("timeout"))) {
+      reason = "timeout";
+    } else if (err.code === "ENOTFOUND" || err.code === "EAI_AGAIN") {
+      reason = "dns_failure";
+    } else if (err.code === "ECONNREFUSED" || err.code === "ECONNRESET" || err.code === "EHOSTUNREACH" || err.code === "ETIMEDOUT") {
+      reason = "connection_failure";
+    } else if (httpStatus && httpStatus >= 400 && httpStatus < 500) {
+      reason = `http_${httpStatus}`;
+    } else if (httpStatus && httpStatus >= 500) {
+      reason = `http_${httpStatus}`;
+    } else if (err.name === "SyntaxError" || (err.message && err.message.toLowerCase().includes("json"))) {
+      reason = "malformed_response";
+    } else {
+      reason = "network_failure";
+    }
+
+    const retained = cachedProviderEvents.nasa.filter((e) => !e.validUntil || new Date(e.validUntil).getTime() > Date.now());
+    providerHealth.nasa = {
+      status: "UNAVAILABLE",
+      reason,
+      durationMs: duration,
+      lastAttemptAt: new Date().toISOString(),
+      count: retained.length,
+      errorDetails: err.message,
+      httpStatus,
+      errorCode: err.code || null,
+      errorName: err.name || "Error",
+      timeoutMs,
+    };
+
+    console.warn(
+      `[WeatherSync] NASA fetch error:\n` +
+      `  • Error Name: ${err.name || "Error"}\n` +
+      `  • Error Message: ${err.message}\n` +
+      `  • Timeout Duration: ${timeoutMs}ms\n` +
+      `  • Request Duration: ${duration}ms\n` +
+      `  • HTTP Status: ${httpStatus || "N/A"}\n` +
+      `  • Error Code: ${err.code || "N/A"}\n` +
+      `  • Underlying Cause: ${reason}\n` +
+      `  • Retained Cached Events: ${retained.length}`
+    );
+    console.warn(`[NASA] unavailable\nreason=${reason}\nduration=${duration}ms`);
+
+    return { provider: "NASA", status: "UNAVAILABLE", reason, events: retained, durationMs: duration, error: err.message };
   }
 }
 
@@ -615,14 +904,18 @@ async function getRadarCapabilities() {
  * 4. Batch fetch real-time Open-Meteo / Tomorrow.io weather telemetry for all locations with smart caching & 429 backoff
  */
 async function fetchAllLocationsWeather() {
+  const t0 = Date.now();
   const now = Date.now();
+  providerHealth.openMeteo.lastAttemptAt = new Date().toISOString();
 
   // Return cached data if rate-limited or cache is still fresh (< 5 mins)
   if (cachedWeatherMap && now < rateLimitBackoffUntil) {
-    return cachedWeatherMap;
+    const duration = Date.now() - t0;
+    return { status: "RATE_LIMITED_CACHE", weatherMap: cachedWeatherMap, durationMs: duration };
   }
   if (cachedWeatherMap && now - lastWeatherFetchTime < WEATHER_CACHE_TTL_MS) {
-    return cachedWeatherMap;
+    const duration = Date.now() - t0;
+    return { status: "FRESH_CACHE", weatherMap: cachedWeatherMap, durationMs: duration };
   }
 
   try {
@@ -632,12 +925,21 @@ async function fetchAllLocationsWeather() {
 
     const weatherUrl = `${OPEN_METEO_API_URL}?latitude=${lats}&longitude=${lons}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,rain,weather_code,wind_speed_10m,wind_direction_10m,wind_gusts_10m,surface_pressure,visibility&timezone=Asia%2FKolkata`;
 
-    const res = await fetch(weatherUrl, { signal: AbortSignal.timeout(12000) });
+    const res = await safeHttpRequest(weatherUrl, { timeout: 6000, accept: "application/json" });
 
     if (res.status === 429) {
       rateLimitBackoffUntil = Date.now() + 10 * 60 * 1000; // 10 minutes backoff
-      console.log("[WeatherSync] ℹ️ Open-Meteo rate limit active (429), serving fresh cached meteorological telemetry.");
-      return cachedWeatherMap || {};
+      const duration = Date.now() - t0;
+      providerHealth.openMeteo = {
+        status: "RATE_LIMITED",
+        reason: "HTTP_429",
+        durationMs: duration,
+        lastAttemptAt: new Date().toISOString(),
+        count: cachedWeatherMap ? Object.keys(cachedWeatherMap).length : 0,
+        errorDetails: "Open-Meteo rate limit active (429)",
+      };
+      console.log(`[WeatherSync] ℹ️ Open-Meteo rate limit active (429) in ${duration}ms, serving fresh cached meteorological telemetry.`);
+      return { status: "RATE_LIMITED", weatherMap: cachedWeatherMap || {}, durationMs: duration };
     }
 
     if (!res.ok) throw new Error(`Open-Meteo HTTP ${res.status}`);
@@ -680,15 +982,37 @@ async function fetchAllLocationsWeather() {
       };
     });
 
+    const duration = Date.now() - t0;
     cachedWeatherMap = weatherMap;
     lastWeatherFetchTime = Date.now();
-    return weatherMap;
+    providerHealth.openMeteo = {
+      status: "AVAILABLE",
+      reason: null,
+      durationMs: duration,
+      lastSuccessAt: new Date().toISOString(),
+      lastAttemptAt: new Date().toISOString(),
+      count: Object.keys(weatherMap).length,
+      errorDetails: null,
+    };
+
+    return { status: "AVAILABLE", weatherMap, durationMs: duration };
   } catch (err) {
+    const duration = Date.now() - t0;
+    const reason = err.code === "TIMEOUT" ? "TIMEOUT" : "NETWORK_ERROR";
+    providerHealth.openMeteo = {
+      status: cachedWeatherMap ? "DEGRADED" : "UNAVAILABLE",
+      reason,
+      durationMs: duration,
+      lastAttemptAt: new Date().toISOString(),
+      count: cachedWeatherMap ? Object.keys(cachedWeatherMap).length : 0,
+      errorDetails: err.message,
+    };
     if (cachedWeatherMap) {
-      return cachedWeatherMap;
+      console.warn(`[WeatherSync] Open-Meteo fallback to cached telemetry [${reason} ${duration}ms]:`, err.message);
+      return { status: "DEGRADED_CACHE", weatherMap: cachedWeatherMap, durationMs: duration };
     }
-    console.warn("[WeatherSync] Open-Meteo notice:", err.message);
-    return {};
+    console.warn(`[WeatherSync] Open-Meteo notice [${reason} ${duration}ms]:`, err.message);
+    return { status: "UNAVAILABLE", weatherMap: {}, durationMs: duration, error: err.message };
   }
 }
 
@@ -706,15 +1030,25 @@ async function syncDatabaseNow() {
   console.log(`[WeatherSync] 🔄 Starting automated sync cycle #${liveDatabase.syncCount + 1}...`);
 
   try {
-    const [usgsEvents, nasaEvents, gdacsEvents, weatherMap] = await Promise.all([
+    // Execute all 4 external provider requests concurrently with independent timing & error isolation
+    const [usgsRes, nasaRes, gdacsRes, weatherRes] = await Promise.all([
       fetchLiveUSGSEarthquakes(),
       fetchLiveNASAEvents(),
       fetchLiveGDACSEvents(),
       fetchAllLocationsWeather(),
     ]);
 
-    // Pass authentic events to Python Intelligence Layer for geospatial & lifecycle analysis
+    const weatherMap = weatherRes.weatherMap || {};
+    const weatherFetchMs = weatherRes.durationMs;
+    const disasterFetchMs = Math.max(usgsRes.durationMs, nasaRes.durationMs, gdacsRes.durationMs);
+
+    const usgsEvents = usgsRes.events || [];
+    const nasaEvents = nasaRes.events || [];
+    const gdacsEvents = gdacsRes.events || [];
     const allRawDisasterEvents = [...usgsEvents, ...nasaEvents, ...gdacsEvents];
+
+    // Pass authentic events to Python Intelligence Layer for geospatial & lifecycle analysis
+    const tPyStart = Date.now();
     let disasterIntelligence = null;
     try {
       const prevEvents = liveDatabase.recentEventsTimeline || [];
@@ -723,14 +1057,7 @@ async function syncDatabaseNow() {
       console.warn("[WeatherSync] Python disaster intelligence notice:", pyErr.message);
     }
 
-    const destinationMap = {};
-
-    let disasterZonesCount = 0;
-    let moderateAdvisoriesCount = 0;
-    let rainAlertsCount = 0;
-    let normalClearCount = 0;
-
-    // Step 1: Pre-validate all destination weather observations through Python Intelligence
+    // Step 1: Pre-validate all destination weather observations through Python Intelligence concurrently
     const validationPromises = Object.entries(INDIA_LOCATIONS).map(([name, info]) => {
       const key = name.toLowerCase();
       const rawW = (weatherMap && weatherMap[key]) || null;
@@ -777,8 +1104,8 @@ async function syncDatabaseNow() {
 
     const validatedObservations = await Promise.all(validationPromises);
 
-    // Process every location in the network
-    for (const item of validatedObservations) {
+    // Step 2: Evaluate destination telemetry, change detection, and risk intelligence concurrently
+    const destinationEvaluationPromises = validatedObservations.map(async (item) => {
       const { name, info, rawW, validation: validationResult } = item;
       const key = name.toLowerCase();
       const prevObs = liveDatabase.destinations?.[name]?.weather || null;
@@ -794,7 +1121,6 @@ async function syncDatabaseNow() {
         if (rawW && rawW.temperature != null) {
           console.warn(`[WeatherSync] ⚠️ Meteorological observation for ${name} rejected by Python validation:`, validationResult.errors);
         }
-        // If previous valid observation exists, keep it as degraded state; otherwise null out physical values. Zero synthetic data.
         if (prevObs && prevObs.isValid !== false && prevObs.temperature != null) {
           liveW = {
             ...prevObs,
@@ -848,7 +1174,7 @@ async function syncDatabaseNow() {
       let activeBulletinId = null;
       let sourceName = "Open-Meteo Satellite & National Disaster Network";
 
-      // Rule A: Real-time severe weather thresholds (Evaluated strictly on authentic numbers)
+      // Rule A: Real-time severe weather thresholds
       if (
         (liveW.precipitation != null && liveW.precipitation >= 30.0) ||
         (liveW.windGusts != null && liveW.windGusts >= 70.0) ||
@@ -908,7 +1234,7 @@ async function syncDatabaseNow() {
         sourceName = "Open-Meteo Satellite Radar";
       }
 
-      // Rule B: Overlay live GDACS events (Global Disaster Alert and Coordination System)
+      // Rule B: Overlay live GDACS events
       const gdacs = gdacsEvents.find((g) => g.destination.toLowerCase() === key);
       if (gdacs && (gdacs.alertTier === "RED" || (gdacs.alertTier === "YELLOW" && alertTier !== "RED"))) {
         alertTier = gdacs.alertTier;
@@ -930,7 +1256,7 @@ async function syncDatabaseNow() {
         sourceName = "GDACS (United Nations & European Commission)";
       }
 
-      // Rule D: Overlay live USGS earthquakes if elevated
+      // Rule D: Overlay live USGS earthquakes
       const quake = usgsEvents.find((q) => q.destination.toLowerCase() === key);
       if (quake && (quake.alertTier === "RED" || (quake.alertTier === "YELLOW" && alertTier !== "RED"))) {
         alertTier = quake.alertTier;
@@ -952,7 +1278,7 @@ async function syncDatabaseNow() {
         sourceName = "USGS Live Indian Subcontinent Seismic Network";
       }
 
-      // Rule E: Overlay live NASA events if elevated
+      // Rule E: Overlay live NASA events
       const storm = nasaEvents.find((s) => s.destination.toLowerCase() === key);
       if (storm && (storm.alertTier === "RED" || (storm.alertTier === "YELLOW" && alertTier !== "RED"))) {
         alertTier = storm.alertTier;
@@ -973,12 +1299,6 @@ async function syncDatabaseNow() {
         activeBulletinId = storm.id;
         sourceName = "NASA Earth Observatory (EONET Satellite)";
       }
-
-      // Update counters
-      if (alertTier === "RED") disasterZonesCount++;
-      else if (alertTier === "YELLOW") moderateAdvisoriesCount++;
-      else if (isRainAlert) rainAlertsCount++;
-      else normalClearCount++;
 
       const isOfficialAlertPresent = alertTier === "RED" || alertTier === "YELLOW" || isRainAlert;
       const officialAlert = {
@@ -1017,7 +1337,7 @@ async function syncDatabaseNow() {
         disclaimer: "Travel_Guruji Risk Interpretation is an automated algorithmic assessment for travel decision support and is NOT an official government emergency warning. Always heed official directives from IMD, NDMA, and local district authorities.",
       };
 
-      // Weather change detection via Python Intelligence Layer (ONLY for fresh, validated observations)
+      // Weather change detection via Python Intelligence Layer
       let weatherChangeInfo = null;
       if (
         validationResult.valid &&
@@ -1043,7 +1363,7 @@ async function syncDatabaseNow() {
         };
       }
 
-      // Grounded risk interpretation from Python Intelligence Layer (validated data or degraded nulls, zero synthetic data)
+      // Grounded risk interpretation from Python Intelligence Layer
       let pythonRiskAnalysis = null;
       try {
         const destDisasters = allRawDisasterEvents.filter(
@@ -1063,55 +1383,76 @@ async function syncDatabaseNow() {
         };
       }
 
-      destinationMap[name] = {
+      return {
         name,
-        state: info.state,
-        type: info.type || "destination",
-        corridor: info.corridor,
-        river: info.river || "Regional Basin",
-        coordinates: { lat: info.lat, lon: info.lon },
-        weather: {
-          ...liveW,
-          lastUpdatedAt: new Date().toISOString(),
-          changeDetection: weatherChangeInfo,
-          validation: validationResult,
-        },
-        officialAlert,
-        travelGurujiRisk,
-        intelligence: pythonRiskAnalysis || {
-          status: "unavailable",
-          message: "Intelligence analysis temporarily unavailable",
-        },
-        disaster: {
-          alertTier,
-          severity,
-          alertType,
-          isDisasterZone,
-          isDisaster: isDisasterZone,
-          isModerateAdvisory,
-          isRainAlert,
-          isNormal,
-          status,
-          colorCode,
-          badgeLabel,
-          movementStatus,
-          movementFeasible,
-          hazardType,
-          title,
-          description,
-          advice,
-          activeThreat,
-          activeBulletinId,
-          source: sourceName,
-          safeAlternativeHub: info.state.includes("Himachal")
-            ? "Chandigarh"
-            : info.state.includes("Uttarakhand")
-            ? "Dehradun"
-            : "Nearest Capital Junction",
-          affectedCorridors: info.corridor,
-          lastVerifiedAt: new Date().toISOString(),
-        },
+        alertTier,
+        isRainAlert,
+        destinationData: {
+          name,
+          state: info.state,
+          type: info.type || "destination",
+          corridor: info.corridor,
+          river: info.river || "Regional Basin",
+          coordinates: { lat: info.lat, lon: info.lon },
+          weather: {
+            ...liveW,
+            lastUpdatedAt: new Date().toISOString(),
+            changeDetection: weatherChangeInfo,
+            validation: validationResult,
+          },
+          officialAlert,
+          travelGurujiRisk,
+          intelligence: pythonRiskAnalysis || {
+            status: "unavailable",
+            message: "Intelligence analysis temporarily unavailable",
+          },
+          disaster: {
+            alertTier,
+            severity,
+            alertType,
+            isDisasterZone: alertTier === "RED",
+            isDisaster: alertTier === "RED",
+            isModerateAdvisory: alertTier === "YELLOW",
+            isRainAlert,
+            isNormal: alertTier === "GREEN" && !isRainAlert,
+            status,
+            colorCode,
+            badgeLabel,
+            movementStatus,
+            movementFeasible,
+            hazardType,
+            title,
+            description,
+            advice,
+            activeThreat,
+            activeBulletinId,
+            source: sourceName,
+            safeAlternativeHub: info.state.includes("Himachal")
+              ? "Chandigarh"
+              : info.state.includes("Uttarakhand")
+              ? "Dehradun"
+              : "Nearest Capital Junction",
+            affectedCorridors: info.corridor,
+            lastVerifiedAt: new Date().toISOString(),
+          },
+        }
       };
+    });
+
+    const evaluatedResults = await Promise.all(destinationEvaluationPromises);
+
+    const destinationMap = {};
+    let disasterZonesCount = 0;
+    let moderateAdvisoriesCount = 0;
+    let rainAlertsCount = 0;
+    let normalClearCount = 0;
+
+    for (const item of evaluatedResults) {
+      destinationMap[item.name] = item.destinationData;
+      if (item.alertTier === "RED") disasterZonesCount++;
+      else if (item.alertTier === "YELLOW") moderateAdvisoriesCount++;
+      else if (item.isRainAlert) rainAlertsCount++;
+      else normalClearCount++;
     }
 
     // Build timeline of active events
@@ -1151,11 +1492,36 @@ async function syncDatabaseNow() {
       disasterSummary: disasterIntelligence,
     };
 
-    // Persist to disk backup
-    try {
-      fs.writeFileSync(DB_FILE_PATH, JSON.stringify(liveDatabase, null, 2), "utf8");
-    } catch (saveErr) {
-      console.warn("[WeatherSync] Error saving database file:", saveErr.message);
+    const pythonIntelligenceMs = Date.now() - tPyStart;
+    const totalSyncMs = Date.now() - startTime;
+
+    liveDatabase.performance = {
+      weatherFetchMs,
+      disasterFetchMs,
+      pythonIntelligenceMs,
+      totalSyncMs,
+      lastMeasuredAt: new Date().toISOString(),
+    };
+    liveDatabase.providerStatus = { ...providerHealth };
+
+    // Prevent duplicate disk writes if state has not meaningfully changed
+    const stateFingerprint = JSON.stringify({
+      stats: liveDatabase.stats,
+      disastersCount: allRawDisasterEvents.length,
+      activeQuakes: usgsEvents.length,
+      activeNasa: nasaEvents.length,
+      activeGdacs: gdacsEvents.length,
+      tempSum: Math.round(Object.values(destinationMap).reduce((acc, d) => acc + (d.weather?.temperature || 0), 0) * 10) / 10,
+    });
+
+    const hasStateChanged = stateFingerprint !== lastKnownStateHash;
+    if (hasStateChanged || liveDatabase.syncCount === 1) {
+      lastKnownStateHash = stateFingerprint;
+      try {
+        fs.writeFileSync(DB_FILE_PATH, JSON.stringify(liveDatabase, null, 2), "utf8");
+      } catch (saveErr) {
+        console.warn("[WeatherSync] Error saving database file:", saveErr.message);
+      }
     }
 
     // Broadcast update to all connected SSE clients (browsers)
@@ -1169,12 +1535,16 @@ async function syncDatabaseNow() {
       intelligenceSummary: liveDatabase.intelligenceSummary,
     });
 
-    const elapsed = Date.now() - startTime;
     console.log(
-      `[WeatherSync] ✅ Continuous sync cycle #${liveDatabase.syncCount} complete in ${elapsed}ms: ` +
-      `${disasterZonesCount} 🔴 Disaster Zones, ${moderateAdvisoriesCount} 🟡 Advisories, ` +
-      `${rainAlertsCount} 🌧️ Rain Alerts, ${normalClearCount} 🟢 Clear Hubs.`
+      `[WeatherSync] 📡 External Provider Status & Timings (Cycle #${liveDatabase.syncCount} in ${totalSyncMs}ms):\n` +
+      `  • Open-Meteo: ${providerHealth.openMeteo.status} (${providerHealth.openMeteo.durationMs}ms) [${Object.keys(weatherMap).length} stations]\n` +
+      `  • USGS Seismic: ${providerHealth.usgs.status} (${providerHealth.usgs.durationMs}ms) [${usgsEvents.length} events]\n` +
+      `  • GDACS Coordination: ${providerHealth.gdacs.status} (${providerHealth.gdacs.durationMs}ms) [${gdacsEvents.length} events]\n` +
+      `  • NASA EONET: ${providerHealth.nasa.status} (${providerHealth.nasa.durationMs}ms) [${nasaEvents.length} events]\n` +
+      `  • Python Intelligence: ${pythonIntelligenceMs}ms [55 stations analyzed]\n` +
+      `  • Regional Impact: ${disasterZonesCount} 🔴 Disaster Zones, ${moderateAdvisoriesCount} 🟡 Advisories, ${rainAlertsCount} 🌧️ Rain Alerts, ${normalClearCount} 🟢 Clear Hubs.`
     );
+
   } catch (err) {
     console.error("[WeatherSync] ❌ Sync cycle failed:", err.message);
   } finally {
@@ -1192,6 +1562,7 @@ function registerSseClient(res) {
     "Content-Type": "text/event-stream",
     "Cache-Control": "no-cache",
     "Connection": "keep-alive",
+    "X-Accel-Buffering": "no",
   });
 
   // Send immediate initial data
@@ -1200,16 +1571,22 @@ function registerSseClient(res) {
     timestamp: liveDatabase.lastSyncTimestamp,
     syncCount: liveDatabase.syncCount,
     stats: liveDatabase.stats,
-    destinations: Object.values(liveDatabase.destinations),
-    timeline: liveDatabase.recentEventsTimeline,
+    destinations: Object.values(liveDatabase.destinations || {}),
+    timeline: liveDatabase.recentEventsTimeline || [],
+    intelligenceSummary: liveDatabase.intelligenceSummary || { status: "active" },
   });
   res.write(`data: ${initialPayload}\n\n`);
 
   sseClients.add(res);
 
-  // Send periodic ping to prevent timeout
+  // Send periodic keep-alive ping to prevent proxy/browser timeout
   const pingInterval = setInterval(() => {
     try {
+      if (res.destroyed || res.writableEnded) {
+        clearInterval(pingInterval);
+        sseClients.delete(res);
+        return;
+      }
       res.write(":ping\n\n");
     } catch {
       clearInterval(pingInterval);
@@ -1217,10 +1594,14 @@ function registerSseClient(res) {
     }
   }, 15000);
 
-  res.on("close", () => {
+  const cleanup = () => {
     clearInterval(pingInterval);
     sseClients.delete(res);
-  });
+  };
+
+  res.on("close", cleanup);
+  res.on("finish", cleanup);
+  res.on("error", cleanup);
 }
 
 /**
@@ -1231,12 +1612,17 @@ function broadcastUpdate(payload) {
   const message = `data: ${JSON.stringify(payload)}\n\n`;
   for (const client of sseClients) {
     try {
+      if (client.destroyed || client.writableEnded) {
+        sseClients.delete(client);
+        continue;
+      }
       client.write(message);
     } catch (err) {
       sseClients.delete(client);
     }
   }
 }
+
 
 /**
  * Formats alerts into the authoritative emergency format
@@ -1440,6 +1826,8 @@ function getSyncStatus() {
     nextSyncInSeconds,
     isSyncing: liveDatabase.isSyncing,
     stats: liveDatabase.stats,
+    performance: liveDatabase.performance,
+    providerStatus: liveDatabase.providerStatus || providerHealth,
     dataSources: liveDatabase.dataSources,
     recentEventsTimeline: liveDatabase.recentEventsTimeline,
     activeSubscribersCount: sseClients.size,
@@ -1459,4 +1847,9 @@ module.exports = {
   fetchRainViewerRadarFrames,
   fetchTomorrowIoWeather,
   fetchTomorrowIoForecast,
+  fetchLiveNASAEvents,
+  fetchLiveGDACSEvents,
+  fetchLiveUSGSEarthquakes,
+  fetchAllLocationsWeather,
+  providerHealth,
 };

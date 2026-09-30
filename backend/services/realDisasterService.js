@@ -16,6 +16,85 @@
  * 4. National Disaster Management Authority (NDMA) & IMD Ground Directives
  */
 
+const https = require("node:https");
+
+/**
+ * Robust IPv4 JSON fetcher with hard timeout to prevent IPv6 blackholing on external government feeds.
+ */
+function fetchJsonIPv4(url, timeoutMs = 6000) {
+  return new Promise((resolve, reject) => {
+    try {
+      const u = new URL(url);
+      let settled = false;
+      const req = https.request({
+        protocol: u.protocol,
+        hostname: u.hostname,
+        port: 443,
+        path: u.pathname + u.search,
+        method: "GET",
+        family: 4,
+        headers: {
+          "User-Agent": "TravelGuruji/2.0 (SmartTourism IndianSubcontinent Safety Monitor; contact@travelguruji.in)",
+          "Accept": "application/json, text/plain, */*",
+        },
+        timeout: timeoutMs,
+      }, (res) => {
+        let body = "";
+        res.on("data", c => body += c);
+        res.on("end", () => {
+          if (!settled) {
+            settled = true;
+            clearTimeout(hardTimer);
+            if (res.statusCode < 200 || res.statusCode >= 300) {
+              const err = new Error(`HTTP ${res.statusCode}`);
+              err.status = res.statusCode;
+              return reject(err);
+            }
+            try {
+              resolve(JSON.parse(body));
+            } catch (e) {
+              reject(e);
+            }
+          }
+        });
+      });
+
+      const hardTimer = setTimeout(() => {
+        if (!settled) {
+          settled = true;
+          const err = new Error(`The operation was aborted due to timeout (${timeoutMs}ms)`);
+          err.code = "TIMEOUT";
+          req.destroy(err);
+          reject(err);
+        }
+      }, timeoutMs);
+
+      req.on("timeout", () => {
+        if (!settled) {
+          settled = true;
+          clearTimeout(hardTimer);
+          const err = new Error(`The operation was aborted due to timeout (${timeoutMs}ms)`);
+          err.code = "TIMEOUT";
+          req.destroy(err);
+          reject(err);
+        }
+      });
+
+      req.on("error", (e) => {
+        if (!settled) {
+          settled = true;
+          clearTimeout(hardTimer);
+          reject(e);
+        }
+      });
+
+      req.end();
+    } catch (err) {
+      reject(err);
+    }
+  });
+}
+
 // All 33 Destinations + 11 Origins of Travel_Guruji
 const INDIA_LOCATIONS = {
   // --- Himachal Pradesh Destinations ---
@@ -190,9 +269,7 @@ async function fetchIndiaUSGSEarthquakes() {
   try {
     const url =
       "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&minmagnitude=2.0&minlatitude=8.0&maxlatitude=36.0&minlongitude=68.5&maxlongitude=97.5&limit=50";
-    const res = await fetch(url, { signal: AbortSignal.timeout(12000) });
-    if (!res.ok) throw new Error(`USGS HTTP ${res.status}`);
-    const data = await res.json();
+    const data = await fetchJsonIPv4(url, 5000);
 
     if (!data.features || !data.features.length) return [];
 
@@ -331,9 +408,7 @@ async function fetchIndiaUSGSEarthquakes() {
 async function fetchIndiaNASAEvents() {
   try {
     const url = "https://eonet.gsfc.nasa.gov/api/v3/events?status=open&limit=30";
-    const res = await fetch(url, { signal: AbortSignal.timeout(12000) });
-    if (!res.ok) throw new Error(`NASA HTTP ${res.status}`);
-    const data = await res.json();
+    const data = await fetchJsonIPv4(url, 5000);
 
     if (!data.events || !data.events.length) return [];
 

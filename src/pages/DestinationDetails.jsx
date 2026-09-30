@@ -432,7 +432,7 @@ function DestinationDetails() {
               </div>
             </div>
 
-            {weatherGlance && (
+            {(liveDisasterInfo?.weather || weatherGlance) && (
               <Link
                 to={`/weather?dest=${encodeURIComponent(destination.name)}`}
                 className="details-meta-card details-meta-weather"
@@ -440,21 +440,25 @@ function DestinationDetails() {
                 title="Click to view live weather & natural disaster telemetry"
               >
                 <div className="details-meta-icon">
-                  {weatherGlance.mode === "live"
-                    ? weatherGlance.forecast?.[0]?.weatherIcon || "☀️"
-                    : weatherGlance.seasonal?.dominantIcon || "🌤️"}
+                  {liveDisasterInfo?.weather?.icon || (weatherGlance?.mode === "live"
+                    ? weatherGlance?.forecast?.[0]?.weatherIcon || "☀️"
+                    : weatherGlance?.seasonal?.dominantIcon || "🌤️")}
                 </div>
 
                 <div>
                   <span style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                    {weatherGlance.mode === "live" ? "Current Weather" : "Seasonal Weather"}
+                    {liveDisasterInfo?.weather || weatherGlance?.mode === "live" ? "Current Weather" : "Seasonal Weather"}
                     <span style={{ fontSize: "10px", color: "#0284c7", fontWeight: "700" }}>• View Radar ↗</span>
                   </span>
 
                   <strong>
-                    {weatherGlance.mode === "live"
-                      ? `${weatherGlance.forecast?.[0]?.temperatureMax ?? "--"}°C • ${weatherGlance.forecast?.[0]?.weatherLabel || "Live"}`
-                      : `${weatherGlance.seasonal?.avgTempMin}°C – ${weatherGlance.seasonal?.avgTempMax}°C • ${weatherGlance.seasonal?.dominantCondition}`}
+                    {liveDisasterInfo?.weather?.temperature != null
+                      ? `${liveDisasterInfo.weather.temperature}°C • ${liveDisasterInfo.weather.condition || "Live"}`
+                      : weatherGlance?.today?.currentTemperature != null
+                      ? `${weatherGlance.today.currentTemperature}°C • ${weatherGlance.today.weatherLabel || "Live"}`
+                      : weatherGlance?.mode === "live"
+                      ? `${weatherGlance.forecast?.[0]?.temperatureMax ?? "--"}°C (High) • ${weatherGlance.forecast?.[0]?.weatherLabel || "Live"}`
+                      : `${weatherGlance?.seasonal?.avgTempMin ?? "--"}°C – ${weatherGlance?.seasonal?.avgTempMax ?? "--"}°C • ${weatherGlance?.seasonal?.dominantCondition ?? ""}`}
                   </strong>
                 </div>
               </Link>

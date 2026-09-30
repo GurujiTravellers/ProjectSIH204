@@ -4,6 +4,7 @@ const {
   optimizeTripPlan,
   optimizeBudget,
   optimizeTransport,
+  getPythonServiceUrl,
 } = require("../services/pythonIntelligenceClient");
 
 const router = express.Router();
@@ -26,7 +27,7 @@ function logPythonOffline(errMessage) {
 function logPythonOnline() {
   if (pythonWasOffline) {
     console.log(
-      "[Intelligence Gateway] Python intelligence service reconnected successfully at http://127.0.0.1:8000"
+      `[Intelligence Gateway] Python intelligence service reconnected successfully at ${getPythonServiceUrl()}`
     );
     pythonWasOffline = false;
   }

@@ -2086,9 +2086,14 @@ function TripPlan() {
                         <h3 style={{ margin: "0 0 4px", fontSize: "20px", color: "#0f172a" }}>
                           {weatherData.today.weatherLabel || "Partly Cloudy"}
                         </h3>
-                        <div style={{ display: "flex", gap: "12px", fontSize: "14px", color: "#475569" }}>
-                          <span>↑ <strong>{weatherData.today.temperatureMax}°C</strong></span>
-                          <span>↓ <strong>{weatherData.today.temperatureMin}°C</strong></span>
+                        <div style={{ display: "flex", gap: "12px", fontSize: "14px", color: "#475569", flexWrap: "wrap", alignItems: "center" }}>
+                          {weatherData.today.currentTemperature != null && (
+                            <span style={{ color: "#0f172a", fontWeight: "800" }}>
+                              Current: <strong>{weatherData.today.currentTemperature}°C</strong>
+                            </span>
+                          )}
+                          <span>High: <strong>{weatherData.today.temperatureMax}°C</strong></span>
+                          <span>Low: <strong>{weatherData.today.temperatureMin}°C</strong></span>
                           <span>🌧️ <strong>{weatherData.today.precipitationSum} mm</strong> ({weatherData.today.precipitationProbability}%)</span>
                         </div>
                       </div>

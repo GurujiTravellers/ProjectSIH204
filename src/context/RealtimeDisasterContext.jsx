@@ -2,22 +2,19 @@ import React, { createContext, useContext, useState, useEffect, useRef, useCallb
 import { getApiBaseUrl } from "../config/apiConfig";
 import { showToast } from "../components/Toast";
 import { fetchLiveSyncedDestinations, forceWeatherSync } from "../services/weatherApi";
-import liveWeatherSnapshot from "../data/liveWeatherSnapshot.json";
-
-const initialDestList = Object.values(liveWeatherSnapshot?.destinations || {});
 
 const RealtimeDisasterContext = createContext(null);
 
 export function RealtimeDisasterProvider({ children }) {
-  const [destinations, setDestinations] = useState(initialDestList);
+  const [destinations, setDestinations] = useState([]);
   const [stats, setStats] = useState({
-    totalDestinations: initialDestList.length,
-    disasterZones: initialDestList.filter((d) => d.disaster?.alertTier === "RED").length,
-    moderateAdvisories: initialDestList.filter((d) => d.disaster?.alertTier === "YELLOW").length,
-    rainAlerts: initialDestList.filter((d) => d.disaster?.isRainAlert).length,
-    normalClear: initialDestList.filter((d) => d.disaster?.alertTier === "GREEN" && !d.disaster?.isRainAlert).length,
+    totalDestinations: 0,
+    disasterZones: 0,
+    moderateAdvisories: 0,
+    rainAlerts: 0,
+    normalClear: 0,
   });
-  const [lastSyncTimestamp, setLastSyncTimestamp] = useState(liveWeatherSnapshot?.lastSyncTimestamp || null);
+  const [lastSyncTimestamp, setLastSyncTimestamp] = useState(null);
   const [isLiveConnected, setIsLiveConnected] = useState(false);
   const [isSyncing, setIsSyncing] = useState(false);
   const [recentTimeline, setRecentTimeline] = useState([]);
@@ -86,18 +83,24 @@ export function RealtimeDisasterProvider({ children }) {
   useEffect(() => {
     let reconnectTimeout = null;
     let sse = null;
+    let isMounted = true;
 
     function connectSSE() {
+      if (!isMounted) return;
       try {
+        if (sse) {
+          sse.close();
+        }
         const streamUrl = `${getApiBaseUrl()}/weather/live-stream`;
         sse = new EventSource(streamUrl);
         sseRef.current = sse;
 
         sse.onopen = () => {
-          setIsLiveConnected(true);
+          if (isMounted) setIsLiveConnected(true);
         };
 
         sse.onmessage = (event) => {
+          if (!isMounted) return;
           try {
             const parsed = JSON.parse(event.data);
             handleDatabaseUpdate(parsed);
@@ -107,40 +110,29 @@ export function RealtimeDisasterProvider({ children }) {
         };
 
         sse.onerror = () => {
-          setIsLiveConnected(false);
+          if (isMounted) setIsLiveConnected(false);
           if (sse) sse.close();
-          // Attempt reconnection after 10 seconds
-          reconnectTimeout = setTimeout(connectSSE, 10000);
+          if (isMounted) {
+            // Attempt clean reconnection after 8 seconds
+            clearTimeout(reconnectTimeout);
+            reconnectTimeout = setTimeout(connectSSE, 8000);
+          }
         };
       } catch (e) {
-        setIsLiveConnected(false);
+        if (isMounted) setIsLiveConnected(false);
       }
     }
 
     connectSSE();
 
-    // Secondary continuous polling heartbeat (every 25 seconds) to ensure 100% sync reliability
-    const pollInterval = setInterval(async () => {
-      try {
-        const res = await fetchLiveSyncedDestinations();
-        if (res && res.destinations) {
-          handleDatabaseUpdate({
-            destinations: res.destinations,
-            stats: res.syncStatus?.stats,
-            timestamp: res.syncStatus?.lastSyncTimestamp,
-          });
-        }
-      } catch (err) {
-        // Ignore network errors in background polling
-      }
-    }, 25000);
-
     return () => {
+      isMounted = false;
       if (reconnectTimeout) clearTimeout(reconnectTimeout);
       if (sse) sse.close();
-      clearInterval(pollInterval);
+      if (sseRef.current) sseRef.current.close();
     };
   }, [handleDatabaseUpdate]);
+
 
   // Initial fetch on mount
   useEffect(() => {

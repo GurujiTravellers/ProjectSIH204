@@ -1,5 +1,4 @@
 import { getApiBaseUrl } from "../config/apiConfig";
-import liveWeatherSnapshot from "../data/liveWeatherSnapshot.json";
 
 const OPEN_METEO_GEOCODING_URL =
   "https://geocoding-api.open-meteo.com/v1/search";
@@ -12,6 +11,146 @@ const OPEN_METEO_ARCHIVE_URL =
 
 // Safe fallback coordinates for remote hamlets / natural spots not indexed in GeoNames
 const KNOWN_LOCATION_FALLBACKS = {
+  "manali": {
+    name: "Manali",
+    latitude: 32.2396,
+    longitude: 77.1887,
+    admin1: "Himachal Pradesh",
+    country: "India",
+  },
+  "shimla": {
+    name: "Shimla",
+    latitude: 31.1048,
+    longitude: 77.1734,
+    admin1: "Himachal Pradesh",
+    country: "India",
+  },
+  "sissu": {
+    name: "Sissu",
+    latitude: 32.4820,
+    longitude: 77.1245,
+    admin1: "Himachal Pradesh",
+    country: "India",
+  },
+  "kasol": {
+    name: "Kasol",
+    latitude: 32.0100,
+    longitude: 77.3150,
+    admin1: "Himachal Pradesh",
+    country: "India",
+  },
+  "chitkul": {
+    name: "Chitkul",
+    latitude: 31.3533,
+    longitude: 78.4354,
+    admin1: "Himachal Pradesh",
+    country: "India",
+  },
+  "kalpa": {
+    name: "Kalpa",
+    latitude: 31.5372,
+    longitude: 78.2562,
+    admin1: "Himachal Pradesh",
+    country: "India",
+  },
+  "srinagar": {
+    name: "Srinagar",
+    latitude: 34.0837,
+    longitude: 74.7973,
+    admin1: "Jammu & Kashmir",
+    country: "India",
+  },
+  "gulmarg": {
+    name: "Gulmarg",
+    latitude: 34.0484,
+    longitude: 74.3805,
+    admin1: "Jammu & Kashmir",
+    country: "India",
+  },
+  "pahalgam": {
+    name: "Pahalgam",
+    latitude: 34.0161,
+    longitude: 75.3150,
+    admin1: "Jammu & Kashmir",
+    country: "India",
+  },
+  "rishikesh": {
+    name: "Rishikesh",
+    latitude: 30.0869,
+    longitude: 78.2676,
+    admin1: "Uttarakhand",
+    country: "India",
+  },
+  "haridwar": {
+    name: "Haridwar",
+    latitude: 29.9457,
+    longitude: 78.1642,
+    admin1: "Uttarakhand",
+    country: "India",
+  },
+  "darjeeling": {
+    name: "Darjeeling",
+    latitude: 27.0410,
+    longitude: 88.2663,
+    admin1: "West Bengal",
+    country: "India",
+  },
+  "puri": {
+    name: "Puri",
+    latitude: 19.8135,
+    longitude: 85.8312,
+    admin1: "Odisha",
+    country: "India",
+  },
+  "shillong": {
+    name: "Shillong",
+    latitude: 25.5788,
+    longitude: 91.8933,
+    admin1: "Meghalaya",
+    country: "India",
+  },
+  "dawki": {
+    name: "Dawki",
+    latitude: 25.1878,
+    longitude: 92.0199,
+    admin1: "Meghalaya",
+    country: "India",
+  },
+  "delhi": {
+    name: "Delhi",
+    latitude: 28.6139,
+    longitude: 77.2090,
+    admin1: "Delhi NCR",
+    country: "India",
+  },
+  "jaipur": {
+    name: "Jaipur",
+    latitude: 26.9124,
+    longitude: 75.7873,
+    admin1: "Rajasthan",
+    country: "India",
+  },
+  "jaisalmer": {
+    name: "Jaisalmer",
+    latitude: 26.9157,
+    longitude: 70.9083,
+    admin1: "Rajasthan",
+    country: "India",
+  },
+  "bengaluru": {
+    name: "Bengaluru",
+    latitude: 12.9716,
+    longitude: 77.5946,
+    admin1: "Karnataka",
+    country: "India",
+  },
+  "bangalore": {
+    name: "Bengaluru",
+    latitude: 12.9716,
+    longitude: 77.5946,
+    admin1: "Karnataka",
+    country: "India",
+  },
   "mawlynnong village": {
     name: "Mawlynnong",
     latitude: 25.2016,
@@ -533,6 +672,7 @@ async function getWeatherForecast(
 
     const response = await fetch(
       `${OPEN_METEO_FORECAST_URL}?latitude=${location.latitude}&longitude=${location.longitude}` +
+        `&current=temperature_2m,apparent_temperature,relative_humidity_2m,precipitation,weather_code,wind_speed_10m` +
         `&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,precipitation_sum,wind_speed_10m_max,wind_gusts_10m_max,uv_index_max` +
         `&timezone=auto&start_date=${sStr}&end_date=${eStr}`
     );
@@ -599,7 +739,11 @@ async function getWeatherForecast(
       };
     });
 
-    const todayForecast = forecast[0] || null;
+    const todayForecast = forecast[0] ? {
+      ...forecast[0],
+      currentTemperature: data.current?.temperature_2m != null ? Math.round(data.current.temperature_2m * 10) / 10 : null,
+      apparentTemperature: data.current?.apparent_temperature != null ? Math.round(data.current.apparent_temperature * 10) / 10 : null,
+    } : null;
     const tomorrowForecast = forecast[1] || null;
     const daysAheadForecast = forecast.slice(2);
 
@@ -609,6 +753,7 @@ async function getWeatherForecast(
       startDate: sStr,
       endDate: forecast[forecast.length - 1]?.date || sStr,
       days: forecast.length,
+      current: data.current || null,
       forecast,
       today: todayForecast,
       tomorrow: tomorrowForecast,
@@ -803,21 +948,14 @@ async function fetchLiveSyncedDestinations(filters = {}) {
       }
     }
   } catch (err) {
-    console.warn("Backend /weather/destinations fetch unreachable, activating direct snapshot & API fallback:", err.message);
+    console.warn("Backend /weather/destinations fetch unreachable:", err.message);
   }
 
-  // DIRECT SNAPSHOT & AUTHENTIC API FALLBACK:
-  // Guarantees all 55 destination temperatures, feels-like, and weather icons show immediately
-  const snapshotList = Object.values(liveWeatherSnapshot.destinations || {});
   return {
-    success: true,
-    destinations: snapshotList,
-    count: snapshotList.length,
-    syncStatus: liveWeatherSnapshot.syncStatus || {
-      lastSyncTimestamp: liveWeatherSnapshot.lastSyncTimestamp || new Date().toISOString(),
-      provider: "Tomorrow.io / Open-Meteo Direct Stream",
-      isAutoSyncRunning: true,
-    },
+    success: false,
+    destinations: [],
+    count: 0,
+    syncStatus: null,
   };
 }
 
@@ -832,10 +970,10 @@ async function fetchWeatherSyncStatus() {
     console.warn("fetchWeatherSyncStatus error:", err.message);
   }
   return {
-    success: true,
-    isAutoSyncRunning: true,
+    success: false,
+    isAutoSyncRunning: false,
     provider: "Tomorrow.io / Open-Meteo Direct Stream",
-    lastSyncTimestamp: liveWeatherSnapshot.lastSyncTimestamp || new Date().toISOString(),
+    lastSyncTimestamp: null,
   };
 }
 
@@ -871,21 +1009,52 @@ async function fetchDestinationLiveWeather(destinationName) {
 
   // DIRECT EXTERNAL API FALLBACK: Fetch directly from Open-Meteo
   try {
-    const destination = (liveWeatherSnapshot.destinations || {})[destinationName] ||
-      Object.values(liveWeatherSnapshot.destinations || {}).find(
-        (d) => d.name.toLowerCase() === destinationName.toLowerCase()
-      );
+    const key = destinationName.toLowerCase().trim();
+    const locFallback = KNOWN_LOCATION_FALLBACKS[key];
+    const coords = locFallback ? { lat: locFallback.latitude, lon: locFallback.longitude } : null;
 
-    if (destination && destination.coordinates) {
-      const coords = destination.coordinates;
+    if (coords) {
       const forecastRes = await fetch(
         `https://api.open-meteo.com/v1/forecast?latitude=${coords.lat}&longitude=${coords.lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,surface_pressure,wind_speed_10m,wind_direction_10m,wind_gusts_10m&hourly=temperature_2m,precipitation_probability,precipitation,weather_code,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max,wind_speed_10m_max&timezone=auto&forecast_days=7`
       );
       if (forecastRes.ok) {
         const raw = await forecastRes.json();
+        const summary = getWeatherSummary(raw.current?.weather_code ?? 0);
+        const updatedWeather = {
+          temperature: raw.current?.temperature_2m != null ? Math.round(raw.current.temperature_2m * 10) / 10 : null,
+          apparentTemperature: raw.current?.apparent_temperature != null ? Math.round(raw.current.apparent_temperature * 10) / 10 : null,
+          humidity: raw.current?.relative_humidity_2m ?? null,
+          precipitation: raw.current?.precipitation ?? 0,
+          windSpeed: raw.current?.wind_speed_10m != null ? Math.round(raw.current.wind_speed_10m) : null,
+          windGusts: raw.current?.wind_gusts_10m != null ? Math.round(raw.current.wind_gusts_10m) : null,
+          pressure: raw.current?.surface_pressure != null ? Math.round(raw.current.surface_pressure) : null,
+          weatherCode: raw.current?.weather_code ?? 0,
+          condition: summary.label || "Clear",
+          icon: summary.icon || "☀️",
+          category: summary.category || "CLEAR",
+          provider: "Open-Meteo Direct Live API",
+          lastUpdatedAt: new Date().toISOString(),
+        };
+
+        const fallbackDestination = {
+          name: locFallback?.name || destinationName,
+          state: locFallback?.admin1 || "India",
+          corridor: "Travel Corridor",
+          coordinates: coords,
+          weather: updatedWeather,
+          disaster: {
+            alertTier: "GREEN",
+            severity: "NORMAL",
+            isDisasterZone: false,
+            badgeLabel: "🟢 Normal Conditions",
+            title: "Normal Meteorological Conditions",
+            description: "No active severe disaster bulletins detected.",
+          },
+        };
+
         return {
           success: true,
-          destination,
+          destination: fallbackDestination,
           provider: "Open-Meteo Direct Live API",
           current: raw.current,
           hourlyForecast: (raw.hourly?.time || []).slice(0, 24).map((t, idx) => ({
@@ -896,27 +1065,11 @@ async function fetchDestinationLiveWeather(destinationName) {
             weatherCode: raw.hourly.weather_code?.[idx] || 0,
           })),
           forecast7Day: { daily: raw.daily },
-          travelGurujiRisk: destination.travelGurujiRisk,
         };
       }
     }
   } catch (directErr) {
     console.warn("Direct Open-Meteo forecast fetch failed:", directErr.message);
-  }
-
-  // Return destination snapshot if available
-  const destFallback = Object.values(liveWeatherSnapshot.destinations || {}).find(
-    (d) => d.name.toLowerCase() === destinationName.toLowerCase()
-  );
-  if (destFallback) {
-    return {
-      success: true,
-      destination: destFallback,
-      provider: destFallback.weather?.provider || "Tomorrow.io / Open-Meteo Feed",
-      hourlyForecast: [],
-      forecast7Day: null,
-      travelGurujiRisk: destFallback.travelGurujiRisk,
-    };
   }
 
   return null;

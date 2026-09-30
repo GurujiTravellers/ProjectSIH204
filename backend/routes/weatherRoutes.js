@@ -219,13 +219,15 @@ router.get("/destination/:name", async (req, res) => {
     }
 
     // 2. Open-Meteo fallback if hourly or daily forecast is still needed
+    let directCurrent = null;
     if (!forecast7Day || hourlyForecast.length === 0) {
       try {
         const forecastRes = await fetch(
-          `${WEATHER_URL}?latitude=${coords.lat}&longitude=${coords.lon}&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max,wind_speed_10m_max,wind_gusts_10m_max&hourly=temperature_2m,apparent_temperature,relative_humidity_2m,precipitation,precipitation_probability,weather_code,wind_speed_10m,wind_direction_10m,surface_pressure,visibility&timezone=Asia%2FKolkata&forecast_days=7`
+          `${WEATHER_URL}?latitude=${coords.lat}&longitude=${coords.lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m,wind_direction_10m,wind_gusts_10m,surface_pressure&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max,wind_speed_10m_max,wind_gusts_10m_max&hourly=temperature_2m,apparent_temperature,relative_humidity_2m,precipitation,precipitation_probability,weather_code,wind_speed_10m,wind_direction_10m,surface_pressure,visibility&timezone=Asia%2FKolkata&forecast_days=7`
         );
         if (forecastRes.ok) {
           const omData = await forecastRes.json();
+          directCurrent = omData.current || null;
           forecast7Day = {
             source: "Open-Meteo European Flood & Hydrology Radar (Fallback)",
             daily: omData.daily,
@@ -261,6 +263,7 @@ router.get("/destination/:name", async (req, res) => {
           provider: liveProvider,
         },
       },
+      current: directCurrent,
       provider: liveProvider,
       hourlyForecast,
       forecast7Day,
@@ -288,18 +291,39 @@ router.get("/", async (req, res) => {
       });
     }
 
-    const geocodingResponse = await fetch(
-      `${GEOCODING_URL}?name=${encodeURIComponent(
-        city
-      )}&count=1&language=en&format=json`
-    );
+    let location = null;
+    const syncedDest = getDestinationByName(city);
+    if (syncedDest && syncedDest.coordinates) {
+      location = {
+        name: syncedDest.name,
+        country: "India",
+        latitude: syncedDest.coordinates.lat,
+        longitude: syncedDest.coordinates.lon,
+        admin1: syncedDest.state || "",
+      };
+    } else {
+      const geocodingResponse = await fetch(
+        `${GEOCODING_URL}?name=${encodeURIComponent(
+          city
+        )}&count=10&language=en&format=json`
+      );
 
-    if (!geocodingResponse.ok) {
-      throw new Error("Unable to find destination location");
+      if (!geocodingResponse.ok) {
+        throw new Error("Unable to find destination location");
+      }
+
+      const geocodingData = await geocodingResponse.json();
+      const results = geocodingData.results || [];
+      const indiaResults = results.filter(
+        (r) => r.country_code === "IN" || (r.country && r.country.toLowerCase() === "india")
+      );
+
+      if (city.toLowerCase() === "manali") {
+        location = indiaResults.find((r) => r.admin1 && r.admin1.toLowerCase().includes("himachal")) || indiaResults[0] || results[0];
+      } else {
+        location = indiaResults[0] || results[0];
+      }
     }
-
-    const geocodingData = await geocodingResponse.json();
-    const location = geocodingData.results?.[0];
 
     if (!location) {
       return res.status(404).json({

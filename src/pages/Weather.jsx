@@ -7,21 +7,17 @@ import {
   fetchDestinationLiveWeather,
 } from "../services/weatherApi";
 import EmergencyRadarMap from "../components/EmergencyRadarMap";
-import liveWeatherSnapshot from "../data/liveWeatherSnapshot.json";
-
-const initialDestinationsList = Object.values(liveWeatherSnapshot?.destinations || {});
+import { useRealtimeDisaster } from "../context/RealtimeDisasterContext";
 
 export default function Weather() {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
 
-  const [destinations, setDestinations] = useState(initialDestinationsList);
-  const [loading, setLoading] = useState(initialDestinationsList.length === 0);
-  const [syncStatus, setSyncStatus] = useState(liveWeatherSnapshot?.syncStatus || null);
+  const [destinations, setDestinations] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [syncStatus, setSyncStatus] = useState(null);
   const [isSyncing, setIsSyncing] = useState(false);
-  const [lastSyncTime, setLastSyncTime] = useState(
-    liveWeatherSnapshot?.lastSyncTimestamp ? new Date(liveWeatherSnapshot.lastSyncTimestamp) : new Date()
-  );
+  const [lastSyncTime, setLastSyncTime] = useState(null);
   const [secondsAgo, setSecondsAgo] = useState(0);
 
   // View Mode: SPLIT by default so both Real-Time Radar Map AND the Live Temperature Section are visible immediately!
@@ -39,11 +35,13 @@ export default function Weather() {
   const [modalLoading, setModalLoading] = useState(false);
   const [detailedForecast, setDetailedForecast] = useState(null);
 
-  // Load initial data
+  const { destinations: contextDestinations, lastSyncTimestamp: contextSyncTime, isLiveConnected } = useRealtimeDisaster();
+
+  // Load initial data or handle manual force sync
   const loadData = async (forceRefresh = false) => {
     if (forceRefresh) {
       setIsSyncing(true);
-    } else {
+    } else if (destinations.length === 0) {
       setLoading(true);
     }
 
@@ -68,24 +66,44 @@ export default function Weather() {
 
   useEffect(() => {
     loadData();
-
-    // Auto-refresh from background database every 30 seconds
-    const interval = setInterval(() => {
-      fetchLiveSyncedDestinations().then((res) => {
-        if (res && res.destinations) {
-          setDestinations(res.destinations);
-          if (res.syncStatus) {
-            setSyncStatus(res.syncStatus);
-            if (res.syncStatus.lastSyncTimestamp) {
-              setLastSyncTime(new Date(res.syncStatus.lastSyncTimestamp));
-            }
-          }
-        }
-      });
-    }, 30000);
-
-    return () => clearInterval(interval);
   }, []);
+
+  // Real-time SSE synchronization: update immediately when background sync broadcasts
+  useEffect(() => {
+    if (contextDestinations && contextDestinations.length > 0) {
+      setDestinations(contextDestinations);
+      setLoading(false);
+
+      // Keep modal destination in sync with live stream if modal is currently open
+      setSelectedDestination((prev) => {
+        if (!prev) return prev;
+        const fresh = contextDestinations.find(
+          (d) => d.name.toLowerCase() === prev.name.toLowerCase()
+        );
+        if (fresh) {
+          return {
+            ...prev,
+            ...fresh,
+            weather: {
+              ...prev.weather,
+              ...fresh.weather,
+            },
+            disaster: fresh.disaster || prev.disaster,
+            officialAlert: fresh.officialAlert || prev.officialAlert,
+            travelGurujiRisk: fresh.travelGurujiRisk || prev.travelGurujiRisk,
+          };
+        }
+        return prev;
+      });
+    }
+  }, [contextDestinations]);
+
+  useEffect(() => {
+    if (contextSyncTime) {
+      setLastSyncTime(new Date(contextSyncTime));
+    }
+  }, [contextSyncTime]);
+
 
   // Update "seconds ago" ticker every second
   useEffect(() => {
@@ -119,7 +137,14 @@ export default function Weather() {
       const res = await fetchDestinationLiveWeather(dest.name);
       if (res) {
         if (res.destination) {
-          setSelectedDestination(res.destination);
+          setSelectedDestination((prev) => ({
+            ...(prev || dest),
+            ...res.destination,
+            weather: {
+              ...(prev?.weather || dest?.weather),
+              ...res.destination.weather,
+            },
+          }));
         }
         setDetailedForecast(res);
       } else {
@@ -1637,13 +1662,26 @@ export default function Weather() {
               }}
             >
               <div>
-                <span style={{ fontSize: "11px", color: "#64748b", textTransform: "uppercase", fontWeight: "700" }}>Temperature</span>
-                <div style={{ fontSize: "20px", fontWeight: "900", color: "#0f172a" }}>
+                <span style={{ fontSize: "11px", color: "#64748b", textTransform: "uppercase", fontWeight: "700" }}>Current Temperature</span>
+                <div style={{ fontSize: "22px", fontWeight: "900", color: "#0f172a" }}>
                   {selectedDestination.weather.temperature != null ? `${selectedDestination.weather.temperature}°C` : "Connecting..."}
                 </div>
-                <span style={{ fontSize: "11px", color: "#64748b" }}>
+                <div style={{ fontSize: "11px", color: "#64748b", marginTop: "2px" }}>
                   Feels like {selectedDestination.weather.apparentTemperature != null ? `${selectedDestination.weather.apparentTemperature}°C` : (selectedDestination.weather.temperature != null ? `${selectedDestination.weather.temperature}°C` : "--")}
-                </span>
+                </div>
+                {(() => {
+                  const daily = detailedForecast?.forecast7Day?.daily || detailedForecast?.daily;
+                  const tMax = daily?.temperature_2m_max?.[0];
+                  const tMin = daily?.temperature_2m_min?.[0];
+                  if (tMax != null || tMin != null) {
+                    return (
+                      <div style={{ fontSize: "11px", color: "#475569", fontWeight: "700", marginTop: "4px" }}>
+                        Today: {tMax != null && `↑ ${tMax}°C`} {tMin != null && `• ↓ ${tMin}°C`}
+                      </div>
+                    );
+                  }
+                  return null;
+                })()}
               </div>
 
               <div>
