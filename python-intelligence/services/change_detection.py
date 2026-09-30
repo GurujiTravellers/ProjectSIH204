@@ -24,7 +24,53 @@ def detect_weather_changes(
     """
     now_ts = current.get("timestamp") or datetime.now(timezone.utc).isoformat()
 
-    if not previous:
+    # 1. Invalid observation protection (Section 6)
+    if current.get("isValid") is False or current.get("valid") is False:
+        return WeatherChangeResponse(
+            destination=destination,
+            changed=False,
+            changes={"invalidObservation": True},
+            significant=False,
+            summary=f"Observation for {destination} is invalid; change comparison aborted.",
+            timestamp=now_ts,
+        )
+
+    curr_temp_raw = current.get("temperature")
+    if curr_temp_raw is not None:
+        try:
+            curr_temp_val = float(curr_temp_raw)
+            if curr_temp_val < -90.0 or curr_temp_val > 60.0:
+                return WeatherChangeResponse(
+                    destination=destination,
+                    changed=False,
+                    changes={"invalidObservation": True, "error": f"Temperature {curr_temp_val}°C violates physical limits."},
+                    significant=False,
+                    summary=f"Observation for {destination} contains physically impossible temperature ({curr_temp_val}°C); change comparison aborted.",
+                    timestamp=now_ts,
+                )
+        except (ValueError, TypeError):
+            return WeatherChangeResponse(
+                destination=destination,
+                changed=False,
+                changes={"invalidObservation": True},
+                significant=False,
+                summary=f"Non-numeric temperature for {destination}; change detection aborted.",
+                timestamp=now_ts,
+            )
+
+    # 2. Stale data protection (Section 7)
+    if current.get("isStale") is True:
+        return WeatherChangeResponse(
+            destination=destination,
+            changed=False,
+            changes={"staleObservation": True},
+            significant=False,
+            summary=f"Observation for {destination} is stale; weather change event suppressed.",
+            timestamp=now_ts,
+        )
+
+    # 3. Initial baseline check
+    if not previous or previous.get("isValid") is False or previous.get("valid") is False:
         return WeatherChangeResponse(
             destination=destination,
             changed=False,
@@ -34,16 +80,60 @@ def detect_weather_changes(
             timestamp=now_ts,
         )
 
+    # 4. Source change handling (Section 8: Tomorrow.io <-> Open-Meteo provider switch)
+    curr_source = str(current.get("source") or current.get("provider") or "").lower()
+    prev_source = str(previous.get("source") or previous.get("provider") or "").lower()
+    if curr_source and prev_source:
+        curr_is_tomorrow = "tomorrow" in curr_source
+        prev_is_tomorrow = "tomorrow" in prev_source
+        curr_is_openmeteo = "open-meteo" in curr_source or "openmeteo" in curr_source
+        prev_is_openmeteo = "open-meteo" in prev_source or "openmeteo" in prev_source
+
+        if (curr_is_tomorrow and prev_is_openmeteo) or (curr_is_openmeteo and prev_is_tomorrow):
+            prev_name = previous.get("source") or previous.get("provider")
+            curr_name = current.get("source") or current.get("provider")
+            return WeatherChangeResponse(
+                destination=destination,
+                changed=False,
+                changes={
+                    "providerSwitch": True,
+                    "previousProvider": prev_name,
+                    "currentProvider": curr_name,
+                },
+                significant=False,
+                summary=f"Provider switch detected ({prev_name} → {curr_name}); baseline reset without atmospheric change.",
+                timestamp=now_ts,
+            )
+
     changes: Dict[str, Any] = {}
     significant = False
     summary_parts: List[str] = []
 
-    # 1. Time delta calculation
+    # 5. Time delta calculation & timestamp gap handling (Section 9)
     curr_time = parse_timestamp_iso(current.get("timestamp"))
     prev_time = parse_timestamp_iso(previous.get("timestamp"))
     time_diff_min = 0.0
     if curr_time and prev_time:
-        time_diff_min = max(1.0, round((curr_time - prev_time).total_seconds() / 60.0, 1))
+        time_diff_sec = (curr_time - prev_time).total_seconds()
+        if time_diff_sec < 0:
+            return WeatherChangeResponse(
+                destination=destination,
+                changed=False,
+                changes={"outOfOrderTimestamps": True},
+                significant=False,
+                summary=f"Observation timestamp is earlier than previous reading for {destination}; change comparison skipped.",
+                timestamp=now_ts,
+            )
+        time_diff_min = max(1.0, round(time_diff_sec / 60.0, 1))
+        if time_diff_min > 180.0:
+            return WeatherChangeResponse(
+                destination=destination,
+                changed=False,
+                changes={"gapExceeded": True, "timeDiffMinutes": time_diff_min},
+                significant=False,
+                summary=f"Time gap between readings ({round(time_diff_min / 60.0, 1)} hours) exceeds live tracking window; baseline re-established.",
+                timestamp=now_ts,
+            )
 
     # 2. Temperature delta & trend
     curr_temp = current.get("temperature")
@@ -134,6 +224,12 @@ def detect_weather_changes(
     else:
         summary = "; ".join(summary_parts)
 
+    temp_info = changes.get("temperature", {})
+    wind_info = changes.get("windSpeed", {})
+    press_info = changes.get("pressure", {})
+    precip_info = changes.get("precipitation", {})
+    cond_info = changes.get("condition", {})
+
     return WeatherChangeResponse(
         destination=destination,
         changed=changed,
@@ -141,6 +237,12 @@ def detect_weather_changes(
         significant=significant,
         summary=summary,
         timestamp=now_ts,
+        temperatureDelta=temp_info.get("delta"),
+        trend=temp_info.get("trend"),
+        windSpike=bool(wind_info.get("windSpike", False)),
+        steepDrop=bool(press_info.get("steepDrop", False)),
+        heavyRainOnset=bool(precip_info.get("heavyRainOnset", False)),
+        conditionChange=f"{cond_info.get('previous')} → {cond_info.get('current')}" if cond_info else None,
     )
 
 

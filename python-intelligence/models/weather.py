@@ -64,6 +64,12 @@ class WeatherChangeResponse(BaseModel):
     significant: bool = False
     summary: str = ""
     timestamp: str
+    temperatureDelta: Optional[float] = None
+    trend: Optional[str] = None
+    windSpike: Optional[bool] = False
+    steepDrop: Optional[bool] = False
+    heavyRainOnset: Optional[bool] = False
+    conditionChange: Optional[str] = None
 
 
 class WeatherDiscrepancyRequest(BaseModel):

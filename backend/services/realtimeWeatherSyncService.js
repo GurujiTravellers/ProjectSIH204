@@ -1017,12 +1017,30 @@ async function syncDatabaseNow() {
         disclaimer: "Travel_Guruji Risk Interpretation is an automated algorithmic assessment for travel decision support and is NOT an official government emergency warning. Always heed official directives from IMD, NDMA, and local district authorities.",
       };
 
-      // Weather change detection via Python Intelligence Layer (ONLY for validated observations)
+      // Weather change detection via Python Intelligence Layer (ONLY for fresh, validated observations)
       let weatherChangeInfo = null;
-      if (validationResult.valid && prevObs && prevObs.temperature != null && liveW && liveW.temperature != null) {
+      if (
+        validationResult.valid &&
+        !validationResult.isStale &&
+        prevObs &&
+        prevObs.isValid !== false &&
+        !prevObs.isStale &&
+        prevObs.temperature != null &&
+        liveW &&
+        liveW.temperature != null
+      ) {
         try {
           weatherChangeInfo = await pythonClient.detectWeatherChange(name, liveW, prevObs);
         } catch (_) {}
+      } else if (validationResult.isStale) {
+        weatherChangeInfo = {
+          destination: name,
+          changed: false,
+          changes: { staleObservation: true },
+          significant: false,
+          summary: `Observation for ${name} is stale (${validationResult.dataAgeMinutes} min old); weather change detection suspended.`,
+          timestamp: new Date().toISOString(),
+        };
       }
 
       // Grounded risk interpretation from Python Intelligence Layer (validated data or degraded nulls, zero synthetic data)
