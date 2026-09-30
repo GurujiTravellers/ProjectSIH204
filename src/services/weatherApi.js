@@ -13,8 +13,8 @@ const OPEN_METEO_ARCHIVE_URL =
 const KNOWN_LOCATION_FALLBACKS = {
   "manali": {
     name: "Manali",
-    latitude: 32.2396,
-    longitude: 77.1887,
+    latitude: 32.2574,
+    longitude: 77.1748,
     admin1: "Himachal Pradesh",
     country: "India",
   },

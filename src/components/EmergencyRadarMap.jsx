@@ -7,7 +7,7 @@ import { fetchRadarCapabilities } from "../services/weatherApi";
 const INDIA_COORDINATES = {
   // Himachal Pradesh
   Shimla: { lat: 31.1048, lon: 77.1734, state: "Himachal Pradesh", region: "North" },
-  Manali: { lat: 32.2396, lon: 77.1887, state: "Himachal Pradesh", region: "North" },
+  Manali: { lat: 32.2574, lon: 77.1748, state: "Himachal Pradesh", region: "North" },
   "Rohtang Pass": { lat: 32.3716, lon: 77.2466, state: "Himachal Pradesh", region: "North" },
   Kasol: { lat: 32.0100, lon: 77.3150, state: "Himachal Pradesh", region: "North" },
   Chitkul: { lat: 31.3533, lon: 78.4354, state: "Himachal Pradesh", region: "North" },

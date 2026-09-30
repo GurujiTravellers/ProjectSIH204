@@ -99,7 +99,7 @@ function fetchJsonIPv4(url, timeoutMs = 6000) {
 const INDIA_LOCATIONS = {
   // --- Himachal Pradesh Destinations ---
   Shimla: { lat: 31.1048, lon: 77.1734, state: "Himachal Pradesh", type: "destination", corridor: "NH-5 Himalayan Expressway", river: "Giri / Ashwani" },
-  Manali: { lat: 32.2396, lon: 77.1887, state: "Himachal Pradesh", type: "destination", corridor: "NH-3 (Chandigarh-Manali)", river: "Beas River" },
+  Manali: { lat: 32.2574, lon: 77.1748, state: "Himachal Pradesh", type: "destination", corridor: "NH-3 (Chandigarh-Manali)", river: "Beas River" },
   "Rohtang Pass": { lat: 32.3716, lon: 77.2466, state: "Himachal Pradesh", type: "destination", corridor: "Manali-Leh Highway (13,058 ft)", river: "Beas Kund / Chandra" },
   Kasol: { lat: 32.0100, lon: 77.3150, state: "Himachal Pradesh", type: "destination", corridor: "Bhuntar-Kasol-Manikaran Road", river: "Parvati River" },
   Chitkul: { lat: 31.3533, lon: 78.4354, state: "Himachal Pradesh", type: "destination", corridor: "Kinnaur Valley Indo-Tibet Border Road", river: "Baspa River" },
