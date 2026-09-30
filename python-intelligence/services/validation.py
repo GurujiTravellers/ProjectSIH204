@@ -78,10 +78,10 @@ def validate_weather_observation(
             warnings.append(f"Precipitation rate {observation.precipitation} mm/h is exceptionally high.")
             quality_score -= 0.1
 
-    # 7. Atmospheric Pressure
+    # 7. Atmospheric Pressure (Surface station pressure valid from sea level up to ~5500m elevation)
     if observation.pressure is not None:
-        if observation.pressure < 870.0 or observation.pressure > 1085.0:
-            errors.append(f"Atmospheric pressure {observation.pressure} hPa outside physical bounds [870, 1085].")
+        if observation.pressure < 500.0 or observation.pressure > 1085.0:
+            errors.append(f"Atmospheric pressure {observation.pressure} hPa outside physical bounds [500, 1085].")
 
     # 8. Visibility
     if observation.visibility is not None and observation.visibility < 0.0:

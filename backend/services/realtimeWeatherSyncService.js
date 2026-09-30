@@ -730,27 +730,100 @@ async function syncDatabaseNow() {
     let rainAlertsCount = 0;
     let normalClearCount = 0;
 
-    // Process every location in the network
-    for (const [name, info] of Object.entries(INDIA_LOCATIONS)) {
+    // Step 1: Pre-validate all destination weather observations through Python Intelligence
+    const validationPromises = Object.entries(INDIA_LOCATIONS).map(([name, info]) => {
       const key = name.toLowerCase();
-      const liveW = (weatherMap && weatherMap[key]) || {
-        temperature: null,
-        apparentTemperature: null,
-        humidity: null,
-        precipitation: 0,
-        rain: 0,
-        windSpeed: null,
-        windDirection: null,
-        windCompass: "",
-        windGusts: null,
-        pressure: null,
-        visibility: null,
-        weatherCode: null,
-        condition: "Live Station Telemetry",
-        icon: "🌤️",
-        category: "clear",
-        provider: TOMORROW_IO_API_KEY ? "Tomorrow.io / Open-Meteo Unified Radar" : "Open-Meteo Satellite Radar",
-      };
+      const rawW = (weatherMap && weatherMap[key]) || null;
+      if (!rawW || rawW.temperature == null) {
+        return Promise.resolve({
+          name,
+          info,
+          rawW,
+          validation: {
+            valid: false,
+            source: rawW?.provider || (TOMORROW_IO_API_KEY ? "Tomorrow.io" : "Open-Meteo"),
+            destination: name,
+            errors: ["Missing mandatory temperature reading from meteorological API"],
+            warnings: [],
+            isStale: false,
+            dataAgeMinutes: null,
+            qualityScore: 0.0,
+          },
+        });
+      }
+
+      return pythonClient.validateWeather({
+        temperature: rawW.temperature,
+        apparentTemperature: rawW.apparentTemperature,
+        humidity: rawW.humidity,
+        windSpeed: rawW.windSpeed,
+        windDirection: rawW.windDirection,
+        windCompass: rawW.windCompass,
+        windGusts: rawW.windGusts,
+        pressure: rawW.pressure,
+        visibility: rawW.visibility,
+        precipitation: rawW.precipitation,
+        rain: rawW.rain,
+        weatherCode: rawW.weatherCode,
+        condition: rawW.condition,
+        icon: rawW.icon,
+        source: rawW.provider || (TOMORROW_IO_API_KEY ? "Tomorrow.io" : "Open-Meteo"),
+        timestamp: rawW.lastUpdatedAt || new Date().toISOString(),
+        latitude: info.lat,
+        longitude: info.lon,
+        destination: name,
+      }).then((validation) => ({ name, info, rawW, validation }));
+    });
+
+    const validatedObservations = await Promise.all(validationPromises);
+
+    // Process every location in the network
+    for (const item of validatedObservations) {
+      const { name, info, rawW, validation: validationResult } = item;
+      const key = name.toLowerCase();
+      const prevObs = liveDatabase.destinations?.[name]?.weather || null;
+
+      let liveW;
+      if (validationResult.valid && rawW) {
+        liveW = {
+          ...rawW,
+          isValid: true,
+          validation: validationResult,
+        };
+      } else {
+        if (rawW && rawW.temperature != null) {
+          console.warn(`[WeatherSync] ⚠️ Meteorological observation for ${name} rejected by Python validation:`, validationResult.errors);
+        }
+        // If previous valid observation exists, keep it as degraded state; otherwise null out physical values. Zero synthetic data.
+        if (prevObs && prevObs.isValid !== false && prevObs.temperature != null) {
+          liveW = {
+            ...prevObs,
+            isDegraded: true,
+            validation: validationResult,
+          };
+        } else {
+          liveW = {
+            temperature: null,
+            apparentTemperature: null,
+            humidity: null,
+            precipitation: 0,
+            rain: 0,
+            windSpeed: null,
+            windDirection: null,
+            windCompass: "",
+            windGusts: null,
+            pressure: null,
+            visibility: null,
+            weatherCode: null,
+            condition: "Observation Unverified",
+            icon: "❓",
+            category: "unknown",
+            provider: rawW?.provider || (TOMORROW_IO_API_KEY ? "Tomorrow.io / Open-Meteo Unified Radar" : "Open-Meteo Satellite Radar"),
+            isValid: false,
+            validation: validationResult,
+          };
+        }
+      }
 
       // Default baseline: Tier 4 - Normal
       let alertTier = "GREEN";
@@ -944,16 +1017,15 @@ async function syncDatabaseNow() {
         disclaimer: "Travel_Guruji Risk Interpretation is an automated algorithmic assessment for travel decision support and is NOT an official government emergency warning. Always heed official directives from IMD, NDMA, and local district authorities.",
       };
 
-      // Weather change detection via Python Intelligence Layer
-      const prevObs = liveDatabase.destinations?.[name]?.weather || null;
+      // Weather change detection via Python Intelligence Layer (ONLY for validated observations)
       let weatherChangeInfo = null;
-      if (prevObs && liveW && liveW.temperature != null) {
+      if (validationResult.valid && prevObs && prevObs.temperature != null && liveW && liveW.temperature != null) {
         try {
           weatherChangeInfo = await pythonClient.detectWeatherChange(name, liveW, prevObs);
         } catch (_) {}
       }
 
-      // Grounded risk interpretation from Python Intelligence Layer
+      // Grounded risk interpretation from Python Intelligence Layer (validated data or degraded nulls, zero synthetic data)
       let pythonRiskAnalysis = null;
       try {
         const destDisasters = allRawDisasterEvents.filter(
@@ -961,7 +1033,7 @@ async function syncDatabaseNow() {
         );
         pythonRiskAnalysis = await pythonClient.analyzeRisk(
           name,
-          liveW,
+          validationResult.valid ? liveW : (prevObs && prevObs.temperature != null ? prevObs : null),
           destDisasters,
           info.lat,
           info.lon
@@ -984,6 +1056,7 @@ async function syncDatabaseNow() {
           ...liveW,
           lastUpdatedAt: new Date().toISOString(),
           changeDetection: weatherChangeInfo,
+          validation: validationResult,
         },
         officialAlert,
         travelGurujiRisk,

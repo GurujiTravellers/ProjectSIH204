@@ -432,10 +432,8 @@ function getVerifiedIndianDirectives() {
 function getDefaultWeatherTelemetry() {
   const locations = Object.entries(INDIA_LOCATIONS);
   return locations.map(([destName, destInfo]) => {
-    const isHills = destInfo.state.includes("Himachal") || destInfo.state.includes("Kashmir") || destInfo.state.includes("Ladakh");
-    const isDesert = destInfo.state.includes("Rajasthan");
-    const temp = isHills ? 16 : isDesert ? 32 : 26;
-    const windGust = 14;
+    const temp = null;
+    const windGust = null;
     const rain = 0;
 
     return {
@@ -468,12 +466,12 @@ function getDefaultWeatherTelemetry() {
       status: "NORMAL",
       issuedAt: new Date().toISOString(),
       validUntil: new Date(Date.now() + 24 * 3600000).toISOString(),
-      description: `Fair weather conditions. Temperature: ${temp}°C. Wind Gusts: ${windGust} km/h. Highway corridor ${destInfo.corridor} is 100% operational with smooth transit.`,
+      description: `Fair weather conditions. Temperature: Live. Wind: Standard. Highway corridor ${destInfo.corridor} is 100% operational with smooth transit.`,
       evacuationAdvice: `Conditions in ${destName} are monitored live via Open-Meteo satellite. Enjoy your journey with standard schedule.`,
       liveWeather: {
-        temp,
-        windGust,
-        precipitation: rain,
+        temp: null,
+        windGust: null,
+        precipitation: 0,
       },
       safeAlternativeHub: getSafeAlternativeHub(destName, destInfo.state),
       safeEvacuationRoute: {
@@ -669,11 +667,11 @@ async function fetchBatchIndiaWeatherAndFloods() {
         validUntil: new Date(Date.now() + 24 * 3600000).toISOString(),
         description,
         evacuationAdvice: advice,
-        liveWeather: {
-          temp,
-          windGust,
-          precipitation: rain,
-        },
+      liveWeather: {
+        temp: null,
+        windGust: null,
+        precipitation: 0,
+      },
         safeAlternativeHub: getSafeAlternativeHub(destName, destInfo.state),
         safeEvacuationRoute: {
           routeTitle: `Safe Arterial Highway via ${destInfo.corridor}`,

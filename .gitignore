@@ -17,6 +17,14 @@ dist-ssr/
 build/
 *.local
 
+# Environment and secrets
+.env
+backend/.env
+**/.env
+**/.env.*
+!.env.example
+!backend/.env.example
+
 # Python artifacts & virtual environments
 __pycache__/
 **/__pycache__/

@@ -10,6 +10,7 @@ const {
   fetchTomorrowIoWeather,
   fetchTomorrowIoForecast,
 } = require("../services/realtimeWeatherSyncService");
+const pythonClient = require("../services/pythonIntelligenceClient");
 
 const router = express.Router();
 
@@ -156,12 +157,27 @@ router.get("/destination/:name", async (req, res) => {
     try {
       const tomorrowLive = await fetchTomorrowIoWeather(coords.lat, coords.lon);
       if (tomorrowLive && tomorrowLive.temperature != null) {
-        liveProvider = "Tomorrow.io Realtime API";
-        syncedData.weather = {
-          ...syncedData.weather,
+        const tomorrowValidation = await pythonClient.validateWeather({
           ...tomorrowLive,
-          provider: "Tomorrow.io Realtime API",
-        };
+          source: "Tomorrow.io Realtime API",
+          timestamp: tomorrowLive.lastUpdatedAt || new Date().toISOString(),
+          latitude: coords.lat,
+          longitude: coords.lon,
+          destination: destName,
+        });
+
+        if (tomorrowValidation.valid) {
+          liveProvider = "Tomorrow.io Realtime API";
+          syncedData.weather = {
+            ...syncedData.weather,
+            ...tomorrowLive,
+            provider: "Tomorrow.io Realtime API",
+            validation: tomorrowValidation,
+          };
+        } else {
+          console.warn(`[WeatherRoutes] ⚠️ Tomorrow.io observation for ${destName} rejected by Python validation:`, tomorrowValidation.errors);
+          syncedData.weather.validationFailure = tomorrowValidation.errors;
+        }
       }
 
       const tomorrowForecast = await fetchTomorrowIoForecast(coords.lat, coords.lon);
