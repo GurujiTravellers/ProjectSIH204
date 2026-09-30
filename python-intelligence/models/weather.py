@@ -87,6 +87,15 @@ class WeatherDiscrepancyResponse(BaseModel):
     secondary_source: str = "Open-Meteo"
     secondary_temperature: Optional[float] = None
     temperature_difference: Optional[float] = None
+    apparent_temperature_difference: Optional[float] = None
+    humidity_difference: Optional[float] = None
+    wind_difference: Optional[float] = None
     precipitation_difference: Optional[float] = None
     condition_match: bool = True
+    comparable: bool = True
+    status: str = "COMPARED"
+    discrepancy_level: str = "NORMAL"
+    timestamp_difference_minutes: Optional[float] = None
+    primary_timestamp: Optional[str] = None
+    secondary_timestamp: Optional[str] = None
     note: str = "Diagnostic discrepancy comparison only. Authoritative primary source is never modified or averaged."

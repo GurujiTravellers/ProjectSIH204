@@ -248,56 +248,206 @@ def detect_weather_changes(
 
 def compare_weather_discrepancy(
     destination: str,
-    primary: Dict[str, Any],
-    secondary: Dict[str, Any],
+    primary: Optional[Dict[str, Any]],
+    secondary: Optional[Dict[str, Any]],
 ) -> WeatherDiscrepancyResponse:
     """
     Performs multi-source comparison between primary (Tomorrow.io) and secondary (Open-Meteo).
     Evaluates telemetry agreement for diagnostic observability.
     NEVER averages or blends values into a synthetic number.
+    Authoritative primary source is always preserved.
     """
-    pri_temp = primary.get("temperature")
-    sec_temp = secondary.get("temperature")
+    pri = primary or {}
+    sec = secondary or {}
 
-    pri_temp_f = float(pri_temp) if pri_temp is not None else None
-    sec_temp_f = float(sec_temp) if sec_temp is not None else None
+    pri_src = str(pri.get("source") or "Tomorrow.io")
+    sec_src = str(sec.get("source") or "Open-Meteo")
 
-    temp_diff: Optional[float] = None
-    if pri_temp_f is not None and sec_temp_f is not None:
-        temp_diff = round(abs(pri_temp_f - sec_temp_f), 2)
+    pri_temp_raw = pri.get("temperature")
+    sec_temp_raw = sec.get("temperature")
 
-    pri_precip = primary.get("precipitation")
-    sec_precip = secondary.get("precipitation")
+    pri_temp_f: Optional[float] = None
+    if pri_temp_raw is not None:
+        try:
+            pri_temp_f = round(float(pri_temp_raw), 2)
+        except (ValueError, TypeError):
+            pri_temp_f = None
+
+    sec_temp_f: Optional[float] = None
+    if sec_temp_raw is not None:
+        try:
+            sec_temp_f = round(float(sec_temp_raw), 2)
+        except (ValueError, TypeError):
+            sec_temp_f = None
+
+    pri_ts = pri.get("timestamp")
+    sec_ts = sec.get("timestamp")
+
+    # 1. Primary unavailable check (Section 4)
+    if pri_temp_f is None:
+        return WeatherDiscrepancyResponse(
+            destination=destination,
+            primary_source=pri_src,
+            primary_temperature=None,
+            secondary_source=sec_src,
+            secondary_temperature=sec_temp_f,
+            temperature_difference=None,
+            comparable=False,
+            status="PRIMARY_UNAVAILABLE",
+            discrepancy_level="N/A",
+            primary_timestamp=pri_ts,
+            secondary_timestamp=sec_ts,
+            note="Primary weather source (Tomorrow.io) is unavailable. Fallback provider active; discrepancy comparison skipped.",
+        )
+
+    # 2. Secondary unavailable check (Section 4)
+    if sec_temp_f is None:
+        return WeatherDiscrepancyResponse(
+            destination=destination,
+            primary_source=pri_src,
+            primary_temperature=pri_temp_f,
+            secondary_source=sec_src,
+            secondary_temperature=None,
+            temperature_difference=None,
+            comparable=False,
+            status="SECONDARY_UNAVAILABLE",
+            discrepancy_level="N/A",
+            primary_timestamp=pri_ts,
+            secondary_timestamp=sec_ts,
+            note="Secondary weather reference (Open-Meteo) is unavailable. Authoritative Tomorrow.io observation maintained.",
+        )
+
+    # 3. Coordinate comparability check (> 0.5 degrees difference)
+    pri_lat = pri.get("latitude")
+    pri_lon = pri.get("longitude")
+    sec_lat = sec.get("latitude")
+    sec_lon = sec.get("longitude")
+
+    if (
+        pri_lat is not None and pri_lon is not None and
+        sec_lat is not None and sec_lon is not None
+    ):
+        try:
+            lat_diff = abs(float(pri_lat) - float(sec_lat))
+            lon_diff = abs(float(pri_lon) - float(sec_lon))
+            if lat_diff > 0.5 or lon_diff > 0.5:
+                return WeatherDiscrepancyResponse(
+                    destination=destination,
+                    primary_source=pri_src,
+                    primary_temperature=pri_temp_f,
+                    secondary_source=sec_src,
+                    secondary_temperature=sec_temp_f,
+                    temperature_difference=None,
+                    comparable=False,
+                    status="NOT_COMPARABLE_LOCATION",
+                    discrepancy_level="N/A",
+                    primary_timestamp=pri_ts,
+                    secondary_timestamp=sec_ts,
+                    note=f"Observations are not comparable: coordinate delta ({lat_diff:.2f}°, {lon_diff:.2f}°) exceeds 0.5° threshold.",
+                )
+        except (ValueError, TypeError):
+            pass
+
+    # 4. Timestamp comparability check (> 120 minutes difference)
+    ts_diff_min: Optional[float] = None
+    if pri_ts and sec_ts:
+        dt_pri = parse_timestamp_iso(pri_ts)
+        dt_sec = parse_timestamp_iso(sec_ts)
+        if dt_pri and dt_sec:
+            ts_diff_min = round(abs((dt_pri - dt_sec).total_seconds()) / 60.0, 1)
+            if ts_diff_min > 120.0:
+                return WeatherDiscrepancyResponse(
+                    destination=destination,
+                    primary_source=pri_src,
+                    primary_temperature=pri_temp_f,
+                    secondary_source=sec_src,
+                    secondary_temperature=sec_temp_f,
+                    temperature_difference=None,
+                    comparable=False,
+                    status="NOT_COMPARABLE_TIME",
+                    discrepancy_level="N/A",
+                    timestamp_difference_minutes=ts_diff_min,
+                    primary_timestamp=pri_ts,
+                    secondary_timestamp=sec_ts,
+                    note=f"Observations are not comparable: timestamp difference ({ts_diff_min} min) exceeds 120-minute threshold.",
+                )
+
+    # 5. Comparable observations: compute genuine field differences
+    temp_diff = round(abs(pri_temp_f - sec_temp_f), 2)
+
+    app_diff: Optional[float] = None
+    pri_app = pri.get("apparentTemperature")
+    sec_app = sec.get("apparentTemperature")
+    if pri_app is not None and sec_app is not None:
+        try:
+            app_diff = round(abs(float(pri_app) - float(sec_app)), 2)
+        except (ValueError, TypeError):
+            app_diff = None
+
+    hum_diff: Optional[float] = None
+    pri_hum = pri.get("humidity")
+    sec_hum = sec.get("humidity")
+    if pri_hum is not None and sec_hum is not None:
+        try:
+            hum_diff = round(abs(float(pri_hum) - float(sec_hum)), 2)
+        except (ValueError, TypeError):
+            hum_diff = None
+
+    wind_diff: Optional[float] = None
+    pri_wind = pri.get("windSpeed")
+    sec_wind = sec.get("windSpeed")
+    if pri_wind is not None and sec_wind is not None:
+        try:
+            wind_diff = round(abs(float(pri_wind) - float(sec_wind)), 2)
+        except (ValueError, TypeError):
+            wind_diff = None
+
     precip_diff: Optional[float] = None
+    pri_precip = pri.get("precipitation")
+    sec_precip = sec.get("precipitation")
     if pri_precip is not None and sec_precip is not None:
-        precip_diff = round(abs(float(pri_precip) - float(sec_precip)), 2)
+        try:
+            precip_diff = round(abs(float(pri_precip) - float(sec_precip)), 2)
+        except (ValueError, TypeError):
+            precip_diff = None
 
-    pri_cond = str(primary.get("condition") or "").lower()
-    sec_cond = str(secondary.get("condition") or "").lower()
+    pri_cond = str(pri.get("condition") or "").lower()
+    sec_cond = str(sec.get("condition") or "").lower()
     condition_match = (pri_cond == sec_cond) if (pri_cond and sec_cond) else True
 
-    agreement_level = "HIGH"
-    if temp_diff is not None:
-        if temp_diff > 5.0:
-            agreement_level = "POOR"
-        elif temp_diff > 2.0:
-            agreement_level = "MODERATE"
+    # Discrepancy Level: NORMAL (<=2.0°C), NOTABLE (2.0-5.0°C), SIGNIFICANT (>5.0°C)
+    if temp_diff > 5.0:
+        discrepancy_level = "SIGNIFICANT"
+    elif temp_diff > 2.0:
+        discrepancy_level = "NOTABLE"
+    else:
+        discrepancy_level = "NORMAL"
 
     note = (
-        f"Multi-source agreement: {agreement_level}. "
-        f"Tomorrow.io remains authoritative primary source. "
+        f"Multi-source diagnostic comparison: {discrepancy_level} discrepancy ({temp_diff}°C). "
+        f"Tomorrow.io remains authoritative primary source ({pri_src}). "
         f"No values have been averaged or artificially altered."
     )
 
+
     return WeatherDiscrepancyResponse(
         destination=destination,
-        primary_source=str(primary.get("source") or "Tomorrow.io"),
+        primary_source=pri_src,
         primary_temperature=pri_temp_f,
-        secondary_source=str(secondary.get("source") or "Open-Meteo"),
+        secondary_source=sec_src,
         secondary_temperature=sec_temp_f,
         temperature_difference=temp_diff,
+        apparent_temperature_difference=app_diff,
+        humidity_difference=hum_diff,
+        wind_difference=wind_diff,
         precipitation_difference=precip_diff,
         condition_match=condition_match,
+        comparable=True,
+        status="COMPARED",
+        discrepancy_level=discrepancy_level,
+        timestamp_difference_minutes=ts_diff_min,
+        primary_timestamp=pri_ts,
+        secondary_timestamp=sec_ts,
         note=note,
     )
 
@@ -305,16 +455,18 @@ def compare_weather_discrepancy(
 def track_disaster_lifecycle(
     current_events: List[Dict[str, Any]],
     previous_events: Optional[List[Dict[str, Any]]] = None,
+    feed_outages: Optional[List[str]] = None,
 ) -> Tuple[Dict[str, str], List[str]]:
     """
     Tracks lifecycle transitions between polling batches:
     - NEW_EVENT: present in current, not in previous
-    - UPDATED_EVENT: present in both, with changed magnitude, coordinates, or alert level
-    - UNCHANGED: present in both with identical attributes
-    - EXPIRED_EVENT: present in previous, no longer in current active feed
+    - UPDATED_EVENT: present in both, with changed magnitude, coordinates (>0.05°), severity, status, or alert level
+    - UNCHANGED: present in both with identical significant attributes
+    - EXPIRED_EVENT: present in previous, no longer in current active feed (protected against feed outages)
     """
     lifecycle_map: Dict[str, str] = {}
     prev_map: Dict[str, Dict[str, Any]] = {}
+    outage_feeds = {str(f).upper() for f in (feed_outages or [])}
 
     if previous_events:
         for pe in previous_events:
@@ -337,11 +489,36 @@ def track_disaster_lifecycle(
             mag_changed = str(ce.get("magnitude")) != str(old.get("magnitude"))
             sev_changed = str(ce.get("severity")) != str(old.get("severity"))
             tier_changed = str(ce.get("alertTier")) != str(old.get("alertTier"))
-            if mag_changed or sev_changed or tier_changed:
+            status_changed = str(ce.get("status")) != str(old.get("status"))
+
+            # Check coordinate shift (> 0.05 degrees)
+            coord_changed = False
+            try:
+                c_coords = ce.get("coordinates") or {}
+                o_coords = old.get("coordinates") or {}
+                c_lat = float(ce.get("latitude") if ce.get("latitude") is not None else c_coords.get("lat", 0))
+                c_lon = float(ce.get("longitude") if ce.get("longitude") is not None else c_coords.get("lon", 0))
+                o_lat = float(old.get("latitude") if old.get("latitude") is not None else o_coords.get("lat", 0))
+                o_lon = float(old.get("longitude") if old.get("longitude") is not None else o_coords.get("lon", 0))
+                if abs(c_lat - o_lat) > 0.05 or abs(c_lon - o_lon) > 0.05:
+                    coord_changed = True
+            except (ValueError, TypeError):
+                pass
+
+            if mag_changed or sev_changed or tier_changed or status_changed or coord_changed:
                 lifecycle_map[eid] = "UPDATED_EVENT"
             else:
                 lifecycle_map[eid] = "UNCHANGED"
 
-    expired_events = [old_id for old_id in prev_map if old_id not in curr_ids]
+    expired_events: List[str] = []
+    for old_id, old_ev in prev_map.items():
+        if old_id not in curr_ids:
+            # Outage Protection: If the event's source feed is in an outage, do NOT expire it
+            old_src = str(old_ev.get("source") or "").upper()
+            if any(outage_name in old_src for outage_name in outage_feeds):
+                # Feed outage: preserve event, do not mark expired
+                continue
+            expired_events.append(old_id)
 
     return lifecycle_map, expired_events
+

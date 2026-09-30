@@ -74,6 +74,7 @@ class DisasterAnalysisRequest(BaseModel):
     events: List[Dict[str, Any]] = Field(..., description="Authentic disaster records from USGS, GDACS, NASA, IMD")
     destinations: Optional[List[Dict[str, Any]]] = Field(None, description="Optional custom destination list; defaults to 33 Indian destinations")
     previousEvents: Optional[List[Dict[str, Any]]] = Field(None, description="Previous batch of events for lifecycle delta tracking")
+    feedOutages: Optional[List[str]] = Field(default=[], description="List of feed sources experiencing outages to prevent false expiration")
 
 
 class DisasterAnalysisResponse(BaseModel):
@@ -108,4 +109,6 @@ class RiskInterpretationResponse(BaseModel):
     compoundHazards: List[str] = []
     sourceEvidence: List[str] = []
     safeAlternatives: Optional[str] = None
+    safeAlternativeRecommendation: Optional[str] = None
     timestamp: str
+

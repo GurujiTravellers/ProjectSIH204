@@ -11,17 +11,23 @@
  * - Intelligence blocks are tagged as { status: "unavailable", message: "Intelligence analysis temporarily unavailable" }.
  */
 
-const PYTHON_SERVICE_URL =
-  process.env.PYTHON_SERVICE_URL || "http://127.0.0.1:8000";
+function getPythonServiceUrl() {
+  return (
+    process.env.PYTHON_INTELLIGENCE_URL ||
+    process.env.PYTHON_SERVICE_URL ||
+    "http://127.0.0.1:8000"
+  );
+}
 
 const REQUEST_TIMEOUT_MS = 3000;
 
 async function checkHealth() {
+  const serviceUrl = getPythonServiceUrl();
   try {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 1500);
 
-    const response = await fetch(`${PYTHON_SERVICE_URL}/health`, {
+    const response = await fetch(`${serviceUrl}/health`, {
       method: "GET",
       signal: controller.signal,
     });
@@ -38,11 +44,12 @@ async function checkHealth() {
 }
 
 async function requestPython(endpoint, payload) {
+  const serviceUrl = getPythonServiceUrl();
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
 
   try {
-    const response = await fetch(`${PYTHON_SERVICE_URL}${endpoint}`, {
+    const response = await fetch(`${serviceUrl}${endpoint}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -52,16 +59,22 @@ async function requestPython(endpoint, payload) {
     });
     clearTimeout(timeout);
 
+    const rawText = await response.text();
     if (!response.ok) {
-      throw new Error(`Python service responded with status ${response.status}`);
+      throw new Error(`Python service HTTP ${response.status}: ${rawText.slice(0, 100)}`);
     }
 
-    return await response.json();
+    try {
+      return JSON.parse(rawText);
+    } catch (parseErr) {
+      throw new Error(`Malformed JSON response from Python service: ${parseErr.message}`);
+    }
   } catch (err) {
     clearTimeout(timeout);
     throw err;
   }
 }
+
 
 /**
  * 1. Validate incoming weather observation via Python Intelligence
@@ -137,15 +150,17 @@ async function compareWeatherDiscrepancy(destination, primary, secondary) {
 /**
  * 4. Geospatial proximity and lifecycle tracking for active disasters
  */
-async function analyzeDisasters(events, previousEvents = [], destinations = null) {
+async function analyzeDisasters(events, previousEvents = [], destinations = null, feedOutages = []) {
   try {
     return await requestPython("/analyze/disaster", {
       events,
       previousEvents,
       destinations,
+      feedOutages,
     });
   } catch (err) {
     console.warn(`[PythonIntelligenceClient] Disaster analysis fallback: ${err.message}`);
+
     return {
       totalEventsReceived: events.length,
       activeEvents: [],
@@ -205,5 +220,9 @@ module.exports = {
   optimizeTripPlan,
   optimizeBudget,
   optimizeTransport,
-  PYTHON_SERVICE_URL,
+  getPythonServiceUrl,
+  get PYTHON_SERVICE_URL() {
+    return getPythonServiceUrl();
+  },
 };
+

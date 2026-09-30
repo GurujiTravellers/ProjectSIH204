@@ -37,6 +37,7 @@ from models.disaster import (
 from services.validation import (
     validate_weather_observation,
     validate_disaster_record,
+    deduplicate_disaster_records,
 )
 from services.change_detection import (
     detect_weather_changes,
@@ -166,11 +167,15 @@ def analyze_disasters(payload: DisasterAnalysisRequest):
     Performs exact spherical Haversine calculations against monitored Indian destinations,
     categorizes impact zones, and tracks event lifecycles.
     """
-    raw_events = payload.events
+    raw_events = deduplicate_disaster_records(payload.events)
     previous_events = payload.previousEvents or []
 
-    # Track lifecycle changes across polling batches
-    lifecycle_map, expired_ids = track_disaster_lifecycle(raw_events, previous_events)
+    # Track lifecycle changes across polling batches with feed outage protection
+    lifecycle_map, expired_ids = track_disaster_lifecycle(
+        raw_events,
+        previous_events,
+        feed_outages=payload.feedOutages,
+    )
 
     analyzed_events: List[DisasterEventAnalysis] = []
     new_count = 0

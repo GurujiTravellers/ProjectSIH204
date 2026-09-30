@@ -92,6 +92,23 @@ def interpret_travel_risk(req: RiskInterpretationRequest) -> RiskInterpretationR
     has_heavy_rain = False
     has_gale_wind = False
 
+    # Stale weather telemetry handling (Phase 8: >3 hours old limits confidence)
+    is_stale = weather.get("isStale", False)
+    data_age_min = weather.get("dataAgeMinutes")
+    ts_weather = weather.get("timestamp")
+    if is_stale or (data_age_min is not None and data_age_min > 180):
+        contributing_factors.append("Weather telemetry is stale (>3 hours old); risk assessment confidence is limited.")
+    elif ts_weather:
+        try:
+            from services.validation import parse_timestamp_iso
+            dt_w = parse_timestamp_iso(ts_weather)
+            if dt_w:
+                age_h = (datetime.now(timezone.utc) - dt_w).total_seconds() / 3600.0
+                if age_h > 3.0:
+                    contributing_factors.append("Weather telemetry is stale (>3 hours old); risk assessment confidence is limited.")
+        except Exception:
+            pass
+
     if temp is not None:
         source_evidence.append(f"Temperature: {temp}°C via {weather_src}")
         if float(temp) <= -10.0:
@@ -231,6 +248,10 @@ def interpret_travel_risk(req: RiskInterpretationRequest) -> RiskInterpretationR
         travel_advisory = f"Clear atmospheric and seismic conditions verified for {dest}. All regular highway links open."
 
     safe_hub = SAFE_ALTERNATIVE_HUBS.get(dest, "Nearest State Transit Hub")
+    safe_alt_text = f"Lower-risk alternative based on currently available data: {safe_hub}"
+
+    if risk_level in ("HIGH", "CRITICAL"):
+        travel_advisory = f"{travel_advisory} {safe_alt_text}."
 
     return RiskInterpretationResponse(
         destination=dest,
@@ -244,5 +265,8 @@ def interpret_travel_risk(req: RiskInterpretationRequest) -> RiskInterpretationR
         compoundHazards=compound_hazards,
         sourceEvidence=source_evidence,
         safeAlternatives=safe_hub,
+        safeAlternativeRecommendation=safe_alt_text,
         timestamp=now_iso,
     )
+
+

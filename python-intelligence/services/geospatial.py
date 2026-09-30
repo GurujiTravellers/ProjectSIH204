@@ -66,21 +66,29 @@ DEFAULT_DESTINATIONS: Dict[str, Dict[str, Any]] = {
 }
 
 
-def haversine_distance_km(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
+def haversine_distance_km(lat1: Any, lon1: Any, lat2: Any, lon2: Any) -> float:
     """
     Computes the great-circle distance between two geographic coordinates in kilometers.
     Uses spherical trigonometry with the Earth's mean radius of 6371.0 km.
+    Safely coerces string representations and handles invalid types.
     """
+    try:
+        f_lat1, f_lon1 = float(lat1), float(lon1)
+        f_lat2, f_lon2 = float(lat2), float(lon2)
+    except (ValueError, TypeError):
+        return 0.0
+
     r = 6371.0
-    phi1 = math.radians(lat1)
-    phi2 = math.radians(lat2)
-    delta_phi = math.radians(lat2 - lat1)
-    delta_lambda = math.radians(lon2 - lon1)
+    phi1 = math.radians(f_lat1)
+    phi2 = math.radians(f_lat2)
+    delta_phi = math.radians(f_lat2 - f_lat1)
+    delta_lambda = math.radians(f_lon2 - f_lon1)
 
     a = (math.sin(delta_phi / 2.0) ** 2 +
          math.cos(phi1) * math.cos(phi2) * math.sin(delta_lambda / 2.0) ** 2)
     c = 2.0 * math.atan2(math.sqrt(a), math.sqrt(1.0 - a))
     return round(r * c, 2)
+
 
 
 def create_point(lat: float, lon: float) -> Point:
