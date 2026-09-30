@@ -435,18 +435,18 @@ export default function EmergencyHub() {
 
           <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
             {[
-              { label: "112 Police & All SOS", num: "112", color: "#dc2626" },
-              { label: "108 Ambulance", num: "108", color: "#ea580c" },
-              { label: "1070 Disaster SDRF", num: "1070", color: "#d97706" },
-              { label: "1363 Tourist SOS", num: "1363", color: "#2563eb" },
-              { label: "1090 Women Helpline", num: "1090", color: "#9333ea" },
-              { label: "139 Railway SOS", num: "139", color: "#059669" },
+              { label: "112 Police & All SOS", num: "112" },
+              { label: "108 Ambulance", num: "108" },
+              { label: "1070 Disaster SDRF", num: "1070" },
+              { label: "1363 Tourist SOS", num: "1363" },
+              { label: "1090 Women Helpline", num: "1090" },
+              { label: "139 Railway SOS", num: "139" },
             ].map((h) => (
               <a
                 key={h.num}
                 href={`tel:${h.num}`}
                 style={{
-                  background: h.color,
+                  background: "#dc2626",
                   color: "#ffffff",
                   textDecoration: "none",
                   padding: "6px 14px",
@@ -456,7 +456,7 @@ export default function EmergencyHub() {
                   display: "inline-flex",
                   alignItems: "center",
                   gap: "6px",
-                  boxShadow: "0 2px 6px rgba(0,0,0,0.15)",
+                  boxShadow: "0 2px 6px rgba(220, 38, 38, 0.25)",
                 }}
               >
                 📞 {h.label}
