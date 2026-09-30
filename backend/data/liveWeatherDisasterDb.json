@@ -1,7 +1,7 @@
 {
-  "lastSyncTimestamp": "2026-09-30T17:29:32.909Z",
-  "nextSyncTimestamp": "2026-09-30T17:34:32.909Z",
-  "syncCount": 123,
+  "lastSyncTimestamp": "2026-09-30T17:31:55.376Z",
+  "nextSyncTimestamp": "2026-09-30T17:36:55.376Z",
+  "syncCount": 124,
   "isSyncing": true,
   "destinations": {
     "Shimla": {
@@ -35,7 +35,7 @@
         "icon": "☀️",
         "category": "clear",
         "provider": "Open-Meteo Satellite Radar",
-        "lastUpdatedAt": "2026-09-30T17:29:32.850Z",
+        "lastUpdatedAt": "2026-09-30T17:31:55.342Z",
         "latitude": 31.1048,
         "longitude": 77.1734,
         "destination": "Shimla",
@@ -69,7 +69,7 @@
             "condition": "Clear Sky",
             "icon": "☀️",
             "source": "Open-Meteo Satellite Radar",
-            "timestamp": "2026-09-30T17:24:29.801Z",
+            "timestamp": "2026-09-30T17:26:53.626Z",
             "latitude": 31.1048,
             "longitude": 77.1734,
             "destination": "Shimla",
@@ -98,7 +98,7 @@
           },
           "significant": false,
           "summary": "Atmospheric parameters steady across monitoring cycles.",
-          "timestamp": "2026-09-30T17:29:32.637657+00:00",
+          "timestamp": "2026-09-30T17:31:55.078770+00:00",
           "temperatureDelta": -0.2,
           "trend": "COOLING",
           "windSpike": false,
@@ -115,7 +115,7 @@
         "severity": "NORMAL",
         "title": "No Active Government Warning for Shimla",
         "description": "Official monitoring network (IMD, NDMA, USGS, GDACS) reports normal atmospheric & seismic conditions across Himachal Pradesh.",
-        "issuedAt": "2026-09-30T17:29:32.594Z",
+        "issuedAt": "2026-09-30T17:31:55.008Z",
         "bulletinId": null,
         "activeThreat": null
       },
@@ -144,7 +144,7 @@
         ],
         "safeAlternatives": "Chandigarh",
         "safeAlternativeRecommendation": null,
-        "timestamp": "2026-09-30T17:29:32.800053+00:00"
+        "timestamp": "2026-09-30T17:31:55.252478+00:00"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -169,7 +169,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Chandigarh",
         "affectedCorridors": "NH-5 Himalayan Expressway",
-        "lastVerifiedAt": "2026-09-30T17:29:32.850Z"
+        "lastVerifiedAt": "2026-09-30T17:31:55.342Z"
       }
     },
     "Manali": {
@@ -203,7 +203,7 @@
         "icon": "☀️",
         "category": "clear",
         "provider": "Open-Meteo Satellite Radar",
-        "lastUpdatedAt": "2026-09-30T17:29:32.855Z",
+        "lastUpdatedAt": "2026-09-30T17:31:55.325Z",
         "latitude": 32.2574,
         "longitude": 77.1748,
         "destination": "Manali",
@@ -237,7 +237,7 @@
             "condition": "Clear Sky",
             "icon": "☀️",
             "source": "Open-Meteo Satellite Radar",
-            "timestamp": "2026-09-30T17:24:29.801Z",
+            "timestamp": "2026-09-30T17:26:53.633Z",
             "latitude": 32.2574,
             "longitude": 77.1748,
             "destination": "Manali",
@@ -266,7 +266,7 @@
           },
           "significant": false,
           "summary": "Atmospheric parameters steady across monitoring cycles.",
-          "timestamp": "2026-09-30T17:29:32.650853+00:00",
+          "timestamp": "2026-09-30T17:31:55.106290+00:00",
           "temperatureDelta": -0.6,
           "trend": "COOLING",
           "windSpike": false,
@@ -283,7 +283,7 @@
         "severity": "NORMAL",
         "title": "No Active Government Warning for Manali",
         "description": "Official monitoring network (IMD, NDMA, USGS, GDACS) reports normal atmospheric & seismic conditions across Himachal Pradesh.",
-        "issuedAt": "2026-09-30T17:29:32.594Z",
+        "issuedAt": "2026-09-30T17:31:55.008Z",
         "bulletinId": null,
         "activeThreat": null
       },
@@ -312,7 +312,7 @@
         ],
         "safeAlternatives": "Chandigarh",
         "safeAlternativeRecommendation": null,
-        "timestamp": "2026-09-30T17:29:32.803724+00:00"
+        "timestamp": "2026-09-30T17:31:55.241722+00:00"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -337,7 +337,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Chandigarh",
         "affectedCorridors": "NH-3 (Chandigarh-Manali)",
-        "lastVerifiedAt": "2026-09-30T17:29:32.855Z"
+        "lastVerifiedAt": "2026-09-30T17:31:55.325Z"
       }
     },
     "Rohtang Pass": {
@@ -371,7 +371,7 @@
         "icon": "🌤️",
         "category": "clear",
         "provider": "Open-Meteo Satellite Radar",
-        "lastUpdatedAt": "2026-09-30T17:29:32.855Z",
+        "lastUpdatedAt": "2026-09-30T17:31:55.325Z",
         "latitude": 32.3716,
         "longitude": 77.2466,
         "destination": "Rohtang Pass",
@@ -405,7 +405,7 @@
             "condition": "Mainly Clear",
             "icon": "🌤️",
             "source": "Open-Meteo Satellite Radar",
-            "timestamp": "2026-09-30T17:24:29.801Z",
+            "timestamp": "2026-09-30T17:26:53.633Z",
             "latitude": 32.3716,
             "longitude": 77.2466,
             "destination": "Rohtang Pass",
@@ -426,7 +426,7 @@
           "changes": {},
           "significant": false,
           "summary": "No atmospheric change recorded.",
-          "timestamp": "2026-09-30T17:29:32.650068+00:00",
+          "timestamp": "2026-09-30T17:31:55.097696+00:00",
           "temperatureDelta": null,
           "trend": null,
           "windSpike": false,
@@ -443,7 +443,7 @@
         "severity": "WARNING",
         "title": "WEATHER ADVISORY: Caution Advised in Rohtang Pass",
         "description": "Advisory conditions: Rain 0 mm/h, Gusts 13 km/h, Temp -2.6°C. Movement is operational with speed restrictions.",
-        "issuedAt": "2026-09-30T17:29:32.594Z",
+        "issuedAt": "2026-09-30T17:31:55.008Z",
         "bulletinId": null,
         "activeThreat": null
       },
@@ -472,7 +472,7 @@
         ],
         "safeAlternatives": "Manali (South Portal)",
         "safeAlternativeRecommendation": null,
-        "timestamp": "2026-09-30T17:29:32.803546+00:00"
+        "timestamp": "2026-09-30T17:31:55.240491+00:00"
       },
       "disaster": {
         "alertTier": "YELLOW",
@@ -497,7 +497,7 @@
         "source": "Open-Meteo Severe Weather & Hydrology Radar",
         "safeAlternativeHub": "Chandigarh",
         "affectedCorridors": "Manali-Leh Highway (13,058 ft)",
-        "lastVerifiedAt": "2026-09-30T17:29:32.855Z"
+        "lastVerifiedAt": "2026-09-30T17:31:55.325Z"
       }
     },
     "Kasol": {
@@ -531,7 +531,7 @@
         "icon": "☀️",
         "category": "clear",
         "provider": "Open-Meteo Satellite Radar",
-        "lastUpdatedAt": "2026-09-30T17:29:32.853Z",
+        "lastUpdatedAt": "2026-09-30T17:31:55.324Z",
         "latitude": 32.01,
         "longitude": 77.315,
         "destination": "Kasol",
@@ -565,7 +565,7 @@
             "condition": "Clear Sky",
             "icon": "☀️",
             "source": "Open-Meteo Satellite Radar",
-            "timestamp": "2026-09-30T17:24:29.801Z",
+            "timestamp": "2026-09-30T17:26:53.633Z",
             "latitude": 32.01,
             "longitude": 77.315,
             "destination": "Kasol",
@@ -594,7 +594,7 @@
           },
           "significant": false,
           "summary": "Atmospheric parameters steady across monitoring cycles.",
-          "timestamp": "2026-09-30T17:29:32.680810+00:00",
+          "timestamp": "2026-09-30T17:31:55.097394+00:00",
           "temperatureDelta": -0.2,
           "trend": "COOLING",
           "windSpike": false,
@@ -611,7 +611,7 @@
         "severity": "NORMAL",
         "title": "No Active Government Warning for Kasol",
         "description": "Official monitoring network (IMD, NDMA, USGS, GDACS) reports normal atmospheric & seismic conditions across Himachal Pradesh.",
-        "issuedAt": "2026-09-30T17:29:32.594Z",
+        "issuedAt": "2026-09-30T17:31:55.008Z",
         "bulletinId": null,
         "activeThreat": null
       },
@@ -640,7 +640,7 @@
         ],
         "safeAlternatives": "Bhuntar / Chandigarh",
         "safeAlternativeRecommendation": null,
-        "timestamp": "2026-09-30T17:29:32.803046+00:00"
+        "timestamp": "2026-09-30T17:31:55.239906+00:00"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -665,7 +665,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Chandigarh",
         "affectedCorridors": "Bhuntar-Kasol-Manikaran Road",
-        "lastVerifiedAt": "2026-09-30T17:29:32.853Z"
+        "lastVerifiedAt": "2026-09-30T17:31:55.324Z"
       }
     },
     "Chitkul": {
@@ -699,7 +699,7 @@
         "icon": "☀️",
         "category": "clear",
         "provider": "Open-Meteo Satellite Radar",
-        "lastUpdatedAt": "2026-09-30T17:29:32.856Z",
+        "lastUpdatedAt": "2026-09-30T17:31:55.325Z",
         "latitude": 31.3533,
         "longitude": 78.4354,
         "destination": "Chitkul",
@@ -733,7 +733,7 @@
             "condition": "Clear Sky",
             "icon": "☀️",
             "source": "Open-Meteo Satellite Radar",
-            "timestamp": "2026-09-30T17:24:29.801Z",
+            "timestamp": "2026-09-30T17:26:53.634Z",
             "latitude": 31.3533,
             "longitude": 78.4354,
             "destination": "Chitkul",
@@ -762,7 +762,7 @@
           },
           "significant": false,
           "summary": "Atmospheric parameters steady across monitoring cycles.",
-          "timestamp": "2026-09-30T17:29:32.679963+00:00",
+          "timestamp": "2026-09-30T17:31:55.108631+00:00",
           "temperatureDelta": -1.7,
           "trend": "COOLING",
           "windSpike": false,
@@ -779,7 +779,7 @@
         "severity": "WARNING",
         "title": "M 5.1 - 119 km NE of Joshīmath, India",
         "description": "Live seismic tremor recorded by USGS sensors. Epicenter: 119 km NE of Joshīmath, India. Magnitude: M 5.1, Depth: 10 km. Located ~182 km from Chitkul (Himachal Pradesh).",
-        "issuedAt": "2026-09-30T17:29:32.594Z",
+        "issuedAt": "2026-09-30T17:31:55.008Z",
         "bulletinId": "USGS-us7000tdv4",
         "activeThreat": "Earthquake / Seismic Tremor"
       },
@@ -809,7 +809,7 @@
         ],
         "safeAlternatives": "Shimla",
         "safeAlternativeRecommendation": null,
-        "timestamp": "2026-09-30T17:29:32.802310+00:00"
+        "timestamp": "2026-09-30T17:31:55.240916+00:00"
       },
       "disaster": {
         "alertTier": "YELLOW",
@@ -834,7 +834,7 @@
         "source": "USGS Live Indian Subcontinent Seismic Network",
         "safeAlternativeHub": "Chandigarh",
         "affectedCorridors": "Kinnaur Valley Indo-Tibet Border Road",
-        "lastVerifiedAt": "2026-09-30T17:29:32.856Z"
+        "lastVerifiedAt": "2026-09-30T17:31:55.325Z"
       }
     },
     "Kalpa": {
@@ -868,7 +868,7 @@
         "icon": "☀️",
         "category": "clear",
         "provider": "Open-Meteo Satellite Radar",
-        "lastUpdatedAt": "2026-09-30T17:29:32.854Z",
+        "lastUpdatedAt": "2026-09-30T17:31:55.342Z",
         "latitude": 31.5372,
         "longitude": 78.2562,
         "destination": "Kalpa",
@@ -902,7 +902,7 @@
             "condition": "Clear Sky",
             "icon": "☀️",
             "source": "Open-Meteo Satellite Radar",
-            "timestamp": "2026-09-30T17:24:29.801Z",
+            "timestamp": "2026-09-30T17:26:53.634Z",
             "latitude": 31.5372,
             "longitude": 78.2562,
             "destination": "Kalpa",
@@ -931,7 +931,7 @@
           },
           "significant": false,
           "summary": "Atmospheric parameters steady across monitoring cycles.",
-          "timestamp": "2026-09-30T17:29:32.679666+00:00",
+          "timestamp": "2026-09-30T17:31:55.113018+00:00",
           "temperatureDelta": -0.1,
           "trend": "COOLING",
           "windSpike": false,
@@ -948,7 +948,7 @@
         "severity": "NORMAL",
         "title": "No Active Government Warning for Kalpa",
         "description": "Official monitoring network (IMD, NDMA, USGS, GDACS) reports normal atmospheric & seismic conditions across Himachal Pradesh.",
-        "issuedAt": "2026-09-30T17:29:32.594Z",
+        "issuedAt": "2026-09-30T17:31:55.008Z",
         "bulletinId": null,
         "activeThreat": null
       },
@@ -977,7 +977,7 @@
         ],
         "safeAlternatives": "Shimla",
         "safeAlternativeRecommendation": null,
-        "timestamp": "2026-09-30T17:29:32.803378+00:00"
+        "timestamp": "2026-09-30T17:31:55.250897+00:00"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -1002,7 +1002,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Chandigarh",
         "affectedCorridors": "NH-5 Reckong Peo - Kalpa Link",
-        "lastVerifiedAt": "2026-09-30T17:29:32.854Z"
+        "lastVerifiedAt": "2026-09-30T17:31:55.342Z"
       }
     },
     "Sissu": {
@@ -1036,7 +1036,7 @@
         "icon": "☀️",
         "category": "clear",
         "provider": "Open-Meteo Satellite Radar",
-        "lastUpdatedAt": "2026-09-30T17:29:32.856Z",
+        "lastUpdatedAt": "2026-09-30T17:31:55.342Z",
         "latitude": 32.482,
         "longitude": 77.1245,
         "destination": "Sissu",
@@ -1070,7 +1070,7 @@
             "condition": "Clear Sky",
             "icon": "☀️",
             "source": "Open-Meteo Satellite Radar",
-            "timestamp": "2026-09-30T17:24:29.801Z",
+            "timestamp": "2026-09-30T17:26:53.634Z",
             "latitude": 32.482,
             "longitude": 77.1245,
             "destination": "Sissu",
@@ -1091,7 +1091,7 @@
           "changes": {},
           "significant": false,
           "summary": "No atmospheric change recorded.",
-          "timestamp": "2026-09-30T17:29:32.679811+00:00",
+          "timestamp": "2026-09-30T17:31:55.113273+00:00",
           "temperatureDelta": null,
           "trend": null,
           "windSpike": false,
@@ -1108,7 +1108,7 @@
         "severity": "NORMAL",
         "title": "No Active Government Warning for Sissu",
         "description": "Official monitoring network (IMD, NDMA, USGS, GDACS) reports normal atmospheric & seismic conditions across Himachal Pradesh.",
-        "issuedAt": "2026-09-30T17:29:32.594Z",
+        "issuedAt": "2026-09-30T17:31:55.008Z",
         "bulletinId": null,
         "activeThreat": null
       },
@@ -1137,7 +1137,7 @@
         ],
         "safeAlternatives": "Manali (South Portal)",
         "safeAlternativeRecommendation": null,
-        "timestamp": "2026-09-30T17:29:32.802038+00:00"
+        "timestamp": "2026-09-30T17:31:55.251242+00:00"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -1162,7 +1162,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Chandigarh",
         "affectedCorridors": "Atal Tunnel North Portal / Lahaul Highway",
-        "lastVerifiedAt": "2026-09-30T17:29:32.856Z"
+        "lastVerifiedAt": "2026-09-30T17:31:55.342Z"
       }
     },
     "Kaza": {
@@ -1196,7 +1196,7 @@
         "icon": "☁️",
         "category": "cloudy",
         "provider": "Open-Meteo Satellite Radar",
-        "lastUpdatedAt": "2026-09-30T17:29:32.852Z",
+        "lastUpdatedAt": "2026-09-30T17:31:55.342Z",
         "latitude": 32.2276,
         "longitude": 78.071,
         "destination": "Kaza",
@@ -1230,7 +1230,7 @@
             "condition": "Overcast",
             "icon": "☁️",
             "source": "Open-Meteo Satellite Radar",
-            "timestamp": "2026-09-30T17:24:29.801Z",
+            "timestamp": "2026-09-30T17:26:53.634Z",
             "latitude": 32.2276,
             "longitude": 78.071,
             "destination": "Kaza",
@@ -1251,7 +1251,7 @@
           "changes": {},
           "significant": false,
           "summary": "No atmospheric change recorded.",
-          "timestamp": "2026-09-30T17:29:32.680537+00:00",
+          "timestamp": "2026-09-30T17:31:55.113544+00:00",
           "temperatureDelta": null,
           "trend": null,
           "windSpike": false,
@@ -1268,7 +1268,7 @@
         "severity": "WARNING",
         "title": "WEATHER ADVISORY: Caution Advised in Kaza",
         "description": "Advisory conditions: Rain 0 mm/h, Gusts 7 km/h, Temp -6°C. Movement is operational with speed restrictions.",
-        "issuedAt": "2026-09-30T17:29:32.594Z",
+        "issuedAt": "2026-09-30T17:31:55.008Z",
         "bulletinId": null,
         "activeThreat": null
       },
@@ -1297,7 +1297,7 @@
         ],
         "safeAlternatives": "Shimla / Manali",
         "safeAlternativeRecommendation": null,
-        "timestamp": "2026-09-30T17:29:32.802864+00:00"
+        "timestamp": "2026-09-30T17:31:55.252103+00:00"
       },
       "disaster": {
         "alertTier": "YELLOW",
@@ -1322,7 +1322,7 @@
         "source": "Open-Meteo Severe Weather & Hydrology Radar",
         "safeAlternativeHub": "Chandigarh",
         "affectedCorridors": "NH-505 Spiti Valley Route",
-        "lastVerifiedAt": "2026-09-30T17:29:32.852Z"
+        "lastVerifiedAt": "2026-09-30T17:31:55.342Z"
       }
     },
     "Chandratal Lake": {
@@ -1356,7 +1356,7 @@
         "icon": "☀️",
         "category": "clear",
         "provider": "Open-Meteo Satellite Radar",
-        "lastUpdatedAt": "2026-09-30T17:29:32.857Z",
+        "lastUpdatedAt": "2026-09-30T17:31:55.342Z",
         "latitude": 32.4824,
         "longitude": 77.6166,
         "destination": "Chandratal Lake",
@@ -1390,7 +1390,7 @@
             "condition": "Clear Sky",
             "icon": "☀️",
             "source": "Open-Meteo Satellite Radar",
-            "timestamp": "2026-09-30T17:24:29.801Z",
+            "timestamp": "2026-09-30T17:26:53.634Z",
             "latitude": 32.4824,
             "longitude": 77.6166,
             "destination": "Chandratal Lake",
@@ -1411,7 +1411,7 @@
           "changes": {},
           "significant": false,
           "summary": "No atmospheric change recorded.",
-          "timestamp": "2026-09-30T17:29:32.680356+00:00",
+          "timestamp": "2026-09-30T17:31:55.113815+00:00",
           "temperatureDelta": null,
           "trend": null,
           "windSpike": false,
@@ -1428,7 +1428,7 @@
         "severity": "WARNING",
         "title": "WEATHER ADVISORY: Caution Advised in Chandratal Lake",
         "description": "Advisory conditions: Rain 0 mm/h, Gusts 10 km/h, Temp -2.6°C. Movement is operational with speed restrictions.",
-        "issuedAt": "2026-09-30T17:29:32.594Z",
+        "issuedAt": "2026-09-30T17:31:55.008Z",
         "bulletinId": null,
         "activeThreat": null
       },
@@ -1457,7 +1457,7 @@
         ],
         "safeAlternatives": "Kaza / Manali",
         "safeAlternativeRecommendation": null,
-        "timestamp": "2026-09-30T17:29:32.802704+00:00"
+        "timestamp": "2026-09-30T17:31:55.251725+00:00"
       },
       "disaster": {
         "alertTier": "YELLOW",
@@ -1482,7 +1482,7 @@
         "source": "Open-Meteo Severe Weather & Hydrology Radar",
         "safeAlternativeHub": "Chandigarh",
         "affectedCorridors": "Batal-Chandratal Dirt Route (14,100 ft)",
-        "lastVerifiedAt": "2026-09-30T17:29:32.857Z"
+        "lastVerifiedAt": "2026-09-30T17:31:55.342Z"
       }
     },
     "Haridwar": {
@@ -1516,7 +1516,7 @@
         "icon": "☀️",
         "category": "clear",
         "provider": "Open-Meteo Satellite Radar",
-        "lastUpdatedAt": "2026-09-30T17:29:32.854Z",
+        "lastUpdatedAt": "2026-09-30T17:31:55.353Z",
         "latitude": 29.9457,
         "longitude": 78.1642,
         "destination": "Haridwar",
@@ -1550,7 +1550,7 @@
             "condition": "Clear Sky",
             "icon": "☀️",
             "source": "Open-Meteo Satellite Radar",
-            "timestamp": "2026-09-30T17:24:29.801Z",
+            "timestamp": "2026-09-30T17:26:53.634Z",
             "latitude": 29.9457,
             "longitude": 78.1642,
             "destination": "Haridwar",
@@ -1571,7 +1571,7 @@
           "changes": {},
           "significant": false,
           "summary": "No atmospheric change recorded.",
-          "timestamp": "2026-09-30T17:29:32.679497+00:00",
+          "timestamp": "2026-09-30T17:31:55.117975+00:00",
           "temperatureDelta": null,
           "trend": null,
           "windSpike": false,
@@ -1588,7 +1588,7 @@
         "severity": "NORMAL",
         "title": "No Active Government Warning for Haridwar",
         "description": "Official monitoring network (IMD, NDMA, USGS, GDACS) reports normal atmospheric & seismic conditions across Uttarakhand.",
-        "issuedAt": "2026-09-30T17:29:32.594Z",
+        "issuedAt": "2026-09-30T17:31:55.008Z",
         "bulletinId": null,
         "activeThreat": null
       },
@@ -1617,7 +1617,7 @@
         ],
         "safeAlternatives": "Dehradun",
         "safeAlternativeRecommendation": null,
-        "timestamp": "2026-09-30T17:29:32.803210+00:00"
+        "timestamp": "2026-09-30T17:31:55.272355+00:00"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -1642,7 +1642,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Dehradun",
         "affectedCorridors": "NH-334 (Delhi-Haridwar Highway)",
-        "lastVerifiedAt": "2026-09-30T17:29:32.854Z"
+        "lastVerifiedAt": "2026-09-30T17:31:55.353Z"
       }
     },
     "Rishikesh": {
@@ -1676,7 +1676,7 @@
         "icon": "☀️",
         "category": "clear",
         "provider": "Open-Meteo Satellite Radar",
-        "lastUpdatedAt": "2026-09-30T17:29:32.852Z",
+        "lastUpdatedAt": "2026-09-30T17:31:55.353Z",
         "latitude": 30.0869,
         "longitude": 78.2676,
         "destination": "Rishikesh",
@@ -1710,7 +1710,7 @@
             "condition": "Clear Sky",
             "icon": "☀️",
             "source": "Open-Meteo Satellite Radar",
-            "timestamp": "2026-09-30T17:24:29.801Z",
+            "timestamp": "2026-09-30T17:26:53.635Z",
             "latitude": 30.0869,
             "longitude": 78.2676,
             "destination": "Rishikesh",
@@ -1731,7 +1731,7 @@
           "changes": {},
           "significant": false,
           "summary": "No atmospheric change recorded.",
-          "timestamp": "2026-09-30T17:29:32.679340+00:00",
+          "timestamp": "2026-09-30T17:31:55.118081+00:00",
           "temperatureDelta": null,
           "trend": null,
           "windSpike": false,
@@ -1748,7 +1748,7 @@
         "severity": "CRITICAL",
         "title": "Orange flood alert in India (Rishikesh Sector)",
         "description": "On 09/08/2026, a flood started in India, lasting until 28/09/2026 (last update). The flood caused 130 deaths and 453851 displaced .",
-        "issuedAt": "2026-09-30T17:29:32.594Z",
+        "issuedAt": "2026-09-30T17:31:55.008Z",
         "bulletinId": "GDACS-FL-3002-7905",
         "activeThreat": "Flash Flood & River Inundation"
       },
@@ -1780,7 +1780,7 @@
         ],
         "safeAlternatives": "Dehradun",
         "safeAlternativeRecommendation": null,
-        "timestamp": "2026-09-30T17:29:32.801787+00:00"
+        "timestamp": "2026-09-30T17:31:55.272662+00:00"
       },
       "disaster": {
         "alertTier": "RED",
@@ -1805,7 +1805,7 @@
         "source": "GDACS (United Nations & European Commission)",
         "safeAlternativeHub": "Dehradun",
         "affectedCorridors": "NH-7 All-Weather Badrinath Route",
-        "lastVerifiedAt": "2026-09-30T17:29:32.852Z"
+        "lastVerifiedAt": "2026-09-30T17:31:55.353Z"
       }
     },
     "Dehradun": {
@@ -1839,7 +1839,7 @@
         "icon": "☀️",
         "category": "clear",
         "provider": "Open-Meteo Satellite Radar",
-        "lastUpdatedAt": "2026-09-30T17:29:32.855Z",
+        "lastUpdatedAt": "2026-09-30T17:31:55.353Z",
         "latitude": 30.3165,
         "longitude": 78.0322,
         "destination": "Dehradun",
@@ -1873,7 +1873,7 @@
             "condition": "Clear Sky",
             "icon": "☀️",
             "source": "Open-Meteo Satellite Radar",
-            "timestamp": "2026-09-30T17:24:29.801Z",
+            "timestamp": "2026-09-30T17:26:53.635Z",
             "latitude": 30.3165,
             "longitude": 78.0322,
             "destination": "Dehradun",
@@ -1894,7 +1894,7 @@
           "changes": {},
           "significant": false,
           "summary": "No atmospheric change recorded.",
-          "timestamp": "2026-09-30T17:29:32.679128+00:00",
+          "timestamp": "2026-09-30T17:31:55.117868+00:00",
           "temperatureDelta": null,
           "trend": null,
           "windSpike": false,
@@ -1911,7 +1911,7 @@
         "severity": "NORMAL",
         "title": "No Active Government Warning for Dehradun",
         "description": "Official monitoring network (IMD, NDMA, USGS, GDACS) reports normal atmospheric & seismic conditions across Uttarakhand.",
-        "issuedAt": "2026-09-30T17:29:32.594Z",
+        "issuedAt": "2026-09-30T17:31:55.008Z",
         "bulletinId": null,
         "activeThreat": null
       },
@@ -1940,7 +1940,7 @@
         ],
         "safeAlternatives": "Haridwar / Delhi",
         "safeAlternativeRecommendation": null,
-        "timestamp": "2026-09-30T17:29:32.801602+00:00"
+        "timestamp": "2026-09-30T17:31:55.272033+00:00"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -1965,7 +1965,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Dehradun",
         "affectedCorridors": "NH-72 / Delhi-Dehradun Expressway",
-        "lastVerifiedAt": "2026-09-30T17:29:32.855Z"
+        "lastVerifiedAt": "2026-09-30T17:31:55.353Z"
       }
     },
     "Mussoorie": {
@@ -1999,7 +1999,7 @@
         "icon": "☀️",
         "category": "clear",
         "provider": "Open-Meteo Satellite Radar",
-        "lastUpdatedAt": "2026-09-30T17:29:32.857Z",
+        "lastUpdatedAt": "2026-09-30T17:31:55.353Z",
         "latitude": 30.4598,
         "longitude": 78.0644,
         "destination": "Mussoorie",
@@ -2033,7 +2033,7 @@
             "condition": "Clear Sky",
             "icon": "☀️",
             "source": "Open-Meteo Satellite Radar",
-            "timestamp": "2026-09-30T17:24:29.801Z",
+            "timestamp": "2026-09-30T17:26:53.635Z",
             "latitude": 30.4598,
             "longitude": 78.0644,
             "destination": "Mussoorie",
@@ -2062,7 +2062,7 @@
           },
           "significant": false,
           "summary": "Atmospheric parameters steady across monitoring cycles.",
-          "timestamp": "2026-09-30T17:29:32.680121+00:00",
+          "timestamp": "2026-09-30T17:31:55.117760+00:00",
           "temperatureDelta": -0.5,
           "trend": "COOLING",
           "windSpike": false,
@@ -2079,7 +2079,7 @@
         "severity": "NORMAL",
         "title": "No Active Government Warning for Mussoorie",
         "description": "Official monitoring network (IMD, NDMA, USGS, GDACS) reports normal atmospheric & seismic conditions across Uttarakhand.",
-        "issuedAt": "2026-09-30T17:29:32.594Z",
+        "issuedAt": "2026-09-30T17:31:55.008Z",
         "bulletinId": null,
         "activeThreat": null
       },
@@ -2108,7 +2108,7 @@
         ],
         "safeAlternatives": "Dehradun",
         "safeAlternativeRecommendation": null,
-        "timestamp": "2026-09-30T17:29:32.802532+00:00"
+        "timestamp": "2026-09-30T17:31:55.271661+00:00"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -2133,7 +2133,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Dehradun",
         "affectedCorridors": "Dehradun-Mussoorie Hill Ghat Road",
-        "lastVerifiedAt": "2026-09-30T17:29:32.857Z"
+        "lastVerifiedAt": "2026-09-30T17:31:55.353Z"
       }
     },
     "Srinagar": {
@@ -2167,7 +2167,7 @@
         "icon": "☀️",
         "category": "clear",
         "provider": "Open-Meteo Satellite Radar",
-        "lastUpdatedAt": "2026-09-30T17:29:32.851Z",
+        "lastUpdatedAt": "2026-09-30T17:31:55.352Z",
         "latitude": 34.0837,
         "longitude": 74.7973,
         "destination": "Srinagar",
@@ -2201,7 +2201,7 @@
             "condition": "Clear Sky",
             "icon": "☀️",
             "source": "Open-Meteo Satellite Radar",
-            "timestamp": "2026-09-30T17:24:29.801Z",
+            "timestamp": "2026-09-30T17:26:53.635Z",
             "latitude": 34.0837,
             "longitude": 74.7973,
             "destination": "Srinagar",
@@ -2230,7 +2230,7 @@
           },
           "significant": false,
           "summary": "Atmospheric parameters steady across monitoring cycles.",
-          "timestamp": "2026-09-30T17:29:32.678737+00:00",
+          "timestamp": "2026-09-30T17:31:55.117446+00:00",
           "temperatureDelta": -1.7,
           "trend": "COOLING",
           "windSpike": false,
@@ -2247,7 +2247,7 @@
         "severity": "NORMAL",
         "title": "No Active Government Warning for Srinagar",
         "description": "Official monitoring network (IMD, NDMA, USGS, GDACS) reports normal atmospheric & seismic conditions across Jammu & Kashmir.",
-        "issuedAt": "2026-09-30T17:29:32.594Z",
+        "issuedAt": "2026-09-30T17:31:55.008Z",
         "bulletinId": null,
         "activeThreat": null
       },
@@ -2276,7 +2276,7 @@
         ],
         "safeAlternatives": "Jammu / Delhi",
         "safeAlternativeRecommendation": null,
-        "timestamp": "2026-09-30T17:29:32.803893+00:00"
+        "timestamp": "2026-09-30T17:31:55.271085+00:00"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -2301,7 +2301,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "NH-44 Banihal Tunnel Expressway",
-        "lastVerifiedAt": "2026-09-30T17:29:32.851Z"
+        "lastVerifiedAt": "2026-09-30T17:31:55.352Z"
       }
     },
     "Gulmarg": {
@@ -2335,7 +2335,7 @@
         "icon": "☀️",
         "category": "clear",
         "provider": "Open-Meteo Satellite Radar",
-        "lastUpdatedAt": "2026-09-30T17:29:32.857Z",
+        "lastUpdatedAt": "2026-09-30T17:31:55.366Z",
         "latitude": 34.0484,
         "longitude": 74.3805,
         "destination": "Gulmarg",
@@ -2369,7 +2369,7 @@
             "condition": "Clear Sky",
             "icon": "☀️",
             "source": "Open-Meteo Satellite Radar",
-            "timestamp": "2026-09-30T17:24:29.801Z",
+            "timestamp": "2026-09-30T17:26:53.638Z",
             "latitude": 34.0484,
             "longitude": 74.3805,
             "destination": "Gulmarg",
@@ -2398,7 +2398,7 @@
           },
           "significant": false,
           "summary": "Atmospheric parameters steady across monitoring cycles.",
-          "timestamp": "2026-09-30T17:29:32.692949+00:00",
+          "timestamp": "2026-09-30T17:31:55.117624+00:00",
           "temperatureDelta": -1.8,
           "trend": "COOLING",
           "windSpike": false,
@@ -2415,7 +2415,7 @@
         "severity": "NORMAL",
         "title": "No Active Government Warning for Gulmarg",
         "description": "Official monitoring network (IMD, NDMA, USGS, GDACS) reports normal atmospheric & seismic conditions across Jammu & Kashmir.",
-        "issuedAt": "2026-09-30T17:29:32.594Z",
+        "issuedAt": "2026-09-30T17:31:55.008Z",
         "bulletinId": null,
         "activeThreat": null
       },
@@ -2444,7 +2444,7 @@
         ],
         "safeAlternatives": "Srinagar",
         "safeAlternativeRecommendation": null,
-        "timestamp": "2026-09-30T17:29:32.818375+00:00"
+        "timestamp": "2026-09-30T17:31:55.301954+00:00"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -2469,7 +2469,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "Srinagar-Tangmarg-Gulmarg Route (8,690 ft)",
-        "lastVerifiedAt": "2026-09-30T17:29:32.857Z"
+        "lastVerifiedAt": "2026-09-30T17:31:55.366Z"
       }
     },
     "Pahalgam": {
@@ -2503,7 +2503,7 @@
         "icon": "☀️",
         "category": "clear",
         "provider": "Open-Meteo Satellite Radar",
-        "lastUpdatedAt": "2026-09-30T17:29:32.871Z",
+        "lastUpdatedAt": "2026-09-30T17:31:55.351Z",
         "latitude": 34.0161,
         "longitude": 75.315,
         "destination": "Pahalgam",
@@ -2537,7 +2537,7 @@
             "condition": "Clear Sky",
             "icon": "☀️",
             "source": "Open-Meteo Satellite Radar",
-            "timestamp": "2026-09-30T17:24:29.801Z",
+            "timestamp": "2026-09-30T17:26:53.638Z",
             "latitude": 34.0161,
             "longitude": 75.315,
             "destination": "Pahalgam",
@@ -2566,7 +2566,7 @@
           },
           "significant": true,
           "summary": "Temperature shifted by -2.7°C (cooling)",
-          "timestamp": "2026-09-30T17:29:32.693535+00:00",
+          "timestamp": "2026-09-30T17:31:55.117153+00:00",
           "temperatureDelta": -2.7,
           "trend": "COOLING",
           "windSpike": false,
@@ -2583,7 +2583,7 @@
         "severity": "NORMAL",
         "title": "No Active Government Warning for Pahalgam",
         "description": "Official monitoring network (IMD, NDMA, USGS, GDACS) reports normal atmospheric & seismic conditions across Jammu & Kashmir.",
-        "issuedAt": "2026-09-30T17:29:32.595Z",
+        "issuedAt": "2026-09-30T17:31:55.008Z",
         "bulletinId": null,
         "activeThreat": null
       },
@@ -2612,7 +2612,7 @@
         ],
         "safeAlternatives": "Srinagar",
         "safeAlternativeRecommendation": null,
-        "timestamp": "2026-09-30T17:29:32.832854+00:00"
+        "timestamp": "2026-09-30T17:31:55.267642+00:00"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -2637,7 +2637,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "Anantnag-Pahalgam Lidder Valley Highway",
-        "lastVerifiedAt": "2026-09-30T17:29:32.871Z"
+        "lastVerifiedAt": "2026-09-30T17:31:55.351Z"
       }
     },
     "Digha": {
@@ -2671,7 +2671,7 @@
         "icon": "☁️",
         "category": "cloudy",
         "provider": "Open-Meteo Satellite Radar",
-        "lastUpdatedAt": "2026-09-30T17:29:32.869Z",
+        "lastUpdatedAt": "2026-09-30T17:31:55.349Z",
         "latitude": 21.6266,
         "longitude": 87.5074,
         "destination": "Digha",
@@ -2705,7 +2705,7 @@
             "condition": "Overcast",
             "icon": "☁️",
             "source": "Open-Meteo Satellite Radar",
-            "timestamp": "2026-09-30T17:24:29.801Z",
+            "timestamp": "2026-09-30T17:26:53.638Z",
             "latitude": 21.6266,
             "longitude": 87.5074,
             "destination": "Digha",
@@ -2726,7 +2726,7 @@
           "changes": {},
           "significant": false,
           "summary": "No atmospheric change recorded.",
-          "timestamp": "2026-09-30T17:29:32.693216+00:00",
+          "timestamp": "2026-09-30T17:31:55.116918+00:00",
           "temperatureDelta": null,
           "trend": null,
           "windSpike": false,
@@ -2743,7 +2743,7 @@
         "severity": "NORMAL",
         "title": "No Active Government Warning for Digha",
         "description": "Official monitoring network (IMD, NDMA, USGS, GDACS) reports normal atmospheric & seismic conditions across West Bengal.",
-        "issuedAt": "2026-09-30T17:29:32.595Z",
+        "issuedAt": "2026-09-30T17:31:55.008Z",
         "bulletinId": null,
         "activeThreat": null
       },
@@ -2772,7 +2772,7 @@
         ],
         "safeAlternatives": "Kolkata",
         "safeAlternativeRecommendation": null,
-        "timestamp": "2026-09-30T17:29:32.824633+00:00"
+        "timestamp": "2026-09-30T17:31:55.262862+00:00"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -2797,7 +2797,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "NH-116B Coastal Highway",
-        "lastVerifiedAt": "2026-09-30T17:29:32.869Z"
+        "lastVerifiedAt": "2026-09-30T17:31:55.349Z"
       }
     },
     "Darjeeling": {
@@ -2831,7 +2831,7 @@
         "icon": "☁️",
         "category": "cloudy",
         "provider": "Open-Meteo Satellite Radar",
-        "lastUpdatedAt": "2026-09-30T17:29:32.868Z",
+        "lastUpdatedAt": "2026-09-30T17:31:55.353Z",
         "latitude": 27.041,
         "longitude": 88.2663,
         "destination": "Darjeeling",
@@ -2865,7 +2865,7 @@
             "condition": "Overcast",
             "icon": "☁️",
             "source": "Open-Meteo Satellite Radar",
-            "timestamp": "2026-09-30T17:24:29.801Z",
+            "timestamp": "2026-09-30T17:26:53.640Z",
             "latitude": 27.041,
             "longitude": 88.2663,
             "destination": "Darjeeling",
@@ -2886,7 +2886,7 @@
           "changes": {},
           "significant": false,
           "summary": "No atmospheric change recorded.",
-          "timestamp": "2026-09-30T17:29:32.693381+00:00",
+          "timestamp": "2026-09-30T17:31:55.117541+00:00",
           "temperatureDelta": null,
           "trend": null,
           "windSpike": false,
@@ -2903,7 +2903,7 @@
         "severity": "NORMAL",
         "title": "No Active Government Warning for Darjeeling",
         "description": "Official monitoring network (IMD, NDMA, USGS, GDACS) reports normal atmospheric & seismic conditions across West Bengal.",
-        "issuedAt": "2026-09-30T17:29:32.595Z",
+        "issuedAt": "2026-09-30T17:31:55.008Z",
         "bulletinId": null,
         "activeThreat": null
       },
@@ -2932,7 +2932,7 @@
         ],
         "safeAlternatives": "Siliguri / Bagdogra",
         "safeAlternativeRecommendation": null,
-        "timestamp": "2026-09-30T17:29:32.828417+00:00"
+        "timestamp": "2026-09-30T17:31:55.271353+00:00"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -2957,7 +2957,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "Rohini Road / Hill Cart Road (NH-110)",
-        "lastVerifiedAt": "2026-09-30T17:29:32.868Z"
+        "lastVerifiedAt": "2026-09-30T17:31:55.353Z"
       }
     },
     "Kolkata": {
@@ -2991,7 +2991,7 @@
         "icon": "☁️",
         "category": "cloudy",
         "provider": "Open-Meteo Satellite Radar",
-        "lastUpdatedAt": "2026-09-30T17:29:32.871Z",
+        "lastUpdatedAt": "2026-09-30T17:31:55.350Z",
         "latitude": 22.5726,
         "longitude": 88.3639,
         "destination": "Kolkata",
@@ -3025,7 +3025,7 @@
             "condition": "Overcast",
             "icon": "☁️",
             "source": "Open-Meteo Satellite Radar",
-            "timestamp": "2026-09-30T17:24:29.801Z",
+            "timestamp": "2026-09-30T17:26:53.642Z",
             "latitude": 22.5726,
             "longitude": 88.3639,
             "destination": "Kolkata",
@@ -3046,7 +3046,7 @@
           "changes": {},
           "significant": false,
           "summary": "No atmospheric change recorded.",
-          "timestamp": "2026-09-30T17:29:32.694350+00:00",
+          "timestamp": "2026-09-30T17:31:55.117005+00:00",
           "temperatureDelta": null,
           "trend": null,
           "windSpike": false,
@@ -3063,7 +3063,7 @@
         "severity": "NORMAL",
         "title": "No Active Government Warning for Kolkata",
         "description": "Official monitoring network (IMD, NDMA, USGS, GDACS) reports normal atmospheric & seismic conditions across West Bengal.",
-        "issuedAt": "2026-09-30T17:29:32.595Z",
+        "issuedAt": "2026-09-30T17:31:55.008Z",
         "bulletinId": null,
         "activeThreat": null
       },
@@ -3092,7 +3092,7 @@
         ],
         "safeAlternatives": "Nearest State Transit Hub",
         "safeAlternativeRecommendation": null,
-        "timestamp": "2026-09-30T17:29:32.833039+00:00"
+        "timestamp": "2026-09-30T17:31:55.260015+00:00"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -3117,7 +3117,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "NH-16 / NH-19 / Kona Expressway",
-        "lastVerifiedAt": "2026-09-30T17:29:32.871Z"
+        "lastVerifiedAt": "2026-09-30T17:31:55.350Z"
       }
     },
     "Puri": {
@@ -3151,7 +3151,7 @@
         "icon": "⛅",
         "category": "cloudy",
         "provider": "Open-Meteo Satellite Radar",
-        "lastUpdatedAt": "2026-09-30T17:29:32.873Z",
+        "lastUpdatedAt": "2026-09-30T17:31:55.368Z",
         "latitude": 19.8135,
         "longitude": 85.8312,
         "destination": "Puri",
@@ -3185,7 +3185,7 @@
             "condition": "Partly Cloudy",
             "icon": "⛅",
             "source": "Open-Meteo Satellite Radar",
-            "timestamp": "2026-09-30T17:24:29.801Z",
+            "timestamp": "2026-09-30T17:26:53.642Z",
             "latitude": 19.8135,
             "longitude": 85.8312,
             "destination": "Puri",
@@ -3206,7 +3206,7 @@
           "changes": {},
           "significant": false,
           "summary": "No atmospheric change recorded.",
-          "timestamp": "2026-09-30T17:29:32.694578+00:00",
+          "timestamp": "2026-09-30T17:31:55.118598+00:00",
           "temperatureDelta": null,
           "trend": null,
           "windSpike": false,
@@ -3223,7 +3223,7 @@
         "severity": "NORMAL",
         "title": "No Active Government Warning for Puri",
         "description": "Official monitoring network (IMD, NDMA, USGS, GDACS) reports normal atmospheric & seismic conditions across Odisha.",
-        "issuedAt": "2026-09-30T17:29:32.595Z",
+        "issuedAt": "2026-09-30T17:31:55.008Z",
         "bulletinId": null,
         "activeThreat": null
       },
@@ -3252,7 +3252,7 @@
         ],
         "safeAlternatives": "Bhubaneswar",
         "safeAlternativeRecommendation": null,
-        "timestamp": "2026-09-30T17:29:32.839762+00:00"
+        "timestamp": "2026-09-30T17:31:55.313541+00:00"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -3277,7 +3277,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "NH-316 (Bhubaneswar-Puri Highway)",
-        "lastVerifiedAt": "2026-09-30T17:29:32.873Z"
+        "lastVerifiedAt": "2026-09-30T17:31:55.368Z"
       }
     },
     "Bhubaneswar": {
@@ -3311,7 +3311,7 @@
         "icon": "⛅",
         "category": "cloudy",
         "provider": "Open-Meteo Satellite Radar",
-        "lastUpdatedAt": "2026-09-30T17:29:32.869Z",
+        "lastUpdatedAt": "2026-09-30T17:31:55.349Z",
         "latitude": 20.2961,
         "longitude": 85.8245,
         "destination": "Bhubaneswar",
@@ -3345,7 +3345,7 @@
             "condition": "Partly Cloudy",
             "icon": "⛅",
             "source": "Open-Meteo Satellite Radar",
-            "timestamp": "2026-09-30T17:24:29.801Z",
+            "timestamp": "2026-09-30T17:26:53.642Z",
             "latitude": 20.2961,
             "longitude": 85.8245,
             "destination": "Bhubaneswar",
@@ -3366,7 +3366,7 @@
           "changes": {},
           "significant": false,
           "summary": "No atmospheric change recorded.",
-          "timestamp": "2026-09-30T17:29:32.694753+00:00",
+          "timestamp": "2026-09-30T17:31:55.116797+00:00",
           "temperatureDelta": null,
           "trend": null,
           "windSpike": false,
@@ -3383,7 +3383,7 @@
         "severity": "NORMAL",
         "title": "No Active Government Warning for Bhubaneswar",
         "description": "Official monitoring network (IMD, NDMA, USGS, GDACS) reports normal atmospheric & seismic conditions across Odisha.",
-        "issuedAt": "2026-09-30T17:29:32.595Z",
+        "issuedAt": "2026-09-30T17:31:55.008Z",
         "bulletinId": null,
         "activeThreat": null
       },
@@ -3412,7 +3412,7 @@
         ],
         "safeAlternatives": "Cuttack / Kolkata",
         "safeAlternativeRecommendation": null,
-        "timestamp": "2026-09-30T17:29:32.833223+00:00"
+        "timestamp": "2026-09-30T17:31:55.259646+00:00"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -3437,7 +3437,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "NH-16 Golden Quadrilateral",
-        "lastVerifiedAt": "2026-09-30T17:29:32.869Z"
+        "lastVerifiedAt": "2026-09-30T17:31:55.349Z"
       }
     },
     "Konark": {
@@ -3471,7 +3471,7 @@
         "icon": "⛅",
         "category": "cloudy",
         "provider": "Open-Meteo Satellite Radar",
-        "lastUpdatedAt": "2026-09-30T17:29:32.872Z",
+        "lastUpdatedAt": "2026-09-30T17:31:55.349Z",
         "latitude": 19.8876,
         "longitude": 86.0945,
         "destination": "Konark",
@@ -3505,7 +3505,7 @@
             "condition": "Partly Cloudy",
             "icon": "⛅",
             "source": "Open-Meteo Satellite Radar",
-            "timestamp": "2026-09-30T17:24:29.801Z",
+            "timestamp": "2026-09-30T17:26:53.643Z",
             "latitude": 19.8876,
             "longitude": 86.0945,
             "destination": "Konark",
@@ -3526,7 +3526,7 @@
           "changes": {},
           "significant": false,
           "summary": "No atmospheric change recorded.",
-          "timestamp": "2026-09-30T17:29:32.694916+00:00",
+          "timestamp": "2026-09-30T17:31:55.116682+00:00",
           "temperatureDelta": null,
           "trend": null,
           "windSpike": false,
@@ -3543,7 +3543,7 @@
         "severity": "NORMAL",
         "title": "No Active Government Warning for Konark",
         "description": "Official monitoring network (IMD, NDMA, USGS, GDACS) reports normal atmospheric & seismic conditions across Odisha.",
-        "issuedAt": "2026-09-30T17:29:32.595Z",
+        "issuedAt": "2026-09-30T17:31:55.008Z",
         "bulletinId": null,
         "activeThreat": null
       },
@@ -3572,7 +3572,7 @@
         ],
         "safeAlternatives": "Bhubaneswar",
         "safeAlternativeRecommendation": null,
-        "timestamp": "2026-09-30T17:29:32.839614+00:00"
+        "timestamp": "2026-09-30T17:31:55.259012+00:00"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -3597,7 +3597,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "Puri-Konark Marine Drive",
-        "lastVerifiedAt": "2026-09-30T17:29:32.872Z"
+        "lastVerifiedAt": "2026-09-30T17:31:55.349Z"
       }
     },
     "Shillong": {
@@ -3631,7 +3631,7 @@
         "icon": "☁️",
         "category": "cloudy",
         "provider": "Open-Meteo Satellite Radar",
-        "lastUpdatedAt": "2026-09-30T17:29:32.869Z",
+        "lastUpdatedAt": "2026-09-30T17:31:55.352Z",
         "latitude": 25.5788,
         "longitude": 91.8933,
         "destination": "Shillong",
@@ -3665,7 +3665,7 @@
             "condition": "Overcast",
             "icon": "☁️",
             "source": "Open-Meteo Satellite Radar",
-            "timestamp": "2026-09-30T17:24:29.801Z",
+            "timestamp": "2026-09-30T17:26:53.643Z",
             "latitude": 25.5788,
             "longitude": 91.8933,
             "destination": "Shillong",
@@ -3694,7 +3694,7 @@
           },
           "significant": false,
           "summary": "Atmospheric parameters steady across monitoring cycles.",
-          "timestamp": "2026-09-30T17:29:32.695078+00:00",
+          "timestamp": "2026-09-30T17:31:55.117334+00:00",
           "temperatureDelta": -0.1,
           "trend": "COOLING",
           "windSpike": false,
@@ -3711,7 +3711,7 @@
         "severity": "NORMAL",
         "title": "No Active Government Warning for Shillong",
         "description": "Official monitoring network (IMD, NDMA, USGS, GDACS) reports normal atmospheric & seismic conditions across Meghalaya.",
-        "issuedAt": "2026-09-30T17:29:32.595Z",
+        "issuedAt": "2026-09-30T17:31:55.008Z",
         "bulletinId": null,
         "activeThreat": null
       },
@@ -3740,7 +3740,7 @@
         ],
         "safeAlternatives": "Guwahati",
         "safeAlternativeRecommendation": null,
-        "timestamp": "2026-09-30T17:29:32.833370+00:00"
+        "timestamp": "2026-09-30T17:31:55.270681+00:00"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -3765,7 +3765,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "NH-6 (Guwahati-Shillong 4-Lane)",
-        "lastVerifiedAt": "2026-09-30T17:29:32.869Z"
+        "lastVerifiedAt": "2026-09-30T17:31:55.352Z"
       }
     },
     "Mawlynnong Village": {
@@ -3799,7 +3799,7 @@
         "icon": "⛈️",
         "category": "storm",
         "provider": "Open-Meteo Satellite Radar",
-        "lastUpdatedAt": "2026-09-30T17:29:32.870Z",
+        "lastUpdatedAt": "2026-09-30T17:31:55.350Z",
         "latitude": 25.2017,
         "longitude": 91.916,
         "destination": "Mawlynnong Village",
@@ -3833,7 +3833,7 @@
             "condition": "Thunderstorm",
             "icon": "⛈️",
             "source": "Open-Meteo Satellite Radar",
-            "timestamp": "2026-09-30T17:24:29.801Z",
+            "timestamp": "2026-09-30T17:26:53.643Z",
             "latitude": 25.2017,
             "longitude": 91.916,
             "destination": "Mawlynnong Village",
@@ -3854,7 +3854,7 @@
           "changes": {},
           "significant": false,
           "summary": "No atmospheric change recorded.",
-          "timestamp": "2026-09-30T17:29:32.695414+00:00",
+          "timestamp": "2026-09-30T17:31:55.116379+00:00",
           "temperatureDelta": null,
           "trend": null,
           "windSpike": false,
@@ -3871,7 +3871,7 @@
         "severity": "NORMAL",
         "title": "No Active Government Warning for Mawlynnong Village",
         "description": "Official monitoring network (IMD, NDMA, USGS, GDACS) reports normal atmospheric & seismic conditions across Meghalaya.",
-        "issuedAt": "2026-09-30T17:29:32.595Z",
+        "issuedAt": "2026-09-30T17:31:55.008Z",
         "bulletinId": null,
         "activeThreat": null
       },
@@ -3900,7 +3900,7 @@
         ],
         "safeAlternatives": "Guwahati",
         "safeAlternativeRecommendation": null,
-        "timestamp": "2026-09-30T17:29:32.837703+00:00"
+        "timestamp": "2026-09-30T17:31:55.259350+00:00"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -3925,7 +3925,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "Shillong-Pynursla-Mawlynnong Road",
-        "lastVerifiedAt": "2026-09-30T17:29:32.870Z"
+        "lastVerifiedAt": "2026-09-30T17:31:55.350Z"
       }
     },
     "Dawki": {
@@ -3959,7 +3959,7 @@
         "icon": "⛈️",
         "category": "storm",
         "provider": "Open-Meteo Satellite Radar",
-        "lastUpdatedAt": "2026-09-30T17:29:32.871Z",
+        "lastUpdatedAt": "2026-09-30T17:31:55.349Z",
         "latitude": 25.1878,
         "longitude": 92.0199,
         "destination": "Dawki",
@@ -3993,7 +3993,7 @@
             "condition": "Thunderstorm",
             "icon": "⛈️",
             "source": "Open-Meteo Satellite Radar",
-            "timestamp": "2026-09-30T17:24:29.801Z",
+            "timestamp": "2026-09-30T17:26:53.644Z",
             "latitude": 25.1878,
             "longitude": 92.0199,
             "destination": "Dawki",
@@ -4014,7 +4014,7 @@
           "changes": {},
           "significant": false,
           "summary": "No atmospheric change recorded.",
-          "timestamp": "2026-09-30T17:29:32.695651+00:00",
+          "timestamp": "2026-09-30T17:31:55.116495+00:00",
           "temperatureDelta": null,
           "trend": null,
           "windSpike": false,
@@ -4031,7 +4031,7 @@
         "severity": "NORMAL",
         "title": "No Active Government Warning for Dawki",
         "description": "Official monitoring network (IMD, NDMA, USGS, GDACS) reports normal atmospheric & seismic conditions across Meghalaya.",
-        "issuedAt": "2026-09-30T17:29:32.595Z",
+        "issuedAt": "2026-09-30T17:31:55.008Z",
         "bulletinId": null,
         "activeThreat": null
       },
@@ -4061,7 +4061,7 @@
         ],
         "safeAlternatives": "Guwahati",
         "safeAlternativeRecommendation": null,
-        "timestamp": "2026-09-30T17:29:32.837970+00:00"
+        "timestamp": "2026-09-30T17:31:55.261883+00:00"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -4086,7 +4086,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "NH-206 Indo-Bangladesh Border Highway",
-        "lastVerifiedAt": "2026-09-30T17:29:32.871Z"
+        "lastVerifiedAt": "2026-09-30T17:31:55.349Z"
       }
     },
     "Jaipur": {
@@ -4120,7 +4120,7 @@
         "icon": "☀️",
         "category": "clear",
         "provider": "Open-Meteo Satellite Radar",
-        "lastUpdatedAt": "2026-09-30T17:29:32.872Z",
+        "lastUpdatedAt": "2026-09-30T17:31:55.342Z",
         "latitude": 26.9124,
         "longitude": 75.7873,
         "destination": "Jaipur",
@@ -4154,7 +4154,7 @@
             "condition": "Clear Sky",
             "icon": "☀️",
             "source": "Open-Meteo Satellite Radar",
-            "timestamp": "2026-09-30T17:24:29.801Z",
+            "timestamp": "2026-09-30T17:26:53.644Z",
             "latitude": 26.9124,
             "longitude": 75.7873,
             "destination": "Jaipur",
@@ -4175,7 +4175,7 @@
           "changes": {},
           "significant": false,
           "summary": "No atmospheric change recorded.",
-          "timestamp": "2026-09-30T17:29:32.695824+00:00",
+          "timestamp": "2026-09-30T17:31:55.116587+00:00",
           "temperatureDelta": null,
           "trend": null,
           "windSpike": false,
@@ -4192,7 +4192,7 @@
         "severity": "NORMAL",
         "title": "No Active Government Warning for Jaipur",
         "description": "Official monitoring network (IMD, NDMA, USGS, GDACS) reports normal atmospheric & seismic conditions across Rajasthan.",
-        "issuedAt": "2026-09-30T17:29:32.595Z",
+        "issuedAt": "2026-09-30T17:31:55.008Z",
         "bulletinId": null,
         "activeThreat": null
       },
@@ -4221,7 +4221,7 @@
         ],
         "safeAlternatives": "Delhi / Agra",
         "safeAlternativeRecommendation": null,
-        "timestamp": "2026-09-30T17:29:32.838176+00:00"
+        "timestamp": "2026-09-30T17:31:55.258748+00:00"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -4246,7 +4246,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "NH-48 (Delhi-Jaipur Expressway)",
-        "lastVerifiedAt": "2026-09-30T17:29:32.872Z"
+        "lastVerifiedAt": "2026-09-30T17:31:55.342Z"
       }
     },
     "Jaisalmer": {
@@ -4280,7 +4280,7 @@
         "icon": "☀️",
         "category": "clear",
         "provider": "Open-Meteo Satellite Radar",
-        "lastUpdatedAt": "2026-09-30T17:29:32.875Z",
+        "lastUpdatedAt": "2026-09-30T17:31:55.350Z",
         "latitude": 26.9157,
         "longitude": 70.9083,
         "destination": "Jaisalmer",
@@ -4314,7 +4314,7 @@
             "condition": "Clear Sky",
             "icon": "☀️",
             "source": "Open-Meteo Satellite Radar",
-            "timestamp": "2026-09-30T17:24:29.801Z",
+            "timestamp": "2026-09-30T17:26:53.644Z",
             "latitude": 26.9157,
             "longitude": 70.9083,
             "destination": "Jaisalmer",
@@ -4335,7 +4335,7 @@
           "changes": {},
           "significant": false,
           "summary": "No atmospheric change recorded.",
-          "timestamp": "2026-09-30T17:29:32.695996+00:00",
+          "timestamp": "2026-09-30T17:31:55.116272+00:00",
           "temperatureDelta": null,
           "trend": null,
           "windSpike": false,
@@ -4352,7 +4352,7 @@
         "severity": "NORMAL",
         "title": "No Active Government Warning for Jaisalmer",
         "description": "Official monitoring network (IMD, NDMA, USGS, GDACS) reports normal atmospheric & seismic conditions across Rajasthan.",
-        "issuedAt": "2026-09-30T17:29:32.595Z",
+        "issuedAt": "2026-09-30T17:31:55.008Z",
         "bulletinId": null,
         "activeThreat": null
       },
@@ -4381,7 +4381,7 @@
         ],
         "safeAlternatives": "Jodhpur",
         "safeAlternativeRecommendation": null,
-        "timestamp": "2026-09-30T17:29:32.839453+00:00"
+        "timestamp": "2026-09-30T17:31:55.261535+00:00"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -4406,7 +4406,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "NH-11 Thar Desert Highway",
-        "lastVerifiedAt": "2026-09-30T17:29:32.875Z"
+        "lastVerifiedAt": "2026-09-30T17:31:55.350Z"
       }
     },
     "Ajmer": {
@@ -4440,7 +4440,7 @@
         "icon": "☀️",
         "category": "clear",
         "provider": "Open-Meteo Satellite Radar",
-        "lastUpdatedAt": "2026-09-30T17:29:32.873Z",
+        "lastUpdatedAt": "2026-09-30T17:31:55.349Z",
         "latitude": 26.4499,
         "longitude": 74.6399,
         "destination": "Ajmer",
@@ -4474,7 +4474,7 @@
             "condition": "Clear Sky",
             "icon": "☀️",
             "source": "Open-Meteo Satellite Radar",
-            "timestamp": "2026-09-30T17:24:29.801Z",
+            "timestamp": "2026-09-30T17:26:53.644Z",
             "latitude": 26.4499,
             "longitude": 74.6399,
             "destination": "Ajmer",
@@ -4495,7 +4495,7 @@
           "changes": {},
           "significant": false,
           "summary": "No atmospheric change recorded.",
-          "timestamp": "2026-09-30T17:29:32.696219+00:00",
+          "timestamp": "2026-09-30T17:31:55.116039+00:00",
           "temperatureDelta": null,
           "trend": null,
           "windSpike": false,
@@ -4512,7 +4512,7 @@
         "severity": "NORMAL",
         "title": "No Active Government Warning for Ajmer",
         "description": "Official monitoring network (IMD, NDMA, USGS, GDACS) reports normal atmospheric & seismic conditions across Rajasthan.",
-        "issuedAt": "2026-09-30T17:29:32.595Z",
+        "issuedAt": "2026-09-30T17:31:55.008Z",
         "bulletinId": null,
         "activeThreat": null
       },
@@ -4541,7 +4541,7 @@
         ],
         "safeAlternatives": "Jaipur",
         "safeAlternativeRecommendation": null,
-        "timestamp": "2026-09-30T17:29:32.839921+00:00"
+        "timestamp": "2026-09-30T17:31:55.261157+00:00"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -4566,7 +4566,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "NH-48 (Jaipur-Ajmer Expressway)",
-        "lastVerifiedAt": "2026-09-30T17:29:32.873Z"
+        "lastVerifiedAt": "2026-09-30T17:31:55.349Z"
       }
     },
     "Udaipur": {
@@ -4600,7 +4600,7 @@
         "icon": "☀️",
         "category": "clear",
         "provider": "Open-Meteo Satellite Radar",
-        "lastUpdatedAt": "2026-09-30T17:29:32.874Z",
+        "lastUpdatedAt": "2026-09-30T17:31:55.342Z",
         "latitude": 24.5854,
         "longitude": 73.7125,
         "destination": "Udaipur",
@@ -4634,7 +4634,7 @@
             "condition": "Clear Sky",
             "icon": "☀️",
             "source": "Open-Meteo Satellite Radar",
-            "timestamp": "2026-09-30T17:24:29.801Z",
+            "timestamp": "2026-09-30T17:26:53.644Z",
             "latitude": 24.5854,
             "longitude": 73.7125,
             "destination": "Udaipur",
@@ -4655,7 +4655,7 @@
           "changes": {},
           "significant": false,
           "summary": "No atmospheric change recorded.",
-          "timestamp": "2026-09-30T17:29:32.696400+00:00",
+          "timestamp": "2026-09-30T17:31:55.115915+00:00",
           "temperatureDelta": null,
           "trend": null,
           "windSpike": false,
@@ -4672,7 +4672,7 @@
         "severity": "NORMAL",
         "title": "No Active Government Warning for Udaipur",
         "description": "Official monitoring network (IMD, NDMA, USGS, GDACS) reports normal atmospheric & seismic conditions across Rajasthan.",
-        "issuedAt": "2026-09-30T17:29:32.595Z",
+        "issuedAt": "2026-09-30T17:31:55.008Z",
         "bulletinId": null,
         "activeThreat": null
       },
@@ -4701,7 +4701,7 @@
         ],
         "safeAlternatives": "Ahmedabad / Jaipur",
         "safeAlternativeRecommendation": null,
-        "timestamp": "2026-09-30T17:29:32.840069+00:00"
+        "timestamp": "2026-09-30T17:31:55.258479+00:00"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -4726,7 +4726,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "NH-48 Golden Quadrilateral & Aravalli Ghats",
-        "lastVerifiedAt": "2026-09-30T17:29:32.874Z"
+        "lastVerifiedAt": "2026-09-30T17:31:55.342Z"
       }
     },
     "Delhi": {
@@ -4760,7 +4760,7 @@
         "icon": "☀️",
         "category": "clear",
         "provider": "Open-Meteo Satellite Radar",
-        "lastUpdatedAt": "2026-09-30T17:29:32.874Z",
+        "lastUpdatedAt": "2026-09-30T17:31:55.350Z",
         "latitude": 28.6139,
         "longitude": 77.209,
         "destination": "Delhi",
@@ -4794,7 +4794,7 @@
             "condition": "Clear Sky",
             "icon": "☀️",
             "source": "Open-Meteo Satellite Radar",
-            "timestamp": "2026-09-30T17:24:29.801Z",
+            "timestamp": "2026-09-30T17:26:53.644Z",
             "latitude": 28.6139,
             "longitude": 77.209,
             "destination": "Delhi",
@@ -4815,7 +4815,7 @@
           "changes": {},
           "significant": false,
           "summary": "No atmospheric change recorded.",
-          "timestamp": "2026-09-30T17:29:32.696585+00:00",
+          "timestamp": "2026-09-30T17:31:55.115693+00:00",
           "temperatureDelta": null,
           "trend": null,
           "windSpike": false,
@@ -4832,7 +4832,7 @@
         "severity": "NORMAL",
         "title": "No Active Government Warning for Delhi",
         "description": "Official monitoring network (IMD, NDMA, USGS, GDACS) reports normal atmospheric & seismic conditions across Delhi NCR.",
-        "issuedAt": "2026-09-30T17:29:32.595Z",
+        "issuedAt": "2026-09-30T17:31:55.008Z",
         "bulletinId": null,
         "activeThreat": null
       },
@@ -4861,7 +4861,7 @@
         ],
         "safeAlternatives": "Nearest State Transit Hub",
         "safeAlternativeRecommendation": null,
-        "timestamp": "2026-09-30T17:29:32.840220+00:00"
+        "timestamp": "2026-09-30T17:31:55.258082+00:00"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -4886,7 +4886,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "Eastern & Western Peripheral Expressways",
-        "lastVerifiedAt": "2026-09-30T17:29:32.874Z"
+        "lastVerifiedAt": "2026-09-30T17:31:55.350Z"
       }
     },
     "Agra": {
@@ -4920,7 +4920,7 @@
         "icon": "☀️",
         "category": "clear",
         "provider": "Open-Meteo Satellite Radar",
-        "lastUpdatedAt": "2026-09-30T17:29:32.875Z",
+        "lastUpdatedAt": "2026-09-30T17:31:55.367Z",
         "latitude": 27.1767,
         "longitude": 78.0081,
         "destination": "Agra",
@@ -4954,7 +4954,7 @@
             "condition": "Clear Sky",
             "icon": "☀️",
             "source": "Open-Meteo Satellite Radar",
-            "timestamp": "2026-09-30T17:24:29.801Z",
+            "timestamp": "2026-09-30T17:26:53.646Z",
             "latitude": 27.1767,
             "longitude": 78.0081,
             "destination": "Agra",
@@ -4975,7 +4975,7 @@
           "changes": {},
           "significant": false,
           "summary": "No atmospheric change recorded.",
-          "timestamp": "2026-09-30T17:29:32.696730+00:00",
+          "timestamp": "2026-09-30T17:31:55.118204+00:00",
           "temperatureDelta": null,
           "trend": null,
           "windSpike": false,
@@ -4992,7 +4992,7 @@
         "severity": "NORMAL",
         "title": "No Active Government Warning for Agra",
         "description": "Official monitoring network (IMD, NDMA, USGS, GDACS) reports normal atmospheric & seismic conditions across Uttar Pradesh.",
-        "issuedAt": "2026-09-30T17:29:32.595Z",
+        "issuedAt": "2026-09-30T17:31:55.008Z",
         "bulletinId": null,
         "activeThreat": null
       },
@@ -5021,7 +5021,7 @@
         ],
         "safeAlternatives": "Nearest State Transit Hub",
         "safeAlternativeRecommendation": null,
-        "timestamp": "2026-09-30T17:29:32.840661+00:00"
+        "timestamp": "2026-09-30T17:31:55.304296+00:00"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -5046,7 +5046,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "Yamuna Expressway / Agra-Lucknow Expressway",
-        "lastVerifiedAt": "2026-09-30T17:29:32.875Z"
+        "lastVerifiedAt": "2026-09-30T17:31:55.367Z"
       }
     },
     "Varanasi": {
@@ -5080,7 +5080,7 @@
         "icon": "☀️",
         "category": "clear",
         "provider": "Open-Meteo Satellite Radar",
-        "lastUpdatedAt": "2026-09-30T17:29:32.890Z",
+        "lastUpdatedAt": "2026-09-30T17:31:55.368Z",
         "latitude": 25.3176,
         "longitude": 82.9739,
         "destination": "Varanasi",
@@ -5114,7 +5114,7 @@
             "condition": "Clear Sky",
             "icon": "☀️",
             "source": "Open-Meteo Satellite Radar",
-            "timestamp": "2026-09-30T17:24:29.802Z",
+            "timestamp": "2026-09-30T17:26:53.646Z",
             "latitude": 25.3176,
             "longitude": 82.9739,
             "destination": "Varanasi",
@@ -5135,7 +5135,7 @@
           "changes": {},
           "significant": false,
           "summary": "No atmospheric change recorded.",
-          "timestamp": "2026-09-30T17:29:32.700820+00:00",
+          "timestamp": "2026-09-30T17:31:55.121544+00:00",
           "temperatureDelta": null,
           "trend": null,
           "windSpike": false,
@@ -5152,7 +5152,7 @@
         "severity": "NORMAL",
         "title": "No Active Government Warning for Varanasi",
         "description": "Official monitoring network (IMD, NDMA, USGS, GDACS) reports normal atmospheric & seismic conditions across Uttar Pradesh.",
-        "issuedAt": "2026-09-30T17:29:32.595Z",
+        "issuedAt": "2026-09-30T17:31:55.008Z",
         "bulletinId": null,
         "activeThreat": null
       },
@@ -5181,7 +5181,7 @@
         ],
         "safeAlternatives": "Nearest State Transit Hub",
         "safeAlternativeRecommendation": null,
-        "timestamp": "2026-09-30T17:29:32.882418+00:00"
+        "timestamp": "2026-09-30T17:31:55.313861+00:00"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -5206,7 +5206,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "NH-19 / Grand Trunk Road",
-        "lastVerifiedAt": "2026-09-30T17:29:32.891Z"
+        "lastVerifiedAt": "2026-09-30T17:31:55.368Z"
       }
     },
     "Lucknow": {
@@ -5240,7 +5240,7 @@
         "icon": "☀️",
         "category": "clear",
         "provider": "Open-Meteo Satellite Radar",
-        "lastUpdatedAt": "2026-09-30T17:29:32.875Z",
+        "lastUpdatedAt": "2026-09-30T17:31:55.367Z",
         "latitude": 26.8467,
         "longitude": 80.9462,
         "destination": "Lucknow",
@@ -5274,7 +5274,7 @@
             "condition": "Clear Sky",
             "icon": "☀️",
             "source": "Open-Meteo Satellite Radar",
-            "timestamp": "2026-09-30T17:24:29.802Z",
+            "timestamp": "2026-09-30T17:26:53.646Z",
             "latitude": 26.8467,
             "longitude": 80.9462,
             "destination": "Lucknow",
@@ -5295,7 +5295,7 @@
           "changes": {},
           "significant": false,
           "summary": "No atmospheric change recorded.",
-          "timestamp": "2026-09-30T17:29:32.701110+00:00",
+          "timestamp": "2026-09-30T17:31:55.125504+00:00",
           "temperatureDelta": null,
           "trend": null,
           "windSpike": false,
@@ -5312,7 +5312,7 @@
         "severity": "NORMAL",
         "title": "No Active Government Warning for Lucknow",
         "description": "Official monitoring network (IMD, NDMA, USGS, GDACS) reports normal atmospheric & seismic conditions across Uttar Pradesh.",
-        "issuedAt": "2026-09-30T17:29:32.595Z",
+        "issuedAt": "2026-09-30T17:31:55.008Z",
         "bulletinId": null,
         "activeThreat": null
       },
@@ -5341,7 +5341,7 @@
         ],
         "safeAlternatives": "Nearest State Transit Hub",
         "safeAlternativeRecommendation": null,
-        "timestamp": "2026-09-30T17:29:32.841425+00:00"
+        "timestamp": "2026-09-30T17:31:55.301743+00:00"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -5366,7 +5366,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "Purvanchal & Agra-Lucknow Expressways",
-        "lastVerifiedAt": "2026-09-30T17:29:32.875Z"
+        "lastVerifiedAt": "2026-09-30T17:31:55.367Z"
       }
     },
     "Goa": {
@@ -5400,7 +5400,7 @@
         "icon": "☀️",
         "category": "clear",
         "provider": "Open-Meteo Satellite Radar",
-        "lastUpdatedAt": "2026-09-30T17:29:32.875Z",
+        "lastUpdatedAt": "2026-09-30T17:31:55.366Z",
         "latitude": 15.2993,
         "longitude": 74.124,
         "destination": "Goa",
@@ -5434,7 +5434,7 @@
             "condition": "Clear Sky",
             "icon": "☀️",
             "source": "Open-Meteo Satellite Radar",
-            "timestamp": "2026-09-30T17:24:29.802Z",
+            "timestamp": "2026-09-30T17:26:53.646Z",
             "latitude": 15.2993,
             "longitude": 74.124,
             "destination": "Goa",
@@ -5455,7 +5455,7 @@
           "changes": {},
           "significant": false,
           "summary": "No atmospheric change recorded.",
-          "timestamp": "2026-09-30T17:29:32.701308+00:00",
+          "timestamp": "2026-09-30T17:31:55.125419+00:00",
           "temperatureDelta": null,
           "trend": null,
           "windSpike": false,
@@ -5472,7 +5472,7 @@
         "severity": "NORMAL",
         "title": "No Active Government Warning for Goa",
         "description": "Official monitoring network (IMD, NDMA, USGS, GDACS) reports normal atmospheric & seismic conditions across Goa.",
-        "issuedAt": "2026-09-30T17:29:32.595Z",
+        "issuedAt": "2026-09-30T17:31:55.008Z",
         "bulletinId": null,
         "activeThreat": null
       },
@@ -5501,7 +5501,7 @@
         ],
         "safeAlternatives": "Belagavi / Mumbai",
         "safeAlternativeRecommendation": null,
-        "timestamp": "2026-09-30T17:29:32.840860+00:00"
+        "timestamp": "2026-09-30T17:31:55.301505+00:00"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -5526,7 +5526,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "NH-66 Coastal Link (Mumbai-Goa-Kochi)",
-        "lastVerifiedAt": "2026-09-30T17:29:32.875Z"
+        "lastVerifiedAt": "2026-09-30T17:31:55.366Z"
       }
     },
     "Mumbai": {
@@ -5560,7 +5560,7 @@
         "icon": "☀️",
         "category": "clear",
         "provider": "Open-Meteo Satellite Radar",
-        "lastUpdatedAt": "2026-09-30T17:29:32.875Z",
+        "lastUpdatedAt": "2026-09-30T17:31:55.375Z",
         "latitude": 19.076,
         "longitude": 72.8777,
         "destination": "Mumbai",
@@ -5594,7 +5594,7 @@
             "condition": "Clear Sky",
             "icon": "☀️",
             "source": "Open-Meteo Satellite Radar",
-            "timestamp": "2026-09-30T17:24:29.802Z",
+            "timestamp": "2026-09-30T17:26:53.646Z",
             "latitude": 19.076,
             "longitude": 72.8777,
             "destination": "Mumbai",
@@ -5615,7 +5615,7 @@
           "changes": {},
           "significant": false,
           "summary": "No atmospheric change recorded.",
-          "timestamp": "2026-09-30T17:29:32.701471+00:00",
+          "timestamp": "2026-09-30T17:31:55.132829+00:00",
           "temperatureDelta": null,
           "trend": null,
           "windSpike": false,
@@ -5632,7 +5632,7 @@
         "severity": "NORMAL",
         "title": "No Active Government Warning for Mumbai",
         "description": "Official monitoring network (IMD, NDMA, USGS, GDACS) reports normal atmospheric & seismic conditions across Maharashtra.",
-        "issuedAt": "2026-09-30T17:29:32.595Z",
+        "issuedAt": "2026-09-30T17:31:55.008Z",
         "bulletinId": null,
         "activeThreat": null
       },
@@ -5661,7 +5661,7 @@
         ],
         "safeAlternatives": "Pune",
         "safeAlternativeRecommendation": null,
-        "timestamp": "2026-09-30T17:29:32.840998+00:00"
+        "timestamp": "2026-09-30T17:31:55.341070+00:00"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -5686,7 +5686,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "Western Express Highway & Coastal Road",
-        "lastVerifiedAt": "2026-09-30T17:29:32.875Z"
+        "lastVerifiedAt": "2026-09-30T17:31:55.375Z"
       }
     },
     "Pune": {
@@ -5720,7 +5720,7 @@
         "icon": "☀️",
         "category": "clear",
         "provider": "Open-Meteo Satellite Radar",
-        "lastUpdatedAt": "2026-09-30T17:29:32.887Z",
+        "lastUpdatedAt": "2026-09-30T17:31:55.368Z",
         "latitude": 18.5204,
         "longitude": 73.8567,
         "destination": "Pune",
@@ -5754,7 +5754,7 @@
             "condition": "Clear Sky",
             "icon": "☀️",
             "source": "Open-Meteo Satellite Radar",
-            "timestamp": "2026-09-30T17:24:29.802Z",
+            "timestamp": "2026-09-30T17:26:53.646Z",
             "latitude": 18.5204,
             "longitude": 73.8567,
             "destination": "Pune",
@@ -5775,7 +5775,7 @@
           "changes": {},
           "significant": false,
           "summary": "No atmospheric change recorded.",
-          "timestamp": "2026-09-30T17:29:32.701626+00:00",
+          "timestamp": "2026-09-30T17:31:55.124489+00:00",
           "temperatureDelta": null,
           "trend": null,
           "windSpike": false,
@@ -5792,7 +5792,7 @@
         "severity": "WARNING",
         "title": "Green flood alert in India, Nepal (Pune Sector)",
         "description": "On 24/09/2026, a flood started in India, Nepal, lasting until 26/09/2026 (last update). The flood caused 1 deaths and 1223 displaced .",
-        "issuedAt": "2026-09-30T17:29:32.595Z",
+        "issuedAt": "2026-09-30T17:31:55.009Z",
         "bulletinId": "GDACS-FL-1957-7642",
         "activeThreat": "Flash Flood & River Inundation"
       },
@@ -5822,7 +5822,7 @@
         ],
         "safeAlternatives": "Nearest State Transit Hub",
         "safeAlternativeRecommendation": null,
-        "timestamp": "2026-09-30T17:29:32.868441+00:00"
+        "timestamp": "2026-09-30T17:31:55.318056+00:00"
       },
       "disaster": {
         "alertTier": "YELLOW",
@@ -5847,7 +5847,7 @@
         "source": "GDACS (United Nations & European Commission)",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "Mumbai-Pune Expressway / NH-48",
-        "lastVerifiedAt": "2026-09-30T17:29:32.887Z"
+        "lastVerifiedAt": "2026-09-30T17:31:55.368Z"
       }
     },
     "Ahmedabad": {
@@ -5881,7 +5881,7 @@
         "icon": "☀️",
         "category": "clear",
         "provider": "Open-Meteo Satellite Radar",
-        "lastUpdatedAt": "2026-09-30T17:29:32.888Z",
+        "lastUpdatedAt": "2026-09-30T17:31:55.374Z",
         "latitude": 23.0225,
         "longitude": 72.5714,
         "destination": "Ahmedabad",
@@ -5915,7 +5915,7 @@
             "condition": "Clear Sky",
             "icon": "☀️",
             "source": "Open-Meteo Satellite Radar",
-            "timestamp": "2026-09-30T17:24:29.802Z",
+            "timestamp": "2026-09-30T17:26:53.646Z",
             "latitude": 23.0225,
             "longitude": 72.5714,
             "destination": "Ahmedabad",
@@ -5936,7 +5936,7 @@
           "changes": {},
           "significant": false,
           "summary": "No atmospheric change recorded.",
-          "timestamp": "2026-09-30T17:29:32.701758+00:00",
+          "timestamp": "2026-09-30T17:31:55.124657+00:00",
           "temperatureDelta": null,
           "trend": null,
           "windSpike": false,
@@ -5953,7 +5953,7 @@
         "severity": "NORMAL",
         "title": "No Active Government Warning for Ahmedabad",
         "description": "Official monitoring network (IMD, NDMA, USGS, GDACS) reports normal atmospheric & seismic conditions across Gujarat.",
-        "issuedAt": "2026-09-30T17:29:32.595Z",
+        "issuedAt": "2026-09-30T17:31:55.009Z",
         "bulletinId": null,
         "activeThreat": null
       },
@@ -5982,7 +5982,7 @@
         ],
         "safeAlternatives": "Nearest State Transit Hub",
         "safeAlternativeRecommendation": null,
-        "timestamp": "2026-09-30T17:29:32.870869+00:00"
+        "timestamp": "2026-09-30T17:31:55.339047+00:00"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -6007,7 +6007,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "NE-1 (Ahmedabad-Vadodara Expressway)",
-        "lastVerifiedAt": "2026-09-30T17:29:32.888Z"
+        "lastVerifiedAt": "2026-09-30T17:31:55.374Z"
       }
     },
     "Gujarat": {
@@ -6041,7 +6041,7 @@
         "icon": "☀️",
         "category": "clear",
         "provider": "Open-Meteo Satellite Radar",
-        "lastUpdatedAt": "2026-09-30T17:29:32.887Z",
+        "lastUpdatedAt": "2026-09-30T17:31:55.365Z",
         "latitude": 23.0225,
         "longitude": 72.5714,
         "destination": "Gujarat",
@@ -6075,7 +6075,7 @@
             "condition": "Clear Sky",
             "icon": "☀️",
             "source": "Open-Meteo Satellite Radar",
-            "timestamp": "2026-09-30T17:24:29.802Z",
+            "timestamp": "2026-09-30T17:26:53.646Z",
             "latitude": 23.0225,
             "longitude": 72.5714,
             "destination": "Gujarat",
@@ -6096,7 +6096,7 @@
           "changes": {},
           "significant": false,
           "summary": "No atmospheric change recorded.",
-          "timestamp": "2026-09-30T17:29:32.701869+00:00",
+          "timestamp": "2026-09-30T17:31:55.124803+00:00",
           "temperatureDelta": null,
           "trend": null,
           "windSpike": false,
@@ -6113,7 +6113,7 @@
         "severity": "NORMAL",
         "title": "No Active Government Warning for Gujarat",
         "description": "Official monitoring network (IMD, NDMA, USGS, GDACS) reports normal atmospheric & seismic conditions across Gujarat.",
-        "issuedAt": "2026-09-30T17:29:32.595Z",
+        "issuedAt": "2026-09-30T17:31:55.009Z",
         "bulletinId": null,
         "activeThreat": null
       },
@@ -6142,7 +6142,7 @@
         ],
         "safeAlternatives": "Nearest State Transit Hub",
         "safeAlternativeRecommendation": null,
-        "timestamp": "2026-09-30T17:29:32.870677+00:00"
+        "timestamp": "2026-09-30T17:31:55.294846+00:00"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -6167,7 +6167,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "NE-1 & Rann of Kutch Coastal Highway",
-        "lastVerifiedAt": "2026-09-30T17:29:32.888Z"
+        "lastVerifiedAt": "2026-09-30T17:31:55.365Z"
       }
     },
     "Kalka": {
@@ -6201,7 +6201,7 @@
         "icon": "☀️",
         "category": "clear",
         "provider": "Open-Meteo Satellite Radar",
-        "lastUpdatedAt": "2026-09-30T17:29:32.892Z",
+        "lastUpdatedAt": "2026-09-30T17:31:55.367Z",
         "latitude": 30.8354,
         "longitude": 76.9348,
         "destination": "Kalka",
@@ -6235,7 +6235,7 @@
             "condition": "Clear Sky",
             "icon": "☀️",
             "source": "Open-Meteo Satellite Radar",
-            "timestamp": "2026-09-30T17:24:29.802Z",
+            "timestamp": "2026-09-30T17:26:53.646Z",
             "latitude": 30.8354,
             "longitude": 76.9348,
             "destination": "Kalka",
@@ -6256,7 +6256,7 @@
           "changes": {},
           "significant": false,
           "summary": "No atmospheric change recorded.",
-          "timestamp": "2026-09-30T17:29:32.701977+00:00",
+          "timestamp": "2026-09-30T17:31:55.124921+00:00",
           "temperatureDelta": null,
           "trend": null,
           "windSpike": false,
@@ -6273,7 +6273,7 @@
         "severity": "NORMAL",
         "title": "No Active Government Warning for Kalka",
         "description": "Official monitoring network (IMD, NDMA, USGS, GDACS) reports normal atmospheric & seismic conditions across Haryana.",
-        "issuedAt": "2026-09-30T17:29:32.595Z",
+        "issuedAt": "2026-09-30T17:31:55.009Z",
         "bulletinId": null,
         "activeThreat": null
       },
@@ -6302,7 +6302,7 @@
         ],
         "safeAlternatives": "Chandigarh",
         "safeAlternativeRecommendation": null,
-        "timestamp": "2026-09-30T17:29:32.882647+00:00"
+        "timestamp": "2026-09-30T17:31:55.302163+00:00"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -6327,7 +6327,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "NH-5 Himalayan Gateway (Kalka-Shimla Toy Train)",
-        "lastVerifiedAt": "2026-09-30T17:29:32.892Z"
+        "lastVerifiedAt": "2026-09-30T17:31:55.367Z"
       }
     },
     "Chandigarh": {
@@ -6361,7 +6361,7 @@
         "icon": "☀️",
         "category": "clear",
         "provider": "Open-Meteo Satellite Radar",
-        "lastUpdatedAt": "2026-09-30T17:29:32.908Z",
+        "lastUpdatedAt": "2026-09-30T17:31:55.365Z",
         "latitude": 30.7333,
         "longitude": 76.7794,
         "destination": "Chandigarh",
@@ -6395,7 +6395,7 @@
             "condition": "Clear Sky",
             "icon": "☀️",
             "source": "Open-Meteo Satellite Radar",
-            "timestamp": "2026-09-30T17:24:29.802Z",
+            "timestamp": "2026-09-30T17:26:53.646Z",
             "latitude": 30.7333,
             "longitude": 76.7794,
             "destination": "Chandigarh",
@@ -6416,7 +6416,7 @@
           "changes": {},
           "significant": false,
           "summary": "No atmospheric change recorded.",
-          "timestamp": "2026-09-30T17:29:32.705064+00:00",
+          "timestamp": "2026-09-30T17:31:55.125079+00:00",
           "temperatureDelta": null,
           "trend": null,
           "windSpike": false,
@@ -6433,7 +6433,7 @@
         "severity": "NORMAL",
         "title": "No Active Government Warning for Chandigarh",
         "description": "Official monitoring network (IMD, NDMA, USGS, GDACS) reports normal atmospheric & seismic conditions across Chandigarh.",
-        "issuedAt": "2026-09-30T17:29:32.595Z",
+        "issuedAt": "2026-09-30T17:31:55.009Z",
         "bulletinId": null,
         "activeThreat": null
       },
@@ -6462,7 +6462,7 @@
         ],
         "safeAlternatives": "Nearest State Transit Hub",
         "safeAlternativeRecommendation": null,
-        "timestamp": "2026-09-30T17:29:32.887173+00:00"
+        "timestamp": "2026-09-30T17:31:55.296686+00:00"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -6487,7 +6487,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "NH-152D & NH-44 Express Corridor",
-        "lastVerifiedAt": "2026-09-30T17:29:32.908Z"
+        "lastVerifiedAt": "2026-09-30T17:31:55.365Z"
       }
     },
     "Amritsar": {
@@ -6521,7 +6521,7 @@
         "icon": "☀️",
         "category": "clear",
         "provider": "Open-Meteo Satellite Radar",
-        "lastUpdatedAt": "2026-09-30T17:29:32.886Z",
+        "lastUpdatedAt": "2026-09-30T17:31:55.366Z",
         "latitude": 31.634,
         "longitude": 74.8723,
         "destination": "Amritsar",
@@ -6555,7 +6555,7 @@
             "condition": "Clear Sky",
             "icon": "☀️",
             "source": "Open-Meteo Satellite Radar",
-            "timestamp": "2026-09-30T17:24:29.802Z",
+            "timestamp": "2026-09-30T17:26:53.646Z",
             "latitude": 31.634,
             "longitude": 74.8723,
             "destination": "Amritsar",
@@ -6576,7 +6576,7 @@
           "changes": {},
           "significant": false,
           "summary": "No atmospheric change recorded.",
-          "timestamp": "2026-09-30T17:29:32.702104+00:00",
+          "timestamp": "2026-09-30T17:31:55.125208+00:00",
           "temperatureDelta": null,
           "trend": null,
           "windSpike": false,
@@ -6593,7 +6593,7 @@
         "severity": "NORMAL",
         "title": "No Active Government Warning for Amritsar",
         "description": "Official monitoring network (IMD, NDMA, USGS, GDACS) reports normal atmospheric & seismic conditions across Punjab.",
-        "issuedAt": "2026-09-30T17:29:32.595Z",
+        "issuedAt": "2026-09-30T17:31:55.009Z",
         "bulletinId": null,
         "activeThreat": null
       },
@@ -6622,7 +6622,7 @@
         ],
         "safeAlternatives": "Nearest State Transit Hub",
         "safeAlternativeRecommendation": null,
-        "timestamp": "2026-09-30T17:29:32.884659+00:00"
+        "timestamp": "2026-09-30T17:31:55.301107+00:00"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -6647,7 +6647,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "NH-3 (Amritsar-Jalandhar-Delhi)",
-        "lastVerifiedAt": "2026-09-30T17:29:32.886Z"
+        "lastVerifiedAt": "2026-09-30T17:31:55.366Z"
       }
     },
     "Punjab": {
@@ -6681,7 +6681,7 @@
         "icon": "☀️",
         "category": "clear",
         "provider": "Open-Meteo Satellite Radar",
-        "lastUpdatedAt": "2026-09-30T17:29:32.885Z",
+        "lastUpdatedAt": "2026-09-30T17:31:55.367Z",
         "latitude": 31.634,
         "longitude": 74.8723,
         "destination": "Punjab",
@@ -6715,7 +6715,7 @@
             "condition": "Clear Sky",
             "icon": "☀️",
             "source": "Open-Meteo Satellite Radar",
-            "timestamp": "2026-09-30T17:24:29.802Z",
+            "timestamp": "2026-09-30T17:26:53.646Z",
             "latitude": 31.634,
             "longitude": 74.8723,
             "destination": "Punjab",
@@ -6736,7 +6736,7 @@
           "changes": {},
           "significant": false,
           "summary": "No atmospheric change recorded.",
-          "timestamp": "2026-09-30T17:29:32.702240+00:00",
+          "timestamp": "2026-09-30T17:31:55.125299+00:00",
           "temperatureDelta": null,
           "trend": null,
           "windSpike": false,
@@ -6753,7 +6753,7 @@
         "severity": "NORMAL",
         "title": "No Active Government Warning for Punjab",
         "description": "Official monitoring network (IMD, NDMA, USGS, GDACS) reports normal atmospheric & seismic conditions across Punjab.",
-        "issuedAt": "2026-09-30T17:29:32.595Z",
+        "issuedAt": "2026-09-30T17:31:55.009Z",
         "bulletinId": null,
         "activeThreat": null
       },
@@ -6782,7 +6782,7 @@
         ],
         "safeAlternatives": "Nearest State Transit Hub",
         "safeAlternativeRecommendation": null,
-        "timestamp": "2026-09-30T17:29:32.884489+00:00"
+        "timestamp": "2026-09-30T17:31:55.302373+00:00"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -6807,7 +6807,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "NH-3 (Amritsar-Jalandhar-Delhi Expressway)",
-        "lastVerifiedAt": "2026-09-30T17:29:32.885Z"
+        "lastVerifiedAt": "2026-09-30T17:31:55.367Z"
       }
     },
     "Leh Ladakh": {
@@ -6841,7 +6841,7 @@
         "icon": "☀️",
         "category": "clear",
         "provider": "Open-Meteo Satellite Radar",
-        "lastUpdatedAt": "2026-09-30T17:29:32.909Z",
+        "lastUpdatedAt": "2026-09-30T17:31:55.367Z",
         "latitude": 34.1526,
         "longitude": 77.5771,
         "destination": "Leh Ladakh",
@@ -6875,7 +6875,7 @@
             "condition": "Clear Sky",
             "icon": "☀️",
             "source": "Open-Meteo Satellite Radar",
-            "timestamp": "2026-09-30T17:24:29.802Z",
+            "timestamp": "2026-09-30T17:26:53.646Z",
             "latitude": 34.1526,
             "longitude": 77.5771,
             "destination": "Leh Ladakh",
@@ -6904,7 +6904,7 @@
           },
           "significant": false,
           "summary": "Atmospheric parameters steady across monitoring cycles.",
-          "timestamp": "2026-09-30T17:29:32.705722+00:00",
+          "timestamp": "2026-09-30T17:31:55.125633+00:00",
           "temperatureDelta": -0.7,
           "trend": "COOLING",
           "windSpike": false,
@@ -6921,7 +6921,7 @@
         "severity": "WARNING",
         "title": "M 4.5 - 72 km E of Thang, India",
         "description": "Live seismic tremor recorded by USGS sensors. Epicenter: 72 km E of Thang, India. Magnitude: M 4.5, Depth: 10 km. Located ~77 km from Leh Ladakh (Ladakh).",
-        "issuedAt": "2026-09-30T17:29:32.595Z",
+        "issuedAt": "2026-09-30T17:31:55.009Z",
         "bulletinId": "USGS-us6000txk0",
         "activeThreat": "Earthquake / Seismic Tremor"
       },
@@ -6953,7 +6953,7 @@
         ],
         "safeAlternatives": "Srinagar / Manali",
         "safeAlternativeRecommendation": null,
-        "timestamp": "2026-09-30T17:29:32.887991+00:00"
+        "timestamp": "2026-09-30T17:31:55.303097+00:00"
       },
       "disaster": {
         "alertTier": "YELLOW",
@@ -6978,7 +6978,7 @@
         "source": "USGS Live Indian Subcontinent Seismic Network",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "Leh-Manali Highway & Zoji La Route (17,582 ft Khardung La)",
-        "lastVerifiedAt": "2026-09-30T17:29:32.909Z"
+        "lastVerifiedAt": "2026-09-30T17:31:55.367Z"
       }
     },
     "Leh": {
@@ -7012,7 +7012,7 @@
         "icon": "☀️",
         "category": "clear",
         "provider": "Open-Meteo Satellite Radar",
-        "lastUpdatedAt": "2026-09-30T17:29:32.903Z",
+        "lastUpdatedAt": "2026-09-30T17:31:55.367Z",
         "latitude": 34.1526,
         "longitude": 77.5771,
         "destination": "Leh",
@@ -7046,7 +7046,7 @@
             "condition": "Clear Sky",
             "icon": "☀️",
             "source": "Open-Meteo Satellite Radar",
-            "timestamp": "2026-09-30T17:24:29.802Z",
+            "timestamp": "2026-09-30T17:26:53.646Z",
             "latitude": 34.1526,
             "longitude": 77.5771,
             "destination": "Leh",
@@ -7075,7 +7075,7 @@
           },
           "significant": false,
           "summary": "Atmospheric parameters steady across monitoring cycles.",
-          "timestamp": "2026-09-30T17:29:32.706016+00:00",
+          "timestamp": "2026-09-30T17:31:55.125757+00:00",
           "temperatureDelta": -0.7,
           "trend": "COOLING",
           "windSpike": false,
@@ -7092,7 +7092,7 @@
         "severity": "NORMAL",
         "title": "No Active Government Warning for Leh",
         "description": "Official monitoring network (IMD, NDMA, USGS, GDACS) reports normal atmospheric & seismic conditions across Ladakh.",
-        "issuedAt": "2026-09-30T17:29:32.595Z",
+        "issuedAt": "2026-09-30T17:31:55.010Z",
         "bulletinId": null,
         "activeThreat": null
       },
@@ -7121,7 +7121,7 @@
         ],
         "safeAlternatives": "Srinagar / Manali",
         "safeAlternativeRecommendation": null,
-        "timestamp": "2026-09-30T17:29:32.887432+00:00"
+        "timestamp": "2026-09-30T17:31:55.303541+00:00"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -7146,7 +7146,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "Leh-Manali Highway & Khardung La Pass",
-        "lastVerifiedAt": "2026-09-30T17:29:32.903Z"
+        "lastVerifiedAt": "2026-09-30T17:31:55.367Z"
       }
     },
     "Bengaluru": {
@@ -7180,7 +7180,7 @@
         "icon": "🌦️",
         "category": "rain",
         "provider": "Open-Meteo Satellite Radar",
-        "lastUpdatedAt": "2026-09-30T17:29:32.908Z",
+        "lastUpdatedAt": "2026-09-30T17:31:55.367Z",
         "latitude": 12.9716,
         "longitude": 77.5946,
         "destination": "Bengaluru",
@@ -7214,7 +7214,7 @@
             "condition": "Light Drizzle",
             "icon": "🌦️",
             "source": "Open-Meteo Satellite Radar",
-            "timestamp": "2026-09-30T17:24:29.802Z",
+            "timestamp": "2026-09-30T17:26:53.646Z",
             "latitude": 12.9716,
             "longitude": 77.5946,
             "destination": "Bengaluru",
@@ -7235,7 +7235,7 @@
           "changes": {},
           "significant": false,
           "summary": "No atmospheric change recorded.",
-          "timestamp": "2026-09-30T17:29:32.706392+00:00",
+          "timestamp": "2026-09-30T17:31:55.127111+00:00",
           "temperatureDelta": null,
           "trend": null,
           "windSpike": false,
@@ -7252,7 +7252,7 @@
         "severity": "WARNING",
         "title": "Drought is on going in Southern India (Bengaluru Sector)",
         "description": "The  Drought notification level is Green.",
-        "issuedAt": "2026-09-30T17:29:32.595Z",
+        "issuedAt": "2026-09-30T17:31:55.010Z",
         "bulletinId": "GDACS-DR-1431-7818",
         "activeThreat": "Drought Warning"
       },
@@ -7282,7 +7282,7 @@
         ],
         "safeAlternatives": "Nearest State Transit Hub",
         "safeAlternativeRecommendation": null,
-        "timestamp": "2026-09-30T17:29:32.888142+00:00"
+        "timestamp": "2026-09-30T17:31:55.303915+00:00"
       },
       "disaster": {
         "alertTier": "YELLOW",
@@ -7307,7 +7307,7 @@
         "source": "GDACS (United Nations & European Commission)",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "NH-44 & NH-75 Arterials",
-        "lastVerifiedAt": "2026-09-30T17:29:32.908Z"
+        "lastVerifiedAt": "2026-09-30T17:31:55.367Z"
       }
     },
     "Chennai": {
@@ -7341,7 +7341,7 @@
         "icon": "🌤️",
         "category": "clear",
         "provider": "Open-Meteo Satellite Radar",
-        "lastUpdatedAt": "2026-09-30T17:29:32.906Z",
+        "lastUpdatedAt": "2026-09-30T17:31:55.376Z",
         "latitude": 13.0827,
         "longitude": 80.2707,
         "destination": "Chennai",
@@ -7375,7 +7375,7 @@
             "condition": "Mainly Clear",
             "icon": "🌤️",
             "source": "Open-Meteo Satellite Radar",
-            "timestamp": "2026-09-30T17:24:29.802Z",
+            "timestamp": "2026-09-30T17:26:53.646Z",
             "latitude": 13.0827,
             "longitude": 80.2707,
             "destination": "Chennai",
@@ -7396,7 +7396,7 @@
           "changes": {},
           "significant": false,
           "summary": "No atmospheric change recorded.",
-          "timestamp": "2026-09-30T17:29:32.706597+00:00",
+          "timestamp": "2026-09-30T17:31:55.133386+00:00",
           "temperatureDelta": null,
           "trend": null,
           "windSpike": false,
@@ -7413,7 +7413,7 @@
         "severity": "NORMAL",
         "title": "No Active Government Warning for Chennai",
         "description": "Official monitoring network (IMD, NDMA, USGS, GDACS) reports normal atmospheric & seismic conditions across Tamil Nadu.",
-        "issuedAt": "2026-09-30T17:29:32.595Z",
+        "issuedAt": "2026-09-30T17:31:55.010Z",
         "bulletinId": null,
         "activeThreat": null
       },
@@ -7442,7 +7442,7 @@
         ],
         "safeAlternatives": "Nearest State Transit Hub",
         "safeAlternativeRecommendation": null,
-        "timestamp": "2026-09-30T17:29:32.885806+00:00"
+        "timestamp": "2026-09-30T17:31:55.341708+00:00"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -7467,7 +7467,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "East Coast Road (ECR) / NH-48",
-        "lastVerifiedAt": "2026-09-30T17:29:32.906Z"
+        "lastVerifiedAt": "2026-09-30T17:31:55.376Z"
       }
     },
     "Hyderabad": {
@@ -7501,7 +7501,7 @@
         "icon": "☀️",
         "category": "clear",
         "provider": "Open-Meteo Satellite Radar",
-        "lastUpdatedAt": "2026-09-30T17:29:32.906Z",
+        "lastUpdatedAt": "2026-09-30T17:31:55.375Z",
         "latitude": 17.385,
         "longitude": 78.4867,
         "destination": "Hyderabad",
@@ -7535,7 +7535,7 @@
             "condition": "Clear Sky",
             "icon": "☀️",
             "source": "Open-Meteo Satellite Radar",
-            "timestamp": "2026-09-30T17:24:29.802Z",
+            "timestamp": "2026-09-30T17:26:53.646Z",
             "latitude": 17.385,
             "longitude": 78.4867,
             "destination": "Hyderabad",
@@ -7556,7 +7556,7 @@
           "changes": {},
           "significant": false,
           "summary": "No atmospheric change recorded.",
-          "timestamp": "2026-09-30T17:29:32.706821+00:00",
+          "timestamp": "2026-09-30T17:31:55.133234+00:00",
           "temperatureDelta": null,
           "trend": null,
           "windSpike": false,
@@ -7573,7 +7573,7 @@
         "severity": "NORMAL",
         "title": "No Active Government Warning for Hyderabad",
         "description": "Official monitoring network (IMD, NDMA, USGS, GDACS) reports normal atmospheric & seismic conditions across Telangana.",
-        "issuedAt": "2026-09-30T17:29:32.595Z",
+        "issuedAt": "2026-09-30T17:31:55.010Z",
         "bulletinId": null,
         "activeThreat": null
       },
@@ -7602,7 +7602,7 @@
         ],
         "safeAlternatives": "Nearest State Transit Hub",
         "safeAlternativeRecommendation": null,
-        "timestamp": "2026-09-30T17:29:32.885963+00:00"
+        "timestamp": "2026-09-30T17:31:55.340638+00:00"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -7627,7 +7627,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "Nehru Outer Ring Road / NH-44",
-        "lastVerifiedAt": "2026-09-30T17:29:32.906Z"
+        "lastVerifiedAt": "2026-09-30T17:31:55.375Z"
       }
     },
     "Kochi": {
@@ -7661,7 +7661,7 @@
         "icon": "🌤️",
         "category": "clear",
         "provider": "Open-Meteo Satellite Radar",
-        "lastUpdatedAt": "2026-09-30T17:29:32.904Z",
+        "lastUpdatedAt": "2026-09-30T17:31:55.376Z",
         "latitude": 9.9312,
         "longitude": 76.2673,
         "destination": "Kochi",
@@ -7695,7 +7695,7 @@
             "condition": "Mainly Clear",
             "icon": "🌤️",
             "source": "Open-Meteo Satellite Radar",
-            "timestamp": "2026-09-30T17:24:29.802Z",
+            "timestamp": "2026-09-30T17:26:53.647Z",
             "latitude": 9.9312,
             "longitude": 76.2673,
             "destination": "Kochi",
@@ -7716,7 +7716,7 @@
           "changes": {},
           "significant": false,
           "summary": "No atmospheric change recorded.",
-          "timestamp": "2026-09-30T17:29:32.707002+00:00",
+          "timestamp": "2026-09-30T17:31:55.134589+00:00",
           "temperatureDelta": null,
           "trend": null,
           "windSpike": false,
@@ -7733,7 +7733,7 @@
         "severity": "NORMAL",
         "title": "No Active Government Warning for Kochi",
         "description": "Official monitoring network (IMD, NDMA, USGS, GDACS) reports normal atmospheric & seismic conditions across Kerala.",
-        "issuedAt": "2026-09-30T17:29:32.595Z",
+        "issuedAt": "2026-09-30T17:31:55.010Z",
         "bulletinId": null,
         "activeThreat": null
       },
@@ -7762,7 +7762,7 @@
         ],
         "safeAlternatives": "Nearest State Transit Hub",
         "safeAlternativeRecommendation": null,
-        "timestamp": "2026-09-30T17:29:32.886093+00:00"
+        "timestamp": "2026-09-30T17:31:55.350497+00:00"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -7787,7 +7787,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "NH-66 / NH-85 (Kochi-Munnar)",
-        "lastVerifiedAt": "2026-09-30T17:29:32.904Z"
+        "lastVerifiedAt": "2026-09-30T17:31:55.376Z"
       }
     },
     "Kerala": {
@@ -7821,7 +7821,7 @@
         "icon": "🌤️",
         "category": "clear",
         "provider": "Open-Meteo Satellite Radar",
-        "lastUpdatedAt": "2026-09-30T17:29:32.906Z",
+        "lastUpdatedAt": "2026-09-30T17:31:55.376Z",
         "latitude": 9.9312,
         "longitude": 76.2673,
         "destination": "Kerala",
@@ -7855,7 +7855,7 @@
             "condition": "Mainly Clear",
             "icon": "🌤️",
             "source": "Open-Meteo Satellite Radar",
-            "timestamp": "2026-09-30T17:24:29.802Z",
+            "timestamp": "2026-09-30T17:26:53.647Z",
             "latitude": 9.9312,
             "longitude": 76.2673,
             "destination": "Kerala",
@@ -7876,7 +7876,7 @@
           "changes": {},
           "significant": false,
           "summary": "No atmospheric change recorded.",
-          "timestamp": "2026-09-30T17:29:32.707143+00:00",
+          "timestamp": "2026-09-30T17:31:55.133528+00:00",
           "temperatureDelta": null,
           "trend": null,
           "windSpike": false,
@@ -7893,7 +7893,7 @@
         "severity": "NORMAL",
         "title": "No Active Government Warning for Kerala",
         "description": "Official monitoring network (IMD, NDMA, USGS, GDACS) reports normal atmospheric & seismic conditions across Kerala.",
-        "issuedAt": "2026-09-30T17:29:32.595Z",
+        "issuedAt": "2026-09-30T17:31:55.010Z",
         "bulletinId": null,
         "activeThreat": null
       },
@@ -7922,7 +7922,7 @@
         ],
         "safeAlternatives": "Nearest State Transit Hub",
         "safeAlternativeRecommendation": null,
-        "timestamp": "2026-09-30T17:29:32.886247+00:00"
+        "timestamp": "2026-09-30T17:31:55.342037+00:00"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -7947,7 +7947,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "NH-66 Coastal Corridor & NH-85 Gap Road",
-        "lastVerifiedAt": "2026-09-30T17:29:32.906Z"
+        "lastVerifiedAt": "2026-09-30T17:31:55.376Z"
       }
     },
     "Vizag": {
@@ -7981,7 +7981,7 @@
         "icon": "☁️",
         "category": "cloudy",
         "provider": "Open-Meteo Satellite Radar",
-        "lastUpdatedAt": "2026-09-30T17:29:32.909Z",
+        "lastUpdatedAt": "2026-09-30T17:31:55.374Z",
         "latitude": 17.6868,
         "longitude": 83.2185,
         "destination": "Vizag",
@@ -8015,7 +8015,7 @@
             "condition": "Overcast",
             "icon": "☁️",
             "source": "Open-Meteo Satellite Radar",
-            "timestamp": "2026-09-30T17:24:29.802Z",
+            "timestamp": "2026-09-30T17:26:53.647Z",
             "latitude": 17.6868,
             "longitude": 83.2185,
             "destination": "Vizag",
@@ -8036,7 +8036,7 @@
           "changes": {},
           "significant": false,
           "summary": "No atmospheric change recorded.",
-          "timestamp": "2026-09-30T17:29:32.707290+00:00",
+          "timestamp": "2026-09-30T17:31:55.132532+00:00",
           "temperatureDelta": null,
           "trend": null,
           "windSpike": false,
@@ -8053,7 +8053,7 @@
         "severity": "NORMAL",
         "title": "No Active Government Warning for Vizag",
         "description": "Official monitoring network (IMD, NDMA, USGS, GDACS) reports normal atmospheric & seismic conditions across Andhra Pradesh.",
-        "issuedAt": "2026-09-30T17:29:32.595Z",
+        "issuedAt": "2026-09-30T17:31:55.010Z",
         "bulletinId": null,
         "activeThreat": null
       },
@@ -8082,7 +8082,7 @@
         ],
         "safeAlternatives": "Nearest State Transit Hub",
         "safeAlternativeRecommendation": null,
-        "timestamp": "2026-09-30T17:29:32.887722+00:00"
+        "timestamp": "2026-09-30T17:31:55.341282+00:00"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -8107,7 +8107,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "NH-16 Coastal Expressway & Araku Ghat",
-        "lastVerifiedAt": "2026-09-30T17:29:32.909Z"
+        "lastVerifiedAt": "2026-09-30T17:31:55.374Z"
       }
     },
     "Ooty": {
@@ -8141,7 +8141,7 @@
         "icon": "☁️",
         "category": "cloudy",
         "provider": "Open-Meteo Satellite Radar",
-        "lastUpdatedAt": "2026-09-30T17:29:32.906Z",
+        "lastUpdatedAt": "2026-09-30T17:31:55.368Z",
         "latitude": 11.4102,
         "longitude": 76.695,
         "destination": "Ooty",
@@ -8175,7 +8175,7 @@
             "condition": "Overcast",
             "icon": "☁️",
             "source": "Open-Meteo Satellite Radar",
-            "timestamp": "2026-09-30T17:24:29.802Z",
+            "timestamp": "2026-09-30T17:26:53.649Z",
             "latitude": 11.4102,
             "longitude": 76.695,
             "destination": "Ooty",
@@ -8196,7 +8196,7 @@
           "changes": {},
           "significant": false,
           "summary": "No atmospheric change recorded.",
-          "timestamp": "2026-09-30T17:29:32.707423+00:00",
+          "timestamp": "2026-09-30T17:31:55.130718+00:00",
           "temperatureDelta": null,
           "trend": null,
           "windSpike": false,
@@ -8213,7 +8213,7 @@
         "severity": "NORMAL",
         "title": "No Active Government Warning for Ooty",
         "description": "Official monitoring network (IMD, NDMA, USGS, GDACS) reports normal atmospheric & seismic conditions across Tamil Nadu.",
-        "issuedAt": "2026-09-30T17:29:32.595Z",
+        "issuedAt": "2026-09-30T17:31:55.010Z",
         "bulletinId": null,
         "activeThreat": null
       },
@@ -8242,7 +8242,7 @@
         ],
         "safeAlternatives": "Nearest State Transit Hub",
         "safeAlternativeRecommendation": null,
-        "timestamp": "2026-09-30T17:29:32.886473+00:00"
+        "timestamp": "2026-09-30T17:31:55.313166+00:00"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -8267,7 +8267,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "Nilgiri Mountain Ghat Road (36 Hairpin Bends)",
-        "lastVerifiedAt": "2026-09-30T17:29:32.906Z"
+        "lastVerifiedAt": "2026-09-30T17:31:55.368Z"
       }
     },
     "Pondicherry": {
@@ -8301,7 +8301,7 @@
         "icon": "⛅",
         "category": "cloudy",
         "provider": "Open-Meteo Satellite Radar",
-        "lastUpdatedAt": "2026-09-30T17:29:32.907Z",
+        "lastUpdatedAt": "2026-09-30T17:31:55.376Z",
         "latitude": 11.9416,
         "longitude": 79.8083,
         "destination": "Pondicherry",
@@ -8335,7 +8335,7 @@
             "condition": "Partly Cloudy",
             "icon": "⛅",
             "source": "Open-Meteo Satellite Radar",
-            "timestamp": "2026-09-30T17:24:29.802Z",
+            "timestamp": "2026-09-30T17:26:53.649Z",
             "latitude": 11.9416,
             "longitude": 79.8083,
             "destination": "Pondicherry",
@@ -8356,7 +8356,7 @@
           "changes": {},
           "significant": false,
           "summary": "No atmospheric change recorded.",
-          "timestamp": "2026-09-30T17:29:32.707698+00:00",
+          "timestamp": "2026-09-30T17:31:55.134437+00:00",
           "temperatureDelta": null,
           "trend": null,
           "windSpike": false,
@@ -8373,7 +8373,7 @@
         "severity": "NORMAL",
         "title": "No Active Government Warning for Pondicherry",
         "description": "Official monitoring network (IMD, NDMA, USGS, GDACS) reports normal atmospheric & seismic conditions across Puducherry.",
-        "issuedAt": "2026-09-30T17:29:32.595Z",
+        "issuedAt": "2026-09-30T17:31:55.010Z",
         "bulletinId": null,
         "activeThreat": null
       },
@@ -8402,7 +8402,7 @@
         ],
         "safeAlternatives": "Nearest State Transit Hub",
         "safeAlternativeRecommendation": null,
-        "timestamp": "2026-09-30T17:29:32.886783+00:00"
+        "timestamp": "2026-09-30T17:31:55.350328+00:00"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -8427,7 +8427,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "East Coast Road (Scenic Coastal Highway)",
-        "lastVerifiedAt": "2026-09-30T17:29:32.907Z"
+        "lastVerifiedAt": "2026-09-30T17:31:55.376Z"
       }
     },
     "Hampi": {
@@ -8461,7 +8461,7 @@
         "icon": "☀️",
         "category": "clear",
         "provider": "Open-Meteo Satellite Radar",
-        "lastUpdatedAt": "2026-09-30T17:29:32.907Z",
+        "lastUpdatedAt": "2026-09-30T17:31:55.375Z",
         "latitude": 15.335,
         "longitude": 76.46,
         "destination": "Hampi",
@@ -8495,7 +8495,7 @@
             "condition": "Clear Sky",
             "icon": "☀️",
             "source": "Open-Meteo Satellite Radar",
-            "timestamp": "2026-09-30T17:24:29.802Z",
+            "timestamp": "2026-09-30T17:26:53.649Z",
             "latitude": 15.335,
             "longitude": 76.46,
             "destination": "Hampi",
@@ -8516,7 +8516,7 @@
           "changes": {},
           "significant": false,
           "summary": "No atmospheric change recorded.",
-          "timestamp": "2026-09-30T17:29:32.707577+00:00",
+          "timestamp": "2026-09-30T17:31:55.131266+00:00",
           "temperatureDelta": null,
           "trend": null,
           "windSpike": false,
@@ -8533,7 +8533,7 @@
         "severity": "NORMAL",
         "title": "No Active Government Warning for Hampi",
         "description": "Official monitoring network (IMD, NDMA, USGS, GDACS) reports normal atmospheric & seismic conditions across Karnataka.",
-        "issuedAt": "2026-09-30T17:29:32.595Z",
+        "issuedAt": "2026-09-30T17:31:55.010Z",
         "bulletinId": null,
         "activeThreat": null
       },
@@ -8562,7 +8562,7 @@
         ],
         "safeAlternatives": "Hubballi / Bengaluru",
         "safeAlternativeRecommendation": null,
-        "timestamp": "2026-09-30T17:29:32.886640+00:00"
+        "timestamp": "2026-09-30T17:31:55.340831+00:00"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -8587,7 +8587,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "NH-50 & Tungabhadra Heritage Ring Road",
-        "lastVerifiedAt": "2026-09-30T17:29:32.907Z"
+        "lastVerifiedAt": "2026-09-30T17:31:55.375Z"
       }
     },
     "Andaman": {
@@ -8621,7 +8621,7 @@
         "icon": "☁️",
         "category": "cloudy",
         "provider": "Open-Meteo Satellite Radar",
-        "lastUpdatedAt": "2026-09-30T17:29:32.902Z",
+        "lastUpdatedAt": "2026-09-30T17:31:55.375Z",
         "latitude": 11.6234,
         "longitude": 92.7265,
         "destination": "Andaman",
@@ -8655,7 +8655,7 @@
             "condition": "Overcast",
             "icon": "☁️",
             "source": "Open-Meteo Satellite Radar",
-            "timestamp": "2026-09-30T17:24:29.802Z",
+            "timestamp": "2026-09-30T17:26:53.652Z",
             "latitude": 11.6234,
             "longitude": 92.7265,
             "destination": "Andaman",
@@ -8676,7 +8676,7 @@
           "changes": {},
           "significant": false,
           "summary": "No atmospheric change recorded.",
-          "timestamp": "2026-09-30T17:29:32.711854+00:00",
+          "timestamp": "2026-09-30T17:31:55.130974+00:00",
           "temperatureDelta": null,
           "trend": null,
           "windSpike": false,
@@ -8693,7 +8693,7 @@
         "severity": "NORMAL",
         "title": "No Active Government Warning for Andaman",
         "description": "Official monitoring network (IMD, NDMA, USGS, GDACS) reports normal atmospheric & seismic conditions across Andaman & Nicobar.",
-        "issuedAt": "2026-09-30T17:29:32.595Z",
+        "issuedAt": "2026-09-30T17:31:55.010Z",
         "bulletinId": null,
         "activeThreat": null
       },
@@ -8722,7 +8722,7 @@
         ],
         "safeAlternatives": "Port Blair Harbor & Airport",
         "safeAlternativeRecommendation": null,
-        "timestamp": "2026-09-30T17:29:32.887351+00:00"
+        "timestamp": "2026-09-30T17:31:55.340216+00:00"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -8747,7 +8747,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "Andaman Trunk Road (ATR) & Island Ferries",
-        "lastVerifiedAt": "2026-09-30T17:29:32.902Z"
+        "lastVerifiedAt": "2026-09-30T17:31:55.375Z"
       }
     },
     "Guwahati": {
@@ -8781,7 +8781,7 @@
         "icon": "🌦️",
         "category": "rain",
         "provider": "Open-Meteo Satellite Radar",
-        "lastUpdatedAt": "2026-09-30T17:29:32.908Z",
+        "lastUpdatedAt": "2026-09-30T17:31:55.375Z",
         "latitude": 26.1445,
         "longitude": 91.7362,
         "destination": "Guwahati",
@@ -8815,7 +8815,7 @@
             "condition": "Light Drizzle",
             "icon": "🌦️",
             "source": "Open-Meteo Satellite Radar",
-            "timestamp": "2026-09-30T17:24:29.802Z",
+            "timestamp": "2026-09-30T17:26:53.653Z",
             "latitude": 26.1445,
             "longitude": 91.7362,
             "destination": "Guwahati",
@@ -8836,7 +8836,7 @@
           "changes": {},
           "significant": false,
           "summary": "No atmospheric change recorded.",
-          "timestamp": "2026-09-30T17:29:32.712107+00:00",
+          "timestamp": "2026-09-30T17:31:55.133049+00:00",
           "temperatureDelta": null,
           "trend": null,
           "windSpike": false,
@@ -8853,7 +8853,7 @@
         "severity": "NORMAL",
         "title": "No Active Government Warning for Guwahati",
         "description": "Official monitoring network (IMD, NDMA, USGS, GDACS) reports normal atmospheric & seismic conditions across Assam.",
-        "issuedAt": "2026-09-30T17:29:32.595Z",
+        "issuedAt": "2026-09-30T17:31:55.010Z",
         "bulletinId": null,
         "activeThreat": null
       },
@@ -8882,7 +8882,7 @@
         ],
         "safeAlternatives": "Nearest State Transit Hub",
         "safeAlternativeRecommendation": null,
-        "timestamp": "2026-09-30T17:29:32.886892+00:00"
+        "timestamp": "2026-09-30T17:31:55.340499+00:00"
       },
       "disaster": {
         "alertTier": "GREEN",
@@ -8907,7 +8907,7 @@
         "source": "Open-Meteo Satellite & National Disaster Network",
         "safeAlternativeHub": "Nearest Capital Junction",
         "affectedCorridors": "NH-27 / Guwahati-Shillong Highway",
-        "lastVerifiedAt": "2026-09-30T17:29:32.908Z"
+        "lastVerifiedAt": "2026-09-30T17:31:55.375Z"
       }
     }
   },
@@ -8938,7 +8938,7 @@
       "corridor": "Manali-Leh Highway (13,058 ft)",
       "movementStatus": "MOVEMENT POSSIBLE WITH CAUTION",
       "source": "Open-Meteo Severe Weather & Hydrology Radar",
-      "timestamp": "2026-09-30T17:29:32.909Z"
+      "timestamp": "2026-09-30T17:31:55.376Z"
     },
     {
       "destination": "Chitkul",
@@ -8949,7 +8949,7 @@
       "corridor": "Kinnaur Valley Indo-Tibet Border Road",
       "movementStatus": "MOVEMENT POSSIBLE WITH CAUTION",
       "source": "USGS Live Indian Subcontinent Seismic Network",
-      "timestamp": "2026-09-30T17:29:32.909Z"
+      "timestamp": "2026-09-30T17:31:55.376Z"
     },
     {
       "destination": "Kaza",
@@ -8960,7 +8960,7 @@
       "corridor": "NH-505 Spiti Valley Route",
       "movementStatus": "MOVEMENT POSSIBLE WITH CAUTION",
       "source": "Open-Meteo Severe Weather & Hydrology Radar",
-      "timestamp": "2026-09-30T17:29:32.909Z"
+      "timestamp": "2026-09-30T17:31:55.376Z"
     },
     {
       "destination": "Chandratal Lake",
@@ -8971,7 +8971,7 @@
       "corridor": "Batal-Chandratal Dirt Route (14,100 ft)",
       "movementStatus": "MOVEMENT POSSIBLE WITH CAUTION",
       "source": "Open-Meteo Severe Weather & Hydrology Radar",
-      "timestamp": "2026-09-30T17:29:32.909Z"
+      "timestamp": "2026-09-30T17:31:55.376Z"
     },
     {
       "destination": "Rishikesh",
@@ -8982,7 +8982,7 @@
       "corridor": "NH-7 All-Weather Badrinath Route",
       "movementStatus": "TRAVEL HAZARDOUS / ROUTES SUSPENDED",
       "source": "GDACS (United Nations & European Commission)",
-      "timestamp": "2026-09-30T17:29:32.909Z"
+      "timestamp": "2026-09-30T17:31:55.376Z"
     },
     {
       "destination": "Pune",
@@ -8993,7 +8993,7 @@
       "corridor": "Mumbai-Pune Expressway / NH-48",
       "movementStatus": "MOVEMENT POSSIBLE WITH CAUTION",
       "source": "GDACS (United Nations & European Commission)",
-      "timestamp": "2026-09-30T17:29:32.909Z"
+      "timestamp": "2026-09-30T17:31:55.376Z"
     },
     {
       "destination": "Leh Ladakh",
@@ -9004,7 +9004,7 @@
       "corridor": "Leh-Manali Highway & Zoji La Route (17,582 ft Khardung La)",
       "movementStatus": "MOVEMENT POSSIBLE WITH CAUTION",
       "source": "USGS Live Indian Subcontinent Seismic Network",
-      "timestamp": "2026-09-30T17:29:32.909Z"
+      "timestamp": "2026-09-30T17:31:55.376Z"
     },
     {
       "destination": "Bengaluru",
@@ -9015,12 +9015,12 @@
       "corridor": "NH-44 & NH-75 Arterials",
       "movementStatus": "MOVEMENT POSSIBLE WITH CAUTION",
       "source": "GDACS (United Nations & European Commission)",
-      "timestamp": "2026-09-30T17:29:32.909Z"
+      "timestamp": "2026-09-30T17:31:55.376Z"
     }
   ],
   "intelligenceSummary": {
     "status": "active",
-    "lastAnalyzedAt": "2026-09-30T17:29:32.909Z",
+    "lastAnalyzedAt": "2026-09-30T17:31:55.376Z",
     "disasterSummary": {
       "totalEventsReceived": 6,
       "activeEvents": [
@@ -9270,7 +9270,7 @@
             "affectedCorridors": "Mumbai-Pune Expressway / NH-48 (~293 km radius)",
             "status": "RESTRICTED",
             "issuedAt": "2026-09-28T10:04:04.000Z",
-            "validUntil": "2026-10-02T17:29:30.535Z",
+            "validUntil": "2026-10-02T17:31:53.936Z",
             "description": "On 24/09/2026, a flood started in India, Nepal, lasting until 26/09/2026 (last update). The flood caused 1 deaths and 1223 displaced .",
             "evacuationAdvice": "Exercise caution while traveling across Mumbai-Pune Expressway / NH-48. Avoid waterlogged routes or coastal zones."
           }
@@ -9373,7 +9373,7 @@
             "affectedCorridors": "NH-7 All-Weather Badrinath Route (~76 km radius)",
             "status": "CLOSED_TO_TOURISTS",
             "issuedAt": "2026-08-27T08:14:48.000Z",
-            "validUntil": "2026-10-02T17:29:30.535Z",
+            "validUntil": "2026-10-02T17:31:53.937Z",
             "description": "On 09/08/2026, a flood started in India, lasting until 28/09/2026 (last update). The flood caused 130 deaths and 453851 displaced .",
             "evacuationAdvice": "Evacuate low-lying or exposed areas along NH-7 All-Weather Badrinath Route. Contact district emergency center 1077."
           }
@@ -9427,7 +9427,7 @@
             "affectedCorridors": "NH-44 & NH-75 Arterials (~162 km radius)",
             "status": "RESTRICTED",
             "issuedAt": "2026-08-31T08:22:42.000Z",
-            "validUntil": "2026-10-02T17:29:30.535Z",
+            "validUntil": "2026-10-02T17:31:53.938Z",
             "description": "The  Drought notification level is Green.",
             "evacuationAdvice": "Exercise caution while traveling across NH-44 & NH-75 Arterials. Avoid waterlogged routes or coastal zones."
           }
@@ -9436,50 +9436,50 @@
       "newEventsCount": 6,
       "updatedEventsCount": 0,
       "expiredEvents": [],
-      "timestamp": "2026-09-30T17:29:31.176298+00:00"
+      "timestamp": "2026-09-30T17:31:54.509621+00:00"
     }
   },
   "performance": {
-    "weatherFetchMs": 1,
-    "disasterFetchMs": 2027,
-    "pythonIntelligenceMs": 2072,
-    "totalSyncMs": 4327,
-    "lastMeasuredAt": "2026-09-30T17:29:32.909Z"
+    "weatherFetchMs": 2,
+    "disasterFetchMs": 2016,
+    "pythonIntelligenceMs": 1111,
+    "totalSyncMs": 3469,
+    "lastMeasuredAt": "2026-09-30T17:31:55.376Z"
   },
   "providerStatus": {
     "usgs": {
       "status": "AVAILABLE",
       "reason": null,
-      "durationMs": 1003,
-      "lastSuccessAt": "2026-09-30T17:29:29.615Z",
-      "lastAttemptAt": "2026-09-30T17:29:29.615Z",
+      "durationMs": 1064,
+      "lastSuccessAt": "2026-09-30T17:31:53.011Z",
+      "lastAttemptAt": "2026-09-30T17:31:53.011Z",
       "count": 3,
       "errorDetails": null
     },
     "nasa": {
       "status": "AVAILABLE",
       "reason": null,
-      "durationMs": 2027,
-      "lastSuccessAt": "2026-09-30T17:29:30.837Z",
-      "lastAttemptAt": "2026-09-30T17:29:30.837Z",
+      "durationMs": 2016,
+      "lastSuccessAt": "2026-09-30T17:31:54.265Z",
+      "lastAttemptAt": "2026-09-30T17:31:54.265Z",
       "count": 0,
       "errorDetails": null
     },
     "gdacs": {
       "status": "AVAILABLE",
       "reason": null,
-      "durationMs": 1714,
-      "lastSuccessAt": "2026-09-30T17:29:30.535Z",
-      "lastAttemptAt": "2026-09-30T17:29:30.535Z",
+      "durationMs": 1660,
+      "lastSuccessAt": "2026-09-30T17:31:53.938Z",
+      "lastAttemptAt": "2026-09-30T17:31:53.938Z",
       "count": 3,
       "errorDetails": null
     },
     "openMeteo": {
       "status": "AVAILABLE",
       "reason": null,
-      "durationMs": 1098,
-      "lastSuccessAt": "2026-09-30T17:24:29.802Z",
-      "lastAttemptAt": "2026-09-30T17:29:28.827Z",
+      "durationMs": 1183,
+      "lastSuccessAt": "2026-09-30T17:26:53.656Z",
+      "lastAttemptAt": "2026-09-30T17:31:52.284Z",
       "count": 55,
       "errorDetails": null
     },
