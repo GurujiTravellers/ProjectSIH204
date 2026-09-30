@@ -464,8 +464,11 @@ function Navbar() {
           <button
             type="button"
             className={`navbar-hamburger ${mobileMenuOpen ? "active" : ""}`}
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            aria-label="Toggle navigation"
+            onClick={(e) => {
+              e.stopPropagation();
+              setMobileMenuOpen((prev) => !prev);
+            }}
+            aria-label="Toggle navigation menu"
             aria-expanded={mobileMenuOpen}
           >
             <span className="hamburger-line"></span>
@@ -474,6 +477,63 @@ function Navbar() {
           </button>
         </div>
       </nav>
+
+      {/* MOBILE HORIZONTAL QUICK NAVIGATION BAR */}
+      <div className="mobile-nav-options-bar" aria-label="Mobile Navigation Options">
+        <div className="mobile-nav-options-scroll">
+          <NavLink to="/" end className={({ isActive }) => (isActive ? "mobile-nav-pill active" : "mobile-nav-pill")}>
+            <span className="pill-icon">🏠</span>
+            <span>Home</span>
+          </NavLink>
+
+          <NavLink to="/destinations" className={({ isActive }) => (isActive ? "mobile-nav-pill active" : "mobile-nav-pill")}>
+            <span className="pill-icon">📍</span>
+            <span>Destinations</span>
+          </NavLink>
+
+          <NavLink to="/hotels" className={({ isActive }) => (isActive ? "mobile-nav-pill active" : "mobile-nav-pill")}>
+            <span className="pill-icon">🏨</span>
+            <span>Hotels</span>
+          </NavLink>
+
+          <NavLink to="/planner" className={({ isActive }) => (isActive ? "mobile-nav-pill active" : "mobile-nav-pill")}>
+            <span className="pill-icon">🗺️</span>
+            <span>Plan Trip</span>
+          </NavLink>
+
+          <NavLink to="/weather" className={({ isActive }) => (isActive ? "mobile-nav-pill active" : "mobile-nav-pill")}>
+            <span className="pill-icon">🌦️</span>
+            <span>Weather & Radar</span>
+            {activeDisasterZones && activeDisasterZones.length > 0 && (
+              <span className="pill-alert-dot" title={`${activeDisasterZones.length} Active Alert(s)`} />
+            )}
+          </NavLink>
+
+          <NavLink to="/transport" className={({ isActive }) => (isActive ? "mobile-nav-pill active" : "mobile-nav-pill")}>
+            <span className="pill-icon">🚆</span>
+            <span>Transport</span>
+          </NavLink>
+
+          <NavLink to="/activities" className={({ isActive }) => (isActive ? "mobile-nav-pill active" : "mobile-nav-pill")}>
+            <span className="pill-icon">🏄</span>
+            <span>Activities</span>
+          </NavLink>
+
+          {user && (
+            <>
+              <NavLink to="/my-bookings" className={({ isActive }) => (isActive ? "mobile-nav-pill active" : "mobile-nav-pill")}>
+                <span className="pill-icon">🎫</span>
+                <span>Bookings</span>
+              </NavLink>
+
+              <NavLink to="/plan-history" className={({ isActive }) => (isActive ? "mobile-nav-pill active" : "mobile-nav-pill")}>
+                <span className="pill-icon">📋</span>
+                <span>History</span>
+              </NavLink>
+            </>
+          )}
+        </div>
+      </div>
 
       {/* MOBILE SLIDE-OUT DRAWER */}
       {mobileMenuOpen && (
