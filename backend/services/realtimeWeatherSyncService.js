@@ -923,9 +923,9 @@ async function fetchAllLocationsWeather() {
     const lats = locations.map(([, info]) => info.lat).join(",");
     const lons = locations.map(([, info]) => info.lon).join(",");
 
-    const weatherUrl = `${OPEN_METEO_API_URL}?latitude=${lats}&longitude=${lons}&current=temperature_2m,relative_humidity_2m,apparent_temperature,dew_point_2m,is_day,cloud_cover,precipitation,rain,weather_code,wind_speed_10m,wind_direction_10m,wind_gusts_10m,surface_pressure,visibility&timezone=Asia%2FKolkata`;
+    const weatherUrl = `${OPEN_METEO_API_URL}?latitude=${lats}&longitude=${lons}&current=temperature_2m,relative_humidity_2m,apparent_temperature,dew_point_2m,is_day,cloud_cover,precipitation,rain,weather_code,wind_speed_10m,wind_direction_10m,wind_gusts_10m,surface_pressure,visibility&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max,wind_speed_10m_max,wind_gusts_10m_max,uv_index_max&timezone=Asia%2FKolkata&forecast_days=7`;
 
-    const res = await safeHttpRequest(weatherUrl, { timeout: 10000, accept: "application/json" });
+    const res = await safeHttpRequest(weatherUrl, { timeout: 12000, accept: "application/json" });
 
     if (res.status === 429) {
       rateLimitBackoffUntil = Date.now() + 60 * 1000; // Adaptive 60s backoff instead of locking for 10 minutes
@@ -948,7 +948,7 @@ async function fetchAllLocationsWeather() {
     const results = Array.isArray(data) ? data : [data];
     const weatherMap = {};
 
-    results.forEach((item, index) => {
+    await Promise.all(results.map(async (item, index) => {
       const [destName] = locations[index];
       const cur = item.current;
       if (!cur) return;
@@ -964,6 +964,36 @@ async function fetchAllLocationsWeather() {
       const isDay = cur.is_day != null ? cur.is_day : 0;
       const cloudCover = cur.cloud_cover != null ? Math.round(cur.cloud_cover) : 0;
       const elevation = item.elevation != null ? item.elevation : null;
+
+      // Extract 7-day daily forecast
+      const daily = item.daily || {};
+      const rawDailyForecast = (daily.time || []).map((date, idx) => {
+        const dCode = daily.weather_code?.[idx] ?? 0;
+        const dInfo = mapWeatherCode(dCode);
+        return {
+          date,
+          tripDay: idx + 1,
+          weatherCode: dCode,
+          condition: dInfo.label,
+          icon: dInfo.icon,
+          category: dInfo.category,
+          temperatureMax: daily.temperature_2m_max?.[idx] != null ? Math.round(daily.temperature_2m_max[idx] * 10) / 10 : null,
+          temperatureMin: daily.temperature_2m_min?.[idx] != null ? Math.round(daily.temperature_2m_min[idx] * 10) / 10 : null,
+          precipitationSum: daily.precipitation_sum?.[idx] != null ? Math.round(daily.precipitation_sum[idx] * 10) / 10 : 0,
+          precipitationProbability: daily.precipitation_probability_max?.[idx] ?? 0,
+          windSpeedMax: daily.wind_speed_10m_max?.[idx] != null ? Math.round(daily.wind_speed_10m_max[idx]) : 0,
+          windGustsMax: daily.wind_gusts_10m_max?.[idx] != null ? Math.round(daily.wind_gusts_10m_max[idx]) : 0,
+          uvIndexMax: daily.uv_index_max?.[idx] != null ? Math.round(daily.uv_index_max[idx] * 10) / 10 : 5.0,
+        };
+      });
+
+      // Calibrate 7-day forecast via Python Intelligence downscaling
+      let calibratedForecast = rawDailyForecast;
+      try {
+        calibratedForecast = await pythonClient.calibrateForecast(destName, rawDailyForecast, elevation);
+      } catch (fErr) {
+        console.warn(`[WeatherSync] Forecast calibration notice for ${destName}:`, fErr.message);
+      }
 
       weatherMap[destName.toLowerCase()] = {
         temperature: cur.temperature_2m != null ? Math.round(cur.temperature_2m * 10) / 10 : null,
@@ -985,10 +1015,12 @@ async function fetchAllLocationsWeather() {
         condition: weatherInfo.label,
         icon: weatherInfo.icon,
         category: weatherInfo.category,
+        forecast: calibratedForecast,
+        daily: item.daily || null,
         provider: TOMORROW_IO_API_KEY ? "Tomorrow.io / Open-Meteo Unified Radar" : "Open-Meteo Satellite Radar",
         lastUpdatedAt: new Date().toISOString(),
       };
-    });
+    }));
 
     const duration = Date.now() - t0;
     cachedWeatherMap = weatherMap;
@@ -1426,6 +1458,7 @@ async function syncDatabaseNow() {
           coordinates: { lat: info.lat, lon: info.lon },
           weather: {
             ...liveW,
+            forecast: liveW.forecast || (weatherMap && weatherMap[key] && weatherMap[key].forecast) || [],
             lastUpdatedAt: new Date().toISOString(),
             changeDetection: weatherChangeInfo,
             validation: validationResult,

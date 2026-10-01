@@ -370,6 +370,88 @@ async function calibrateWeatherBatch(observations) {
 }
 
 /**
+ * Local forecast calibration fallback matching Python atmospheric downscaling formulas
+ */
+function localCalibrateForecast(destination, dailyForecast, elevation = null) {
+  if (!Array.isArray(dailyForecast) || dailyForecast.length === 0) return [];
+  const dest = destination || "";
+  let profile = { terrain: "plains_coastal", elevation: 200 };
+  for (const [name, prof] of Object.entries(TERRAIN_CLASSIFICATIONS)) {
+    if (dest.toLowerCase().trim() === name.toLowerCase()) {
+      profile = prof;
+      break;
+    }
+  }
+
+  const terrainType = profile.terrain;
+  const stationElev = elevation || profile.elevation;
+
+  return dailyForecast.map((day) => {
+    const d = { ...day };
+    const rawMin = d.temperatureMin;
+    const rawMax = d.temperatureMax;
+
+    let deltaMin = 0.0;
+    let deltaMax = 0.0;
+
+    if (rawMin != null && typeof rawMin === "number" && !isNaN(rawMin)) {
+      if (terrainType === "valley_basin") {
+        deltaMin = Math.min(4.5, Math.max(0.0, rawMin * 0.35));
+      } else if (terrainType === "cold_desert_plateau" || terrainType === "alpine_pass") {
+        deltaMin = Math.min(5.5, Math.max(0.0, rawMin * 0.45));
+      } else if (terrainType === "mountain_ridge") {
+        deltaMin = Math.min(2.0, Math.max(0.0, rawMin * 0.15));
+      } else if (terrainType === "alpine_meadow" || terrainType === "broad_basin" || terrainType === "high_plateau") {
+        deltaMin = Math.min(2.5, Math.max(0.0, rawMin * 0.2));
+      }
+    }
+
+    if (rawMax != null && typeof rawMax === "number" && !isNaN(rawMax)) {
+      if ((terrainType === "alpine_pass" || terrainType === "cold_desert_plateau") && stationElev > 3500) {
+        deltaMax = Math.min(2.0, Math.max(0.0, (stationElev - 3500) / 600.0));
+      }
+    }
+
+    const calMin = rawMin != null ? Math.round((rawMin - deltaMin) * 10) / 10 : null;
+    const calMax = rawMax != null ? Math.round((rawMax - deltaMax) * 10) / 10 : null;
+
+    d.temperatureMin = calMin;
+    d.temperatureMax = calMax;
+    d.rawTemperatureMin = rawMin;
+    d.rawTemperatureMax = rawMax;
+    d.microclimateCalibration = {
+      appliedMinDelta: Math.round(deltaMin * 10) / 10,
+      appliedMaxDelta: Math.round(deltaMax * 10) / 10,
+      terrainType,
+      calibratedBy: "Travel_Guruji Embedded Microclimate Engine",
+    };
+    return d;
+  });
+}
+
+/**
+ * Calibrate multi-day weather forecast (daily min/max) via Python Intelligence
+ */
+async function calibrateForecast(destination, dailyForecast, elevation = null) {
+  if (!Array.isArray(dailyForecast) || dailyForecast.length === 0) return [];
+  const isOnline = await checkPythonAvailability();
+  if (!isOnline) {
+    return localCalibrateForecast(destination, dailyForecast, elevation);
+  }
+
+  try {
+    const res = await requestPython("/intelligence/calibrate-forecast", {
+      destination,
+      dailyForecast,
+      elevation,
+    });
+    return res.calibratedForecast || localCalibrateForecast(destination, dailyForecast, elevation);
+  } catch (_) {
+    return localCalibrateForecast(destination, dailyForecast, elevation);
+  }
+}
+
+/**
  * Local change detection fallback
  */
 function localDetectWeatherChange(destination, current, previous) {
@@ -594,6 +676,7 @@ module.exports = {
   checkHealth,
   calibrateWeather,
   calibrateWeatherBatch,
+  calibrateForecast,
   validateWeather,
   detectWeatherChange,
   compareWeatherDiscrepancy,

@@ -202,3 +202,67 @@ def calibrate_batch_observations(
 ) -> List[Dict[str, Any]]:
     """Calibrates an entire list of live destination observations."""
     return [calibrate_microclimate_observation(obs) for obs in observations]
+
+
+def calibrate_destination_forecast(
+    destination: str,
+    daily_forecast: List[Dict[str, Any]],
+    elevation: Optional[float] = None
+) -> List[Dict[str, Any]]:
+    """
+    Calibrates multi-day daily forecasts (temperatureMax and temperatureMin)
+    using physical topographical microclimate downscaling.
+    
+    Nighttime minimum temperatures (temperatureMin) in mountain valleys and cold deserts
+    are downscaled based on nocturnal katabatic pooling & radiative cooling potentials.
+    """
+    if not daily_forecast:
+        return []
+
+    profile = get_terrain_profile(destination)
+    terrain_type = profile["terrain"]
+    station_elev = elevation or profile["elevation"]
+
+    calibrated_days = []
+    for day in daily_forecast:
+        d = dict(day)
+        raw_min = d.get("temperatureMin")
+        raw_max = d.get("temperatureMax")
+
+        delta_min = 0.0
+        delta_max = 0.0
+
+        if raw_min is not None and isinstance(raw_min, (int, float)):
+            if terrain_type == "valley_basin":
+                # Valley nocturnal cold pool downscaling (Manali, Kasol, Chitkul)
+                delta_min = min(4.5, max(0.0, raw_min * 0.35))
+            elif terrain_type in ("cold_desert_plateau", "alpine_pass"):
+                # Trans-Himalayan dry radiative night cooling (Leh, Kaza, Rohtang)
+                delta_min = min(5.5, max(0.0, raw_min * 0.45))
+            elif terrain_type == "mountain_ridge":
+                delta_min = min(2.0, max(0.0, raw_min * 0.15))
+            elif terrain_type in ("alpine_meadow", "broad_basin", "high_plateau"):
+                delta_min = min(2.5, max(0.0, raw_min * 0.2))
+
+        # Max temperatures (daytime convective mixing):
+        if raw_max is not None and isinstance(raw_max, (int, float)):
+            if terrain_type in ("alpine_pass", "cold_desert_plateau") and station_elev > 3500:
+                # Thin air boundary condition at ultra-high passes
+                delta_max = min(2.0, max(0.0, (station_elev - 3500) / 600.0))
+
+        cal_min = round((raw_min - delta_min) * 10) / 10 if raw_min is not None else None
+        cal_max = round((raw_max - delta_max) * 10) / 10 if raw_max is not None else None
+
+        d["temperatureMin"] = cal_min
+        d["temperatureMax"] = cal_max
+        d["rawTemperatureMin"] = raw_min
+        d["rawTemperatureMax"] = raw_max
+        d["microclimateCalibration"] = {
+            "appliedMinDelta": round(delta_min, 1),
+            "appliedMaxDelta": round(delta_max, 1),
+            "terrainType": terrain_type,
+            "calibratedBy": "Travel_Guruji Python Intelligence Microclimate Engine",
+        }
+        calibrated_days.append(d)
+
+    return calibrated_days

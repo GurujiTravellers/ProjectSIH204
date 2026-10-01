@@ -362,6 +362,98 @@ const DESTINATION_STATE_HINTS = {
   "andaman": "Andaman and Nicobar Islands",
 };
 
+// Geomorphological classifications for microclimate downscaling
+const TERRAIN_CLASSIFICATIONS = {
+  manali: { terrain: "valley_basin", elevation: 2050 },
+  kasol: { terrain: "valley_basin", elevation: 1580 },
+  kalpa: { terrain: "valley_basin", elevation: 2758 },
+  sissu: { terrain: "valley_basin", elevation: 3120 },
+  chitkul: { terrain: "valley_basin", elevation: 3450 },
+  pahalgam: { terrain: "valley_basin", elevation: 2130 },
+  "leh ladakh": { terrain: "cold_desert_plateau", elevation: 3500 },
+  leh: { terrain: "cold_desert_plateau", elevation: 3500 },
+  kaza: { terrain: "cold_desert_plateau", elevation: 3650 },
+  "rohtang pass": { terrain: "alpine_pass", elevation: 3978 },
+  "chandratal lake": { terrain: "alpine_pass", elevation: 4250 },
+  shimla: { terrain: "mountain_ridge", elevation: 2205 },
+  mussoorie: { terrain: "mountain_ridge", elevation: 2005 },
+  darjeeling: { terrain: "mountain_ridge", elevation: 2042 },
+  gulmarg: { terrain: "alpine_meadow", elevation: 2650 },
+  srinagar: { terrain: "broad_basin", elevation: 1585 },
+  ooty: { terrain: "high_plateau", elevation: 2240 },
+  shillong: { terrain: "high_plateau", elevation: 1525 },
+};
+
+function clientCalibrateDailyForecast(destinationName, dailyForecast) {
+  if (!Array.isArray(dailyForecast)) return dailyForecast;
+  const destLower = (destinationName || "").toLowerCase().trim();
+  const profile = TERRAIN_CLASSIFICATIONS[destLower] || { terrain: "plains_coastal", elevation: 200 };
+  const terrainType = profile.terrain;
+  const stationElev = profile.elevation;
+
+  return dailyForecast.map((d) => {
+    let deltaMin = 0.0;
+    let deltaMax = 0.0;
+    const rawMin = d.temperatureMin;
+    const rawMax = d.temperatureMax;
+
+    if (rawMin != null && typeof rawMin === "number" && !isNaN(rawMin)) {
+      if (terrainType === "valley_basin") {
+        deltaMin = Math.min(4.5, Math.max(0.0, rawMin * 0.35));
+      } else if (terrainType === "cold_desert_plateau" || terrainType === "alpine_pass") {
+        deltaMin = Math.min(5.5, Math.max(0.0, rawMin * 0.45));
+      } else if (terrainType === "mountain_ridge") {
+        deltaMin = Math.min(2.0, Math.max(0.0, rawMin * 0.15));
+      } else if (["alpine_meadow", "broad_basin", "high_plateau"].includes(terrainType)) {
+        deltaMin = Math.min(2.5, Math.max(0.0, rawMin * 0.2));
+      }
+    }
+
+    if (rawMax != null && typeof rawMax === "number" && !isNaN(rawMax)) {
+      if (["alpine_pass", "cold_desert_plateau"].includes(terrainType) && stationElev > 3500) {
+        deltaMax = Math.min(2.0, Math.max(0.0, (stationElev - 3500) / 600.0));
+      }
+    }
+
+    return {
+      ...d,
+      temperatureMin: rawMin != null ? Math.round((rawMin - deltaMin) * 10) / 10 : null,
+      temperatureMax: rawMax != null ? Math.round((rawMax - deltaMax) * 10) / 10 : null,
+      rawTemperatureMin: rawMin,
+      rawTemperatureMax: rawMax,
+    };
+  });
+}
+
+function clientCalibrateCurrentTemperature(destinationName, current) {
+  if (!current || typeof current !== "object") return current;
+  const destLower = (destinationName || "").toLowerCase().trim();
+  const profile = TERRAIN_CLASSIFICATIONS[destLower] || { terrain: "plains_coastal", elevation: 200 };
+  const rawTemp = current.temperature_2m ?? current.temperature;
+  if (rawTemp == null || typeof rawTemp !== "number" || isNaN(rawTemp)) return current;
+
+  let deltaT = 0;
+  if (profile.terrain === "valley_basin") {
+    deltaT = Math.min(6.5, Math.max(0, (rawTemp - 5.0) * 0.75));
+  } else if (["cold_desert_plateau", "alpine_pass"].includes(profile.terrain)) {
+    deltaT = Math.min(7.5, Math.max(0, (rawTemp - 1.0) * 0.85));
+  } else if (profile.terrain === "mountain_ridge") {
+    deltaT = Math.min(2.0, Math.max(0, (rawTemp - 9.0) * 0.35));
+  }
+
+  const calTemp = Math.round((rawTemp - deltaT) * 10) / 10;
+  const rawApparent = current.apparent_temperature ?? current.apparentTemperature;
+  const calApparent = rawApparent != null ? Math.round((rawApparent - deltaT) * 10) / 10 : calTemp;
+
+  return {
+    ...current,
+    temperature_2m: current.temperature_2m !== undefined ? calTemp : current.temperature_2m,
+    temperature: current.temperature !== undefined ? calTemp : current.temperature,
+    apparent_temperature: current.apparent_temperature !== undefined ? calApparent : current.apparent_temperature,
+    apparentTemperature: current.apparentTemperature !== undefined ? calApparent : current.apparentTemperature,
+  };
+}
+
 // In-memory cache fallback if sessionStorage is unavailable
 const memoryCache = new Map();
 
@@ -641,6 +733,22 @@ async function getWeatherForecast(
     return cached;
   }
 
+  // 1. Query backend authoritative Python-calibrated forecast first
+  try {
+    const stateParam = options.state ? `&state=${encodeURIComponent(options.state)}` : "";
+    const backendUrl = `${getApiBaseUrl()}/weather/forecast?destination=${encodeURIComponent(destination)}&startDate=${startDateStr}&days=${tripDays}${stateParam}`;
+    const backendRes = await fetch(backendUrl);
+    if (backendRes.ok) {
+      const backendData = await backendRes.json();
+      if (backendData && backendData.success && backendData.forecast) {
+        setCachedData(cacheKey, backendData);
+        return backendData;
+      }
+    }
+  } catch (backendErr) {
+    console.warn("Backend weather forecast endpoint notice, falling back to direct pipeline:", backendErr.message);
+  }
+
   // Geocode location
   const location = await getLocation(destination, options);
 
@@ -739,22 +847,25 @@ async function getWeatherForecast(
       };
     });
 
-    const todayForecast = forecast[0] ? {
-      ...forecast[0],
-      currentTemperature: data.current?.temperature_2m != null ? Math.round(data.current.temperature_2m * 10) / 10 : null,
-      apparentTemperature: data.current?.apparent_temperature != null ? Math.round(data.current.apparent_temperature * 10) / 10 : null,
+    const calibratedForecast = clientCalibrateDailyForecast(destination, forecast);
+    const calibratedCurrent = clientCalibrateCurrentTemperature(destination, data.current);
+
+    const todayForecast = calibratedForecast[0] ? {
+      ...calibratedForecast[0],
+      currentTemperature: calibratedCurrent?.temperature_2m != null ? Math.round(calibratedCurrent.temperature_2m * 10) / 10 : null,
+      apparentTemperature: calibratedCurrent?.apparent_temperature != null ? Math.round(calibratedCurrent.apparent_temperature * 10) / 10 : null,
     } : null;
-    const tomorrowForecast = forecast[1] || null;
-    const daysAheadForecast = forecast.slice(2);
+    const tomorrowForecast = calibratedForecast[1] || null;
+    const daysAheadForecast = calibratedForecast.slice(2);
 
     result = {
       mode: "live",
       location,
       startDate: sStr,
-      endDate: forecast[forecast.length - 1]?.date || sStr,
-      days: forecast.length,
-      current: data.current || null,
-      forecast,
+      endDate: calibratedForecast[calibratedForecast.length - 1]?.date || sStr,
+      days: calibratedForecast.length,
+      current: calibratedCurrent || null,
+      forecast: calibratedForecast,
       today: todayForecast,
       tomorrow: tomorrowForecast,
       daysAhead: daysAheadForecast,
@@ -1020,9 +1131,29 @@ async function fetchDestinationLiveWeather(destinationName) {
       if (forecastRes.ok) {
         const raw = await forecastRes.json();
         const summary = getWeatherSummary(raw.current?.weather_code ?? 0);
+        const baseTemp = raw.current?.temperature_2m != null ? Math.round(raw.current.temperature_2m * 10) / 10 : null;
+        const baseApparent = raw.current?.apparent_temperature != null ? Math.round(raw.current.apparent_temperature * 10) / 10 : null;
+        const calibratedObs = clientCalibrateCurrentTemperature(destinationName, {
+          temperature: baseTemp,
+          apparentTemperature: baseApparent,
+        });
+
+        // Also calibrate 7-day daily forecast in fallback
+        const rawDaily = (raw.daily?.time || []).map((date, idx) => ({
+          date,
+          tripDay: idx + 1,
+          temperatureMax: raw.daily.temperature_2m_max?.[idx] != null ? Math.round(raw.daily.temperature_2m_max[idx] * 10) / 10 : null,
+          temperatureMin: raw.daily.temperature_2m_min?.[idx] != null ? Math.round(raw.daily.temperature_2m_min[idx] * 10) / 10 : null,
+          precipitationSum: raw.daily.precipitation_sum?.[idx] != null ? Math.round(raw.daily.precipitation_sum[idx] * 10) / 10 : 0,
+          precipitationProbability: raw.daily.precipitation_probability_max?.[idx] ?? 0,
+          windSpeedMax: raw.daily.wind_speed_10m_max?.[idx] != null ? Math.round(raw.daily.wind_speed_10m_max[idx]) : 0,
+          weatherCode: raw.daily.weather_code?.[idx] ?? 0,
+        }));
+        const calibratedDaily = clientCalibrateDailyForecast(destinationName, rawDaily);
+
         const updatedWeather = {
-          temperature: raw.current?.temperature_2m != null ? Math.round(raw.current.temperature_2m * 10) / 10 : null,
-          apparentTemperature: raw.current?.apparent_temperature != null ? Math.round(raw.current.apparent_temperature * 10) / 10 : null,
+          temperature: calibratedObs.temperature,
+          apparentTemperature: calibratedObs.apparentTemperature,
           humidity: raw.current?.relative_humidity_2m ?? null,
           precipitation: raw.current?.precipitation ?? 0,
           windSpeed: raw.current?.wind_speed_10m != null ? Math.round(raw.current.wind_speed_10m) : null,
@@ -1032,6 +1163,7 @@ async function fetchDestinationLiveWeather(destinationName) {
           condition: summary.label || "Clear",
           icon: summary.icon || "☀️",
           category: summary.category || "CLEAR",
+          forecast: calibratedDaily,
           provider: "Open-Meteo Direct Live API",
           lastUpdatedAt: new Date().toISOString(),
         };

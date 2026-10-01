@@ -34,6 +34,7 @@ from models.weather import (
 from services.meteorological_intelligence import (
     calibrate_microclimate_observation,
     calibrate_batch_observations,
+    calibrate_destination_forecast,
 )
 from models.disaster import (
     DisasterAnalysisRequest,
@@ -163,6 +164,30 @@ def calibrate_weather_batch_endpoint(payload: WeatherBatchCalibrationRequest):
     return {
         "calibratedObservations": calibrated_list,
         "count": len(calibrated_list),
+    }
+
+
+class WeatherForecastCalibrationRequest(BaseModel):
+    destination: str
+    dailyForecast: List[Dict[str, Any]]
+    elevation: Optional[float] = None
+
+
+@app.post("/intelligence/calibrate-forecast")
+def calibrate_forecast_endpoint(payload: WeatherForecastCalibrationRequest):
+    """
+    Calibrates multi-day daily weather forecast (temperatureMin and temperatureMax)
+    using physical topographical microclimate downscaling.
+    """
+    calibrated = calibrate_destination_forecast(
+        destination=payload.destination,
+        daily_forecast=payload.dailyForecast,
+        elevation=payload.elevation,
+    )
+    return {
+        "destination": payload.destination,
+        "calibratedForecast": calibrated,
+        "daysCount": len(calibrated),
     }
 
 
