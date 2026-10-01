@@ -268,9 +268,10 @@ function Hotels() {
           </div>
 
           {/* CATEGORY FILTER TABS */}
-          <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", justifyContent: "center", marginTop: "1.25rem", marginBottom: "0.75rem" }}>
+          <div className="hotels-category-tabs" style={{ display: "flex", gap: "8px", flexWrap: "wrap", justifyContent: "center", marginTop: "1.25rem", marginBottom: "0.75rem" }}>
             <button
               type="button"
+              className="hotels-category-tab-btn"
               onClick={() => handleCategoryChange("all")}
               style={{
                 padding: "8px 16px",
@@ -287,6 +288,7 @@ function Hotels() {
             </button>
             <button
               type="button"
+              className="hotels-category-tab-btn"
               onClick={() => handleCategoryChange("student-homestay")}
               style={{
                 padding: "8px 16px",
@@ -304,6 +306,7 @@ function Hotels() {
             </button>
             <button
               type="button"
+              className="hotels-category-tab-btn"
               onClick={() => handleCategoryChange("homestay")}
               style={{
                 padding: "8px 16px",
@@ -320,6 +323,7 @@ function Hotels() {
             </button>
             <button
               type="button"
+              className="hotels-category-tab-btn"
               onClick={() => handleCategoryChange("hostel")}
               style={{
                 padding: "8px 16px",
@@ -336,6 +340,7 @@ function Hotels() {
             </button>
             <button
               type="button"
+              className="hotels-category-tab-btn"
               onClick={() => handleCategoryChange("women")}
               style={{
                 padding: "8px 16px",
@@ -353,9 +358,10 @@ function Hotels() {
           </div>
 
           {/* SAFETY INTELLIGENCE DRAWER TOGGLE */}
-          <div style={{ textAlign: "center", marginBottom: "1rem" }}>
+          <div className="hotels-safety-toggle-wrapper" style={{ textAlign: "center", marginBottom: "1rem" }}>
             <button
               type="button"
+              className="hotels-safety-toggle-btn"
               onClick={() => setShowSafetyDrawer(!showSafetyDrawer)}
               style={{
                 background: showSafetyDrawer ? "#fee2e2" : "rgba(236, 72, 153, 0.1)",
