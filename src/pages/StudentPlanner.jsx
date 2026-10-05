@@ -110,7 +110,7 @@ function StudentPlanner() {
 
   const numStudents = Math.max(1, Number(formData.studentsCount) || 1);
   const numDays = Math.max(1, Number(formData.days) || 1);
-  const budgetPerStudent = Math.max(500, Number(formData.budgetPerHead) || 1000);
+  const budgetPerStudent = Math.max(1, Number(formData.budgetPerHead) || 0);
   const totalGroupBudget = budgetPerStudent * numStudents;
 
   // Real-time student cost allocation breakdown
@@ -564,8 +564,8 @@ function StudentPlanner() {
                   name="budgetPerHead"
                   value={formData.budgetPerHead}
                   onChange={handleChange}
-                  min="500"
-                  step="200"
+                  min="1"
+                  step="any"
                   className="student-form-control"
                   style={{ fontSize: "16px", fontWeight: 700, color: "#059669" }}
                   required
