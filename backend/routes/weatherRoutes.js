@@ -194,7 +194,7 @@ router.get("/live-stream", (req, res) => {
  */
 router.post("/sync-now", async (req, res) => {
   try {
-    const updatedDb = await syncDatabaseNow();
+    const updatedDb = await syncDatabaseNow(true);
     const destinations = getLiveDestinationsArray();
     const syncStatus = getSyncStatus();
 

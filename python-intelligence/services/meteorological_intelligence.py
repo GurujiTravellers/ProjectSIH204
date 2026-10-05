@@ -123,55 +123,35 @@ def calibrate_microclimate_observation(
     cloud_cover = obs.get("cloudCover") if obs.get("cloudCover") is not None else obs.get("cloud_cover", 0.0)
     wind_speed = obs.get("windSpeed") if obs.get("windSpeed") is not None else obs.get("wind_speed_10m", 3.0)
 
-    delta_t = 0.0
-    physics_mechanism = "Direct Atmospheric NWP Model Grid (Plains / Coastal Invariance)"
-    diurnal_phase = "DAY_CONVECTIVE" if is_day == 1 else "NIGHT_RADIATIVE"
+    # Authentic meteorological intelligence:
+    # 1. Do NOT arbitrarily mutate or subtract degrees from authentic 2m air temperatures.
+    # Open-Meteo & Tomorrow.io calculate 2m temperatures with high-resolution digital elevation models.
+    # 2. Enrich with genuine atmospheric intelligence: thermal comfort, fog risk, diurnal phase, wind chill.
+    diurnal_phase = "DAY_SOLAR_INSOLATION" if is_day == 1 else "NOCTURNAL_RADIATIVE"
+    physics_mechanism = f"Authentic Station Telemetry ({profile['terrain'].replace('_', ' ').title()}, {elevation}m ASL)"
 
-    # Microclimate downscaling only applies during nocturnal radiative cooling
-    if is_day == 0:
-        # Sky clearness factor (0.15 for dense overcast, 1.0 for clear sky)
-        f_clear = max(0.15, 1.0 - 0.85 * ((min(100.0, max(0.0, float(cloud_cover))) / 100.0) ** 2))
+    # Atmospheric diagnostic indicators
+    dew_point_depression = round(max(0.0, raw_temp - dew_point), 1) if dew_point is not None else 0.0
+    fog_condensation_risk = "HIGH" if (dew_point_depression <= 2.0 and cloud_cover < 40 and wind_speed < 10) else "LOW"
 
-        # Wind mixing factor (0.2 for gale winds mixing warm air aloft, 1.0 for calm air)
-        f_wind = max(0.2, 1.0 - min(float(wind_speed), 30.0) / 35.0)
-
-        if terrain_type == "valley_basin":
-            # Valley cold pool drainage down to dew point boundary (Barry 2008 / Whiteman 2000)
-            pot_cooling = max(0.0, raw_temp - dew_point)
-            delta_t = min(6.5, pot_cooling) * f_clear * f_wind
-            physics_mechanism = "Nocturnal Himalayan Valley Cold Pool Inversion & Katabatic Drainage"
-
-        elif terrain_type in ("cold_desert_plateau", "alpine_pass"):
-            # High-altitude dry atmosphere permits uninhibited longwave radiation loss to space
-            pot_cooling = max(0.0, raw_temp - max(dew_point, 0.0))
-            delta_t = min(7.5, pot_cooling * 0.92) * f_clear * f_wind
-            physics_mechanism = "High-Altitude Trans-Himalayan Radiative Cooling & Near-Frost Boundary"
-
-        elif terrain_type == "mountain_ridge":
-            # Ridge stations drain cold air into valleys, experiencing moderate lapse cooling
-            pot_cooling = max(0.0, raw_temp - dew_point)
-            delta_t = min(2.5, pot_cooling * 0.35) * f_clear * f_wind
-            physics_mechanism = "Mountain Ridge Free-Air Lapse Rate Adjustment"
-
-        elif terrain_type in ("alpine_meadow", "broad_basin", "high_plateau"):
-            # Intermediate basin or plateau cooling
-            pot_cooling = max(0.0, raw_temp - dew_point)
-            delta_t = min(4.0, pot_cooling * 0.55) * f_clear * f_wind
-            physics_mechanism = "High-Altitude Meadow Radiative Microclimate Downscaling"
-
-        else:
-            delta_t = 0.0
-            physics_mechanism = "Direct Atmospheric NWP Model Grid (Plains / Coastal Invariance)"
+    if raw_temp <= 0.0:
+        thermal_category = "SUB_ZERO_FREEZE"
+    elif raw_temp <= 10.0:
+        thermal_category = "COLD_BRISK"
+    elif raw_temp <= 22.0:
+        thermal_category = "MILD_PLEASANT"
+    elif raw_temp <= 32.0:
+        thermal_category = "WARM_COMFORTABLE"
+    elif raw_temp <= 38.0:
+        thermal_category = "HOT"
     else:
-        physics_mechanism = "Daytime Convective Boundary Layer Mixing (Inversion Dissipated)"
+        thermal_category = "EXTREME_HEAT"
 
-    # Compute calibrated temperature
-    calibrated_temp = round((raw_temp - delta_t) * 10) / 10.0
-
-    # Downscale apparent temperature proportionally
+    # Authentic temperatures - zero distortion, zero artificial deltas
+    calibrated_temp = round(float(raw_temp) * 10) / 10.0
     raw_apparent = obs.get("apparentTemperature")
     if raw_apparent is not None and isinstance(raw_apparent, (int, float)):
-        calibrated_apparent = round((raw_apparent - delta_t) * 10) / 10.0
+        calibrated_apparent = round(float(raw_apparent) * 10) / 10.0
     else:
         calibrated_apparent = calibrated_temp
 
@@ -182,15 +162,18 @@ def calibrate_microclimate_observation(
         "rawModelTemperature": raw_temp,
         "rawModelApparentTemperature": raw_apparent,
         "dewPoint": round(float(dew_point), 1) if dew_point is not None else None,
+        "dewPointDepression": dew_point_depression,
         "isDay": int(is_day),
         "cloudCover": round(float(cloud_cover), 1) if cloud_cover is not None else 0.0,
         "elevation": elevation,
         "microclimateCalibration": {
-            "appliedDelta": round(delta_t, 1),
+            "appliedDelta": 0.0,
             "terrainType": terrain_type,
             "diurnalPhase": diurnal_phase,
+            "thermalCategory": thermal_category,
+            "fogCondensationRisk": fog_condensation_risk,
             "physicsMechanism": physics_mechanism,
-            "calibratedBy": "Travel_Guruji Python Intelligence Microclimate Engine",
+            "calibratedBy": "Travel_Guruji Python Intelligence Microclimate Engine (Authentic Live Telemetry)",
         },
     }
 
@@ -210,11 +193,8 @@ def calibrate_destination_forecast(
     elevation: Optional[float] = None
 ) -> List[Dict[str, Any]]:
     """
-    Calibrates multi-day daily forecasts (temperatureMax and temperatureMin)
-    using physical topographical microclimate downscaling.
-    
-    Nighttime minimum temperatures (temperatureMin) in mountain valleys and cold deserts
-    are downscaled based on nocturnal katabatic pooling & radiative cooling potentials.
+    Validates and enriches multi-day daily forecasts (temperatureMax and temperatureMin)
+    preserving authentic forecast data from meteorological providers.
     """
     if not daily_forecast:
         return []
@@ -229,39 +209,20 @@ def calibrate_destination_forecast(
         raw_min = d.get("temperatureMin")
         raw_max = d.get("temperatureMax")
 
-        delta_min = 0.0
-        delta_max = 0.0
-
-        if raw_min is not None and isinstance(raw_min, (int, float)):
-            if terrain_type == "valley_basin":
-                # Valley nocturnal cold pool downscaling (Manali, Kasol, Chitkul)
-                delta_min = min(4.5, max(0.0, raw_min * 0.35))
-            elif terrain_type in ("cold_desert_plateau", "alpine_pass"):
-                # Trans-Himalayan dry radiative night cooling (Leh, Kaza, Rohtang)
-                delta_min = min(5.5, max(0.0, raw_min * 0.45))
-            elif terrain_type == "mountain_ridge":
-                delta_min = min(2.0, max(0.0, raw_min * 0.15))
-            elif terrain_type in ("alpine_meadow", "broad_basin", "high_plateau"):
-                delta_min = min(2.5, max(0.0, raw_min * 0.2))
-
-        # Max temperatures (daytime convective mixing):
-        if raw_max is not None and isinstance(raw_max, (int, float)):
-            if terrain_type in ("alpine_pass", "cold_desert_plateau") and station_elev > 3500:
-                # Thin air boundary condition at ultra-high passes
-                delta_max = min(2.0, max(0.0, (station_elev - 3500) / 600.0))
-
-        cal_min = round((raw_min - delta_min) * 10) / 10 if raw_min is not None else None
-        cal_max = round((raw_max - delta_max) * 10) / 10 if raw_max is not None else None
+        # Maintain 100% authentic numerical forecast fidelity
+        cal_min = round(float(raw_min) * 10) / 10.0 if raw_min is not None and isinstance(raw_min, (int, float)) else None
+        cal_max = round(float(raw_max) * 10) / 10.0 if raw_max is not None and isinstance(raw_max, (int, float)) else None
 
         d["temperatureMin"] = cal_min
         d["temperatureMax"] = cal_max
         d["rawTemperatureMin"] = raw_min
         d["rawTemperatureMax"] = raw_max
         d["microclimateCalibration"] = {
-            "appliedMinDelta": round(delta_min, 1),
-            "appliedMaxDelta": round(delta_max, 1),
+            "appliedMinDelta": 0.0,
+            "appliedMaxDelta": 0.0,
             "terrainType": terrain_type,
-            "calibratedBy": "Travel_Guruji Python Intelligence Microclimate Engine",
+            "elevation": station_elev,
+            "calibratedBy": "Travel_Guruji Python Intelligence Engine (Authentic Forecast)",
         }
         calibrated_days.append(d)
 

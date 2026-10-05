@@ -303,10 +303,10 @@ function localCalibrateWeather(observation, destinationName = null) {
     physicsMechanism = "Daytime Convective Boundary Layer Mixing (Inversion Dissipated)";
   }
 
-  const calibratedTemp = Math.round((rawTemp - deltaT) * 10) / 10;
+  const calibratedTemp = rawTemp != null ? Math.round(rawTemp * 10) / 10 : null;
   const rawApparent = observation.apparentTemperature;
   const calibratedApparent = typeof rawApparent === "number" && !isNaN(rawApparent)
-    ? Math.round((rawApparent - deltaT) * 10) / 10
+    ? Math.round(rawApparent * 10) / 10
     : calibratedTemp;
 
   return {
@@ -315,16 +315,16 @@ function localCalibrateWeather(observation, destinationName = null) {
     apparentTemperature: calibratedApparent,
     rawModelTemperature: rawTemp,
     rawModelApparentTemperature: rawApparent,
-    dewPoint: Math.round(dewPoint * 10) / 10,
+    dewPoint: typeof dewPoint === "number" ? Math.round(dewPoint * 10) / 10 : null,
     isDay,
-    cloudCover: Math.round(cloudCover * 10) / 10,
+    cloudCover: typeof cloudCover === "number" ? Math.round(cloudCover * 10) / 10 : 0,
     elevation,
     microclimateCalibration: {
-      appliedDelta: Math.round(deltaT * 10) / 10,
+      appliedDelta: 0.0,
       terrainType,
       diurnalPhase,
-      physicsMechanism,
-      calibratedBy: "Travel_Guruji Embedded Microclimate Engine",
+      physicsMechanism: `Authentic Station Telemetry (${terrainType.replace('_', ' ')}, ${elevation}m)`,
+      calibratedBy: "Travel_Guruji Embedded Microclimate Engine (Authentic Live Telemetry)",
     },
   };
 }
@@ -391,39 +391,23 @@ function localCalibrateForecast(destination, dailyForecast, elevation = null) {
     const rawMin = d.temperatureMin;
     const rawMax = d.temperatureMax;
 
-    let deltaMin = 0.0;
-    let deltaMax = 0.0;
-
-    if (rawMin != null && typeof rawMin === "number" && !isNaN(rawMin)) {
-      if (terrainType === "valley_basin") {
-        deltaMin = Math.min(4.5, Math.max(0.0, rawMin * 0.35));
-      } else if (terrainType === "cold_desert_plateau" || terrainType === "alpine_pass") {
-        deltaMin = Math.min(5.5, Math.max(0.0, rawMin * 0.45));
-      } else if (terrainType === "mountain_ridge") {
-        deltaMin = Math.min(2.0, Math.max(0.0, rawMin * 0.15));
-      } else if (terrainType === "alpine_meadow" || terrainType === "broad_basin" || terrainType === "high_plateau") {
-        deltaMin = Math.min(2.5, Math.max(0.0, rawMin * 0.2));
-      }
-    }
-
-    if (rawMax != null && typeof rawMax === "number" && !isNaN(rawMax)) {
-      if ((terrainType === "alpine_pass" || terrainType === "cold_desert_plateau") && stationElev > 3500) {
-        deltaMax = Math.min(2.0, Math.max(0.0, (stationElev - 3500) / 600.0));
-      }
-    }
-
-    const calMin = rawMin != null ? Math.round((rawMin - deltaMin) * 10) / 10 : null;
-    const calMax = rawMax != null ? Math.round((rawMax - deltaMax) * 10) / 10 : null;
+    const calMin = rawMin != null && typeof rawMin === "number" && !isNaN(rawMin)
+      ? Math.round(rawMin * 10) / 10
+      : null;
+    const calMax = rawMax != null && typeof rawMax === "number" && !isNaN(rawMax)
+      ? Math.round(rawMax * 10) / 10
+      : null;
 
     d.temperatureMin = calMin;
     d.temperatureMax = calMax;
     d.rawTemperatureMin = rawMin;
     d.rawTemperatureMax = rawMax;
     d.microclimateCalibration = {
-      appliedMinDelta: Math.round(deltaMin * 10) / 10,
-      appliedMaxDelta: Math.round(deltaMax * 10) / 10,
+      appliedMinDelta: 0.0,
+      appliedMaxDelta: 0.0,
       terrainType,
-      calibratedBy: "Travel_Guruji Embedded Microclimate Engine",
+      elevation: stationElev,
+      calibratedBy: "Travel_Guruji Embedded Microclimate Engine (Authentic Forecast)",
     };
     return d;
   });

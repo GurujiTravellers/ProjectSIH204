@@ -261,7 +261,7 @@ async function fetchLiveGDACSEvents() {
   try {
     const feedUrl = process.env.GDACS_FEED_URL || GDACS_FEED_URL;
     const res = await safeHttpRequest(feedUrl, {
-      timeout: 6000,
+      timeout: 16000,
       accept: "application/xml, text/xml, */*"
     });
 
@@ -903,19 +903,24 @@ async function getRadarCapabilities() {
 /**
  * 4. Batch fetch real-time Open-Meteo / Tomorrow.io weather telemetry for all locations with smart caching & 429 backoff
  */
-async function fetchAllLocationsWeather() {
+async function fetchAllLocationsWeather(force = false) {
   const t0 = Date.now();
   const now = Date.now();
   providerHealth.openMeteo.lastAttemptAt = new Date().toISOString();
 
-  // Return cached data if rate-limited or cache is still fresh (< 5 mins)
-  if (cachedWeatherMap && now < rateLimitBackoffUntil) {
-    const duration = Date.now() - t0;
-    return { status: "RATE_LIMITED_CACHE", weatherMap: cachedWeatherMap, durationMs: duration };
-  }
-  if (cachedWeatherMap && now - lastWeatherFetchTime < WEATHER_CACHE_TTL_MS) {
-    const duration = Date.now() - t0;
-    return { status: "FRESH_CACHE", weatherMap: cachedWeatherMap, durationMs: duration };
+  // If force is requested (e.g. user clicked "Sync Database Now"), bypass cache
+  if (force) {
+    rateLimitBackoffUntil = 0;
+  } else {
+    // Return cached data if rate-limited or cache is still fresh (< 5 mins)
+    if (cachedWeatherMap && now < rateLimitBackoffUntil) {
+      const duration = Date.now() - t0;
+      return { status: "RATE_LIMITED_CACHE", weatherMap: cachedWeatherMap, durationMs: duration };
+    }
+    if (cachedWeatherMap && now - lastWeatherFetchTime < WEATHER_CACHE_TTL_MS) {
+      const duration = Date.now() - t0;
+      return { status: "FRESH_CACHE", weatherMap: cachedWeatherMap, durationMs: duration };
+    }
   }
 
   try {
@@ -925,7 +930,7 @@ async function fetchAllLocationsWeather() {
 
     const weatherUrl = `${OPEN_METEO_API_URL}?latitude=${lats}&longitude=${lons}&current=temperature_2m,relative_humidity_2m,apparent_temperature,dew_point_2m,is_day,cloud_cover,precipitation,rain,weather_code,wind_speed_10m,wind_direction_10m,wind_gusts_10m,surface_pressure,visibility&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max,wind_speed_10m_max,wind_gusts_10m_max,uv_index_max&timezone=Asia%2FKolkata&forecast_days=7`;
 
-    const res = await safeHttpRequest(weatherUrl, { timeout: 12000, accept: "application/json" });
+    const res = await safeHttpRequest(weatherUrl, { timeout: 25000, accept: "application/json" });
 
     if (res.status === 429) {
       rateLimitBackoffUntil = Date.now() + 60 * 1000; // Adaptive 60s backoff instead of locking for 10 minutes
@@ -1059,7 +1064,7 @@ async function fetchAllLocationsWeather() {
 /**
  * 5. Master Sync Function: Unifies Weather Telemetry with All Real-Time Disasters
  */
-async function syncDatabaseNow() {
+async function syncDatabaseNow(force = false) {
   if (liveDatabase.isSyncing) {
     console.log("[WeatherSync] Sync already in progress, skipping concurrent run.");
     return liveDatabase;
@@ -1067,7 +1072,7 @@ async function syncDatabaseNow() {
 
   liveDatabase.isSyncing = true;
   const startTime = Date.now();
-  console.log(`[WeatherSync] 🔄 Starting automated sync cycle #${liveDatabase.syncCount + 1}...`);
+  console.log(`[WeatherSync] 🔄 Starting automated sync cycle #${liveDatabase.syncCount + 1}... (force=${force})`);
 
   try {
     // Execute all 4 external provider requests concurrently with independent timing & error isolation
@@ -1075,7 +1080,7 @@ async function syncDatabaseNow() {
       fetchLiveUSGSEarthquakes(),
       fetchLiveNASAEvents(),
       fetchLiveGDACSEvents(),
-      fetchAllLocationsWeather(),
+      fetchAllLocationsWeather(force),
     ]);
 
     const weatherMap = weatherRes.weatherMap || {};
