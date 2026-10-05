@@ -397,34 +397,9 @@ function clientCalibrateDailyForecast(destinationName, dailyForecast) {
 
   let appliedMinDelta = 0.0;
   let appliedMaxDelta = 0.0;
-  if (profile.terrain === "valley_basin") {
-    appliedMinDelta = -5.5;
-    appliedMaxDelta = -1.5;
-  } else if (profile.terrain === "cold_desert_plateau") {
-    appliedMinDelta = -5.0;
-    appliedMaxDelta = -1.0;
-  } else if (profile.terrain === "alpine_pass") {
-    if (dest.includes("chitkul")) {
-      appliedMinDelta = -4.0;
-      appliedMaxDelta = -1.0;
-    } else if (dest.includes("rohtang")) {
-      appliedMinDelta = -4.0;
-      appliedMaxDelta = -2.0;
-    } else {
-      appliedMinDelta = -4.5;
-      appliedMaxDelta = -1.5;
-    }
-  } else if (profile.terrain === "mountain_ridge") {
-    if (dest.includes("shimla") || dest.includes("mussoorie")) {
-      appliedMinDelta = +3.0;
-      appliedMaxDelta = +2.0;
-    }
-  } else if (profile.terrain === "alpine_meadow") {
-    appliedMinDelta = -3.5;
-    appliedMaxDelta = -1.0;
-  } else if (profile.terrain === "broad_basin") {
-    appliedMinDelta = -2.0;
-    appliedMaxDelta = 0.0;
+  if (profile.terrain === "mountain_ridge" && (dest.includes("shimla") || dest.includes("mussoorie"))) {
+    appliedMinDelta = +2.5;
+    appliedMaxDelta = +1.5;
   }
 
   return dailyForecast.map((d) => {
@@ -432,8 +407,8 @@ function clientCalibrateDailyForecast(destinationName, dailyForecast) {
     if (d.microclimateCalibration && d.microclimateCalibration.calibratedBy) {
       return d;
     }
-    const rawMin = d.temperatureMin;
-    const rawMax = d.temperatureMax;
+    const rawMin = d.rawTemperatureMin != null ? d.rawTemperatureMin : d.temperatureMin;
+    const rawMax = d.rawTemperatureMax != null ? d.rawTemperatureMax : d.temperatureMax;
 
     return {
       ...d,
@@ -441,6 +416,11 @@ function clientCalibrateDailyForecast(destinationName, dailyForecast) {
       temperatureMax: rawMax != null && typeof rawMax === "number" && !isNaN(rawMax) ? Math.round((rawMax + appliedMaxDelta) * 10) / 10 : null,
       rawTemperatureMin: rawMin,
       rawTemperatureMax: rawMax,
+      microclimateCalibration: {
+        appliedMinDelta,
+        appliedMaxDelta,
+        calibratedBy: "Client Meteorological Engine",
+      },
     };
   });
 }
@@ -451,7 +431,7 @@ function clientCalibrateCurrentTemperature(destinationName, current) {
     // Already calibrated by backend / Python intelligence - strictly preserve
     return current;
   }
-  const rawTemp = current.temperature_2m ?? current.temperature;
+  const rawTemp = current.rawModelTemperature ?? (current.temperature_2m ?? current.temperature);
   if (rawTemp == null || typeof rawTemp !== "number" || isNaN(rawTemp)) return current;
 
   const dest = (destinationName || "").toLowerCase().trim();
@@ -465,39 +445,15 @@ function clientCalibrateCurrentTemperature(destinationName, current) {
 
   const isDay = current.isDay != null ? current.isDay : (current.is_day != null ? current.is_day : 0);
   const cloudCover = current.cloudCover != null ? current.cloudCover : (current.cloud_cover || 0);
-  const windSpeed = current.windSpeed != null ? current.windSpeed : (current.wind_speed_10m || 3.0);
-
   const ccNorm = Math.min(100.0, Math.max(0.0, Number(cloudCover))) / 100.0;
-  const windNorm = Math.min(50.0, Math.max(0.0, Number(windSpeed)));
-  const cloudSuppression = 1.0 - (0.45 * ccNorm);
-  const windSuppression = Math.max(0.4, 1.0 - (windNorm / 35.0));
-  const nocturnalFactor = cloudSuppression * windSuppression;
 
   let delta = 0.0;
-  if (profile.terrain === "valley_basin") {
-    delta = isDay === 0 ? -7.2 * nocturnalFactor : -1.5;
-  } else if (profile.terrain === "cold_desert_plateau") {
-    delta = isDay === 0 ? -7.0 * (1.0 - 0.35 * ccNorm) : -1.0;
-  } else if (profile.terrain === "alpine_pass") {
-    if (dest.includes("chitkul")) {
-      delta = isDay === 0 ? -5.0 * (1.0 - 0.3 * ccNorm) : -1.5;
-    } else if (dest.includes("rohtang")) {
-      delta = isDay === 0 ? -4.0 * (1.0 - 0.3 * ccNorm) : -2.0;
-    } else {
-      delta = isDay === 0 ? -3.5 : -1.5;
-    }
-  } else if (profile.terrain === "mountain_ridge") {
-    if (dest.includes("shimla") || dest.includes("mussoorie")) {
-      delta = isDay === 0 ? +4.8 * (1.0 - 0.3 * ccNorm) : 0.0;
-    }
-  } else if (profile.terrain === "alpine_meadow") {
-    delta = isDay === 0 ? -4.5 * nocturnalFactor : -1.0;
-  } else if (profile.terrain === "broad_basin") {
-    delta = isDay === 0 ? -2.5 * nocturnalFactor : 0.0;
+  if (profile.terrain === "mountain_ridge" && (dest.includes("shimla") || dest.includes("mussoorie"))) {
+    delta = isDay === 0 ? +4.8 * (1.0 - 0.3 * ccNorm) : +1.5;
   }
 
   const calTemp = Math.round((rawTemp + delta) * 10) / 10;
-  const rawApparent = current.apparent_temperature ?? current.apparentTemperature;
+  const rawApparent = current.rawModelApparentTemperature ?? (current.apparent_temperature ?? current.apparentTemperature);
   const calApparent = typeof rawApparent === "number" && !isNaN(rawApparent)
     ? Math.round((rawApparent + delta) * 10) / 10
     : calTemp;
@@ -508,6 +464,12 @@ function clientCalibrateCurrentTemperature(destinationName, current) {
     temperature: current.temperature !== undefined ? calTemp : current.temperature,
     apparent_temperature: current.apparent_temperature !== undefined ? calApparent : current.apparent_temperature,
     apparentTemperature: current.apparentTemperature !== undefined ? calApparent : current.apparentTemperature,
+    rawModelTemperature: rawTemp,
+    rawModelApparentTemperature: rawApparent,
+    microclimateCalibration: {
+      appliedDelta: Math.round(delta * 10) / 10,
+      calibratedBy: "Client Meteorological Engine",
+    },
   };
 }
 

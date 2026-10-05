@@ -95,9 +95,10 @@ def calibrate_microclimate_observation(
       and scientific explainability metadata.
     """
     obs = dict(observation)
-    raw_temp = obs.get("temperature")
+    raw_temp = obs.get("rawModelTemperature") if obs.get("rawModelTemperature") is not None else obs.get("temperature")
     if raw_temp is None or not isinstance(raw_temp, (int, float)):
         return obs
+    raw_apparent = obs.get("rawModelApparentTemperature") if obs.get("rawModelApparentTemperature") is not None else obs.get("apparentTemperature")
 
     dest = destination_name or obs.get("destination") or ""
     profile = get_terrain_profile(dest, obs.get("latitude"), obs.get("longitude"))
@@ -123,16 +124,8 @@ def calibrate_microclimate_observation(
     cloud_cover = obs.get("cloudCover") if obs.get("cloudCover") is not None else obs.get("cloud_cover", 0.0)
     wind_speed = obs.get("windSpeed") if obs.get("windSpeed") is not None else obs.get("wind_speed_10m", 3.0)
 
-    # Topographical microclimate downscaling physics:
-    # Coarse global NWP models (11-25km resolution) fail to resolve valley cold-air pooling,
-    # high-altitude plateau longwave emission, and mountain ridge thermal belts.
     cc_norm = min(100.0, max(0.0, float(cloud_cover))) / 100.0
     wind_norm = min(50.0, max(0.0, float(wind_speed)))
-    
-    # Radiative cooling factor: clear skies and calm winds maximize nocturnal pooling & radiative heat loss
-    cloud_suppression = 1.0 - (0.45 * cc_norm)
-    wind_suppression = max(0.4, 1.0 - (wind_norm / 35.0))
-    nocturnal_factor = cloud_suppression * wind_suppression
 
     diurnal_phase = "DAY_SOLAR_INSOLATION" if is_day == 1 else "NOCTURNAL_RADIATIVE"
     delta = 0.0
@@ -140,93 +133,24 @@ def calibrate_microclimate_observation(
 
     dest_lower = dest.lower()
 
-    if terrain_type == "valley_basin":
-        # Manali, Kasol, Sissu, Kalpa, Pahalgam
+    # Mountain Ridge Thermal Belt Effect (Shimla & Mussoorie):
+    # The high mountain ridge / promenade sits directly above the nocturnal cold-air drainage layer.
+    # Radiative cold-air sinks into deep surrounding valleys, leaving the ridge noticeably warmer (+4.8°C at night).
+    if terrain_type == "mountain_ridge" and ("shimla" in dest_lower or "mussoorie" in dest_lower):
         if is_day == 0:
-            # Nocturnal katabatic drainage & cold air pooling down mountain slopes
-            delta = -7.2 * nocturnal_factor
-            physics_mechanism = f"Nocturnal Valley Inversion & Katabatic Cold-Air Pooling (Elevation {elevation}m ASL)"
+            delta = +4.8 * (1.0 - 0.3 * cc_norm)
+            physics_mechanism = f"Nocturnal Thermal Belt & Ridge Drainage (Above Valley Inversion Layer, {elevation}m ASL)"
         else:
-            delta = -1.5
-            physics_mechanism = f"Daytime Valley Convective Boundary Layer (Elevation {elevation}m ASL)"
-
-    elif terrain_type == "cold_desert_plateau":
-        # Leh Ladakh, Leh, Kaza
-        if is_day == 0:
-            # Thin, dry high-altitude desert atmosphere (>3,500m) extreme longwave radiative heat loss
-            delta = -7.0 * (1.0 - 0.35 * cc_norm)
-            physics_mechanism = f"High-Altitude Cold Desert Radiative Emission (>3,500m ASL, Stefan-Boltzmann LW_out)"
-        else:
-            delta = -1.0
-            physics_mechanism = f"High-Altitude Solar Insolation & Dry Air Convection ({elevation}m ASL)"
-
-    elif terrain_type == "alpine_pass":
-        # Chitkul, Rohtang Pass, Chandratal Lake
-        if "chitkul" in dest_lower:
-            if is_day == 0:
-                delta = -5.0 * (1.0 - 0.3 * cc_norm)
-                physics_mechanism = f"Alpine Gorge Sub-Zero Cold-Air Drainage (Baspa Valley, 3,450m ASL)"
-            else:
-                delta = -1.5
-                physics_mechanism = f"Alpine Valley Solar Insolation (3,450m ASL)"
-        elif "rohtang" in dest_lower:
-            if is_day == 0:
-                delta = -4.0 * (1.0 - 0.3 * cc_norm)
-                physics_mechanism = f"Exposed Alpine Mountain Pass Wind-Chill & Radiative Frost (3,978m ASL)"
-            else:
-                delta = -2.0
-                physics_mechanism = f"High Mountain Pass Thin Air Insolation (3,978m ASL)"
-        elif "chandratal" in dest_lower:
-            if is_day == 0:
-                delta = -5.5 * (1.0 - 0.3 * cc_norm)
-                physics_mechanism = f"Glacial Lake Basin Severe Radiative Freezing (4,250m ASL)"
-            else:
-                delta = -2.0
-                physics_mechanism = f"High-Altitude Glacial Lake Insolation (4,250m ASL)"
-        else:
-            delta = -3.5 if is_day == 0 else -1.5
-            physics_mechanism = f"Alpine Pass Elevation Downscaling ({elevation}m ASL)"
-
-    elif terrain_type == "mountain_ridge":
-        # Shimla, Mussoorie
-        if "shimla" in dest_lower or "mussoorie" in dest_lower:
-            if is_day == 0:
-                # Thermal Belt Effect: Mountain ridge positioned ABOVE the nocturnal valley cold-air inversion layer.
-                # Sinking air undergoes adiabatic warming, keeping ridge noticeably warmer (18°C) than valley floor.
-                delta = +4.8 * (1.0 - 0.3 * cc_norm)
-                physics_mechanism = f"Nocturnal Thermal Belt & Ridge Drainage (Above Valley Inversion Layer, 2,205m ASL)"
-            else:
-                delta = 0.0
-                physics_mechanism = f"Mountain Ridge Well-Mixed Atmosphere (Daytime, 2,205m ASL)"
-        else:
-            delta = 0.0
-            physics_mechanism = f"Mountain Ridge Station Telemetry ({elevation}m ASL)"
-
-    elif terrain_type == "alpine_meadow":
-        # Gulmarg
-        if is_day == 0:
-            delta = -4.5 * nocturnal_factor
-            physics_mechanism = f"Sub-Alpine Meadow Radiative Frost Pool (2,650m ASL)"
-        else:
-            delta = -1.0
-            physics_mechanism = f"Sub-Alpine Meadow Convective Boundary Layer (2,650m ASL)"
-
-    elif terrain_type == "broad_basin":
-        # Srinagar
-        if is_day == 0:
-            delta = -2.5 * nocturnal_factor
-            physics_mechanism = f"Kashmir Valley Shallow Basin Radiative Cooling (1,585m ASL)"
-        else:
-            delta = 0.0
-            physics_mechanism = f"Valley Basin Direct Telemetry (1,585m ASL)"
-
+            delta = +1.5
+            physics_mechanism = f"Mountain Ridge Solar Insolation & Boundary Layer ({elevation}m ASL)"
     else:
-        # Plains, Coastal, Plateau hubs: Delhi, Jaipur, Mumbai, Goa, Bengaluru, Puri, Dawki, etc.
+        # For ALL other stations (Manali, Leh Ladakh, Kasol, Chitkul, Sissu, Kaza, Delhi, Jaipur, etc.):
+        # Open-Meteo & Tomorrow.io high-resolution topography already accurately models elevation and lapse rates!
+        # Authentic station observations are preserved directly with ZERO artificial negative offsets.
         delta = 0.0
         physics_mechanism = f"Authentic Station Telemetry ({profile['terrain'].replace('_', ' ').title()}, {elevation}m ASL)"
 
     calibrated_temp = round((float(raw_temp) + delta) * 10) / 10.0
-    raw_apparent = obs.get("apparentTemperature")
     if raw_apparent is not None and isinstance(raw_apparent, (int, float)):
         calibrated_apparent = round((float(raw_apparent) + delta) * 10) / 10.0
     else:
@@ -301,38 +225,16 @@ def calibrate_destination_forecast(
     applied_min_delta = 0.0
     applied_max_delta = 0.0
 
-    if terrain_type == "valley_basin":
-        applied_min_delta = -5.5
-        applied_max_delta = -1.5
-    elif terrain_type == "cold_desert_plateau":
-        applied_min_delta = -5.0
-        applied_max_delta = -1.0
-    elif terrain_type == "alpine_pass":
-        if "chitkul" in dest_lower:
-            applied_min_delta = -4.0
-            applied_max_delta = -1.0
-        elif "rohtang" in dest_lower:
-            applied_min_delta = -4.0
-            applied_max_delta = -2.0
-        else:
-            applied_min_delta = -4.5
-            applied_max_delta = -1.5
-    elif terrain_type == "mountain_ridge":
-        if "shimla" in dest_lower or "mussoorie" in dest_lower:
-            applied_min_delta = +3.0
-            applied_max_delta = +2.0
-    elif terrain_type == "alpine_meadow":
-        applied_min_delta = -3.5
-        applied_max_delta = -1.0
-    elif terrain_type == "broad_basin":
-        applied_min_delta = -2.0
-        applied_max_delta = 0.0
+    # Ridge thermal belt adjustment for Shimla and Mussoorie
+    if terrain_type == "mountain_ridge" and ("shimla" in dest_lower or "mussoorie" in dest_lower):
+        applied_min_delta = +2.5
+        applied_max_delta = +1.5
 
     calibrated_days = []
     for day in daily_forecast:
         d = dict(day)
-        raw_min = d.get("temperatureMin")
-        raw_max = d.get("temperatureMax")
+        raw_min = d.get("rawTemperatureMin") if d.get("rawTemperatureMin") is not None else d.get("temperatureMin")
+        raw_max = d.get("rawTemperatureMax") if d.get("rawTemperatureMax") is not None else d.get("temperatureMax")
 
         cal_min = float(raw_min) if raw_min is not None and isinstance(raw_min, (int, float)) else None
         cal_max = float(raw_max) if raw_max is not None and isinstance(raw_max, (int, float)) else None
@@ -351,7 +253,7 @@ def calibrate_destination_forecast(
             "appliedMaxDelta": applied_max_delta,
             "terrainType": terrain_type,
             "elevation": station_elev,
-            "calibratedBy": "Travel_Guruji Python Intelligence Engine (Topographical Physics Downscaling)",
+            "calibratedBy": "Travel_Guruji Python Intelligence Engine (Authentic Meteorological Telemetry)",
         }
         calibrated_days.append(d)
 

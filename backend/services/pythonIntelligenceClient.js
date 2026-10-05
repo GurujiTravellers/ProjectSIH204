@@ -242,8 +242,10 @@ const TERRAIN_CLASSIFICATIONS = {
  */
 function localCalibrateWeather(observation, destinationName = null) {
   if (!observation || typeof observation !== "object") return observation;
-  const rawTemp = observation.temperature;
+  const rawTemp = observation.rawModelTemperature != null ? observation.rawModelTemperature : observation.temperature;
   if (rawTemp == null || typeof rawTemp !== "number" || isNaN(rawTemp)) return observation;
+
+  const rawApparent = observation.rawModelApparentTemperature != null ? observation.rawModelApparentTemperature : observation.apparentTemperature;
 
   const dest = destinationName || observation.destination || "";
   let profile = { terrain: "plains_coastal", elevation: 200 };
@@ -275,11 +277,6 @@ function localCalibrateWeather(observation, destinationName = null) {
   const windSpeed = observation.windSpeed != null ? observation.windSpeed : (observation.wind_speed_10m || 3.0);
 
   const ccNorm = Math.min(100.0, Math.max(0.0, Number(cloudCover))) / 100.0;
-  const windNorm = Math.min(50.0, Math.max(0.0, Number(windSpeed)));
-
-  const cloudSuppression = 1.0 - (0.45 * ccNorm);
-  const windSuppression = Math.max(0.4, 1.0 - (windNorm / 35.0));
-  const nocturnalFactor = cloudSuppression * windSuppression;
 
   const diurnalPhase = isDay === 1 ? "DAY_SOLAR_INSOLATION" : "NOCTURNAL_RADIATIVE";
   let delta = 0.0;
@@ -287,62 +284,24 @@ function localCalibrateWeather(observation, destinationName = null) {
 
   const destLower = dest.toLowerCase();
 
-  if (terrainType === "valley_basin") {
+  // Mountain Ridge Thermal Belt Effect for Shimla and Mussoorie
+  if (terrainType === "mountain_ridge" && (destLower.includes("shimla") || destLower.includes("mussoorie"))) {
     if (isDay === 0) {
-      delta = -7.2 * nocturnalFactor;
-      physicsMechanism = `Nocturnal Valley Inversion & Katabatic Cold-Air Pooling (Elevation ${elevation}m ASL)`;
+      delta = +4.8 * (1.0 - 0.3 * ccNorm);
+      physicsMechanism = `Nocturnal Thermal Belt & Ridge Drainage (Above Valley Inversion Layer, ${elevation}m ASL)`;
     } else {
-      delta = -1.5;
-      physicsMechanism = `Daytime Valley Convective Boundary Layer (Elevation ${elevation}m ASL)`;
+      delta = +1.5;
+      physicsMechanism = `Mountain Ridge Solar Insolation & Boundary Layer (${elevation}m ASL)`;
     }
-  } else if (terrainType === "cold_desert_plateau") {
-    if (isDay === 0) {
-      delta = -7.0 * (1.0 - 0.35 * ccNorm);
-      physicsMechanism = `High-Altitude Cold Desert Radiative Emission (>3,500m ASL, Stefan-Boltzmann LW_out)`;
-    } else {
-      delta = -1.0;
-      physicsMechanism = `High-Altitude Solar Insolation & Dry Air Convection (${elevation}m ASL)`;
-    }
-  } else if (terrainType === "alpine_pass") {
-    if (destLower.includes("chitkul")) {
-      delta = isDay === 0 ? -5.0 * (1.0 - 0.3 * ccNorm) : -1.5;
-      physicsMechanism = `Alpine Gorge Sub-Zero Cold-Air Drainage (Baspa Valley, 3,450m ASL)`;
-    } else if (destLower.includes("rohtang")) {
-      delta = isDay === 0 ? -4.0 * (1.0 - 0.3 * ccNorm) : -2.0;
-      physicsMechanism = `Exposed Alpine Mountain Pass Wind-Chill & Radiative Frost (3,978m ASL)`;
-    } else if (destLower.includes("chandratal")) {
-      delta = isDay === 0 ? -5.5 * (1.0 - 0.3 * ccNorm) : -2.0;
-      physicsMechanism = `Glacial Lake Basin Severe Radiative Freezing (4,250m ASL)`;
-    } else {
-      delta = isDay === 0 ? -3.5 : -1.5;
-      physicsMechanism = `Alpine Pass Elevation Downscaling (${elevation}m ASL)`;
-    }
-  } else if (terrainType === "mountain_ridge") {
-    if (destLower.includes("shimla") || destLower.includes("mussoorie")) {
-      if (isDay === 0) {
-        delta = +4.8 * (1.0 - 0.3 * ccNorm);
-        physicsMechanism = `Nocturnal Thermal Belt & Ridge Drainage (Above Valley Inversion Layer, 2,205m ASL)`;
-      } else {
-        delta = 0.0;
-        physicsMechanism = `Mountain Ridge Well-Mixed Atmosphere (Daytime, 2,205m ASL)`;
-      }
-    } else {
-      delta = 0.0;
-      physicsMechanism = `Mountain Ridge Station Telemetry (${elevation}m ASL)`;
-    }
-  } else if (terrainType === "alpine_meadow") {
-    delta = isDay === 0 ? -4.5 * nocturnalFactor : -1.0;
-    physicsMechanism = `Sub-Alpine Meadow Radiative Frost Pool (2,650m ASL)`;
-  } else if (terrainType === "broad_basin") {
-    delta = isDay === 0 ? -2.5 * nocturnalFactor : 0.0;
-    physicsMechanism = `Kashmir Valley Shallow Basin Radiative Cooling (1,585m ASL)`;
   } else {
+    // For ALL other stations (Manali, Leh Ladakh, Kasol, Chitkul, Sissu, Kaza, Delhi, etc.):
+    // Open-Meteo & Tomorrow.io high-resolution topography already accurately models elevation and lapse rates!
+    // Authentic station observations are preserved directly with ZERO artificial negative offsets.
     delta = 0.0;
     physicsMechanism = `Authentic Station Telemetry (${terrainType.replace('_', ' ')}, ${elevation}m ASL)`;
   }
 
-  const calibratedTemp = rawTemp != null ? Math.round((Number(rawTemp) + delta) * 10) / 10 : null;
-  const rawApparent = observation.apparentTemperature;
+  const calibratedTemp = Math.round((Number(rawTemp) + delta) * 10) / 10;
   const calibratedApparent = typeof rawApparent === "number" && !isNaN(rawApparent)
     ? Math.round((Number(rawApparent) + delta) * 10) / 10
     : calibratedTemp;
@@ -362,7 +321,7 @@ function localCalibrateWeather(observation, destinationName = null) {
       terrainType,
       diurnalPhase,
       physicsMechanism,
-      calibratedBy: "Travel_Guruji Embedded Microclimate Engine (Topographical Physics Downscaling)",
+      calibratedBy: "Travel_Guruji Embedded Microclimate Engine (Authentic Meteorological Telemetry)",
     },
   };
 }
@@ -428,40 +387,16 @@ function localCalibrateForecast(destination, dailyForecast, elevation = null) {
   let appliedMinDelta = 0.0;
   let appliedMaxDelta = 0.0;
 
-  if (terrainType === "valley_basin") {
-    appliedMinDelta = -5.5;
-    appliedMaxDelta = -1.5;
-  } else if (terrainType === "cold_desert_plateau") {
-    appliedMinDelta = -5.0;
-    appliedMaxDelta = -1.0;
-  } else if (terrainType === "alpine_pass") {
-    if (destLower.includes("chitkul")) {
-      appliedMinDelta = -4.0;
-      appliedMaxDelta = -1.0;
-    } else if (destLower.includes("rohtang")) {
-      appliedMinDelta = -4.0;
-      appliedMaxDelta = -2.0;
-    } else {
-      appliedMinDelta = -4.5;
-      appliedMaxDelta = -1.5;
-    }
-  } else if (terrainType === "mountain_ridge") {
-    if (destLower.includes("shimla") || destLower.includes("mussoorie")) {
-      appliedMinDelta = +3.0;
-      appliedMaxDelta = +2.0;
-    }
-  } else if (terrainType === "alpine_meadow") {
-    appliedMinDelta = -3.5;
-    appliedMaxDelta = -1.0;
-  } else if (terrainType === "broad_basin") {
-    appliedMinDelta = -2.0;
-    appliedMaxDelta = 0.0;
+  // Ridge thermal belt adjustment for Shimla and Mussoorie
+  if (terrainType === "mountain_ridge" && (destLower.includes("shimla") || destLower.includes("mussoorie"))) {
+    appliedMinDelta = +2.5;
+    appliedMaxDelta = +1.5;
   }
 
   return dailyForecast.map((day) => {
     const d = { ...day };
-    const rawMin = d.temperatureMin;
-    const rawMax = d.temperatureMax;
+    const rawMin = d.rawTemperatureMin != null ? d.rawTemperatureMin : d.temperatureMin;
+    const rawMax = d.rawTemperatureMax != null ? d.rawTemperatureMax : d.temperatureMax;
 
     const calMin = rawMin != null && typeof rawMin === "number" && !isNaN(rawMin)
       ? Math.round((rawMin + appliedMinDelta) * 10) / 10
@@ -479,7 +414,7 @@ function localCalibrateForecast(destination, dailyForecast, elevation = null) {
       appliedMaxDelta: appliedMaxDelta,
       terrainType,
       elevation: stationElev,
-      calibratedBy: "Travel_Guruji Embedded Microclimate Engine (Topographical Physics Downscaling)",
+      calibratedBy: "Travel_Guruji Embedded Microclimate Engine (Authentic Meteorological Telemetry)",
     };
     return d;
   });

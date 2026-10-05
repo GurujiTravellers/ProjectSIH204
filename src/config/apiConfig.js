@@ -23,7 +23,7 @@ export function getApiBaseUrl() {
       hostname.endsWith(".local") ||
       /^(?:10|127|172\.(?:1[6-9]|2[0-9]|3[01])|192\.168)\./.test(hostname);
 
-    if (isLocalDev && port && port !== "5000") {
+    if (isLocalDev && port !== "5000") {
       return `${protocol}//${hostname}:5000/api`;
     }
 

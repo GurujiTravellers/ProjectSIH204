@@ -1000,9 +1000,14 @@ async function fetchAllLocationsWeather(force = false) {
         console.warn(`[WeatherSync] Forecast calibration notice for ${destName}:`, fErr.message);
       }
 
+      const rawT = cur.temperature_2m != null ? Math.round(cur.temperature_2m * 10) / 10 : null;
+      const rawApp = cur.apparent_temperature != null ? Math.round(cur.apparent_temperature * 10) / 10 : null;
+
       weatherMap[destName.toLowerCase()] = {
-        temperature: cur.temperature_2m != null ? Math.round(cur.temperature_2m * 10) / 10 : null,
-        apparentTemperature: cur.apparent_temperature != null ? Math.round(cur.apparent_temperature * 10) / 10 : null,
+        temperature: rawT,
+        apparentTemperature: rawApp,
+        rawModelTemperature: rawT,
+        rawModelApparentTemperature: rawApp,
         humidity: cur.relative_humidity_2m ?? null,
         dewPoint: dewPoint,
         isDay: isDay,
@@ -1028,7 +1033,7 @@ async function fetchAllLocationsWeather(force = false) {
     }));
 
     const duration = Date.now() - t0;
-    cachedWeatherMap = weatherMap;
+    cachedWeatherMap = JSON.parse(JSON.stringify(weatherMap));
     lastWeatherFetchTime = Date.now();
     providerHealth.openMeteo = {
       status: "AVAILABLE",
@@ -1124,17 +1129,25 @@ async function syncDatabaseNow(force = false) {
         };
       }
 
-      // Physics-based microclimate downscaling (Himalayan katabatic drainage, high-altitude radiative cooling)
+      // Authentic meteorological downscaling & validation via Python Intelligence
+      const rawModelTemp = rawW.rawModelTemperature != null ? rawW.rawModelTemperature : rawW.temperature;
+      const rawModelApp = rawW.rawModelApparentTemperature != null ? rawW.rawModelApparentTemperature : rawW.apparentTemperature;
       let calibratedW = rawW;
       try {
         calibratedW = await pythonClient.calibrateWeather({
           ...rawW,
+          rawModelTemperature: rawModelTemp,
+          rawModelApparentTemperature: rawModelApp,
           latitude: info.lat,
           longitude: info.lon,
           destination: name,
         }, name);
         if (weatherMap) {
-          weatherMap[key] = calibratedW;
+          weatherMap[key] = {
+            ...calibratedW,
+            rawModelTemperature: rawModelTemp,
+            rawModelApparentTemperature: rawModelApp,
+          };
         }
       } catch (calErr) {
         console.warn(`[WeatherSync] Microclimate calibration notice for ${name}:`, calErr.message);
