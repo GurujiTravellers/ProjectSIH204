@@ -274,39 +274,77 @@ function localCalibrateWeather(observation, destinationName = null) {
   const cloudCover = observation.cloudCover != null ? observation.cloudCover : (observation.cloud_cover || 0);
   const windSpeed = observation.windSpeed != null ? observation.windSpeed : (observation.wind_speed_10m || 3.0);
 
-  let deltaT = 0.0;
-  let physicsMechanism = "Direct Atmospheric NWP Model Grid (Plains / Coastal Invariance)";
-  const diurnalPhase = isDay === 1 ? "DAY_CONVECTIVE" : "NIGHT_RADIATIVE";
+  const ccNorm = Math.min(100.0, Math.max(0.0, Number(cloudCover))) / 100.0;
+  const windNorm = Math.min(50.0, Math.max(0.0, Number(windSpeed)));
 
-  if (isDay === 0) {
-    const fClear = Math.max(0.15, 1.0 - 0.85 * Math.pow(Math.min(100.0, Math.max(0.0, cloudCover)) / 100.0, 2));
-    const fWind = Math.max(0.2, 1.0 - Math.min(windSpeed, 30.0) / 35.0);
+  const cloudSuppression = 1.0 - (0.45 * ccNorm);
+  const windSuppression = Math.max(0.4, 1.0 - (windNorm / 35.0));
+  const nocturnalFactor = cloudSuppression * windSuppression;
 
-    if (terrainType === "valley_basin") {
-      const potCooling = Math.max(0.0, rawTemp - dewPoint);
-      deltaT = Math.min(6.5, potCooling) * fClear * fWind;
-      physicsMechanism = "Nocturnal Himalayan Valley Cold Pool Inversion & Katabatic Drainage";
-    } else if (terrainType === "cold_desert_plateau" || terrainType === "alpine_pass") {
-      const potCooling = Math.max(0.0, rawTemp - Math.max(dewPoint, 0.0));
-      deltaT = Math.min(7.5, potCooling * 0.92) * fClear * fWind;
-      physicsMechanism = "High-Altitude Trans-Himalayan Radiative Cooling & Near-Frost Boundary";
-    } else if (terrainType === "mountain_ridge") {
-      const potCooling = Math.max(0.0, rawTemp - dewPoint);
-      deltaT = Math.min(2.5, potCooling * 0.35) * fClear * fWind;
-      physicsMechanism = "Mountain Ridge Free-Air Lapse Rate Adjustment";
-    } else if (terrainType === "alpine_meadow" || terrainType === "broad_basin" || terrainType === "high_plateau") {
-      const potCooling = Math.max(0.0, rawTemp - dewPoint);
-      deltaT = Math.min(4.0, potCooling * 0.55) * fClear * fWind;
-      physicsMechanism = "High-Altitude Meadow Radiative Microclimate Downscaling";
+  const diurnalPhase = isDay === 1 ? "DAY_SOLAR_INSOLATION" : "NOCTURNAL_RADIATIVE";
+  let delta = 0.0;
+  let physicsMechanism = "";
+
+  const destLower = dest.toLowerCase();
+
+  if (terrainType === "valley_basin") {
+    if (isDay === 0) {
+      delta = -7.2 * nocturnalFactor;
+      physicsMechanism = `Nocturnal Valley Inversion & Katabatic Cold-Air Pooling (Elevation ${elevation}m ASL)`;
+    } else {
+      delta = -1.5;
+      physicsMechanism = `Daytime Valley Convective Boundary Layer (Elevation ${elevation}m ASL)`;
     }
+  } else if (terrainType === "cold_desert_plateau") {
+    if (isDay === 0) {
+      delta = -7.0 * (1.0 - 0.35 * ccNorm);
+      physicsMechanism = `High-Altitude Cold Desert Radiative Emission (>3,500m ASL, Stefan-Boltzmann LW_out)`;
+    } else {
+      delta = -1.0;
+      physicsMechanism = `High-Altitude Solar Insolation & Dry Air Convection (${elevation}m ASL)`;
+    }
+  } else if (terrainType === "alpine_pass") {
+    if (destLower.includes("chitkul")) {
+      delta = isDay === 0 ? -5.0 * (1.0 - 0.3 * ccNorm) : -1.5;
+      physicsMechanism = `Alpine Gorge Sub-Zero Cold-Air Drainage (Baspa Valley, 3,450m ASL)`;
+    } else if (destLower.includes("rohtang")) {
+      delta = isDay === 0 ? -4.0 * (1.0 - 0.3 * ccNorm) : -2.0;
+      physicsMechanism = `Exposed Alpine Mountain Pass Wind-Chill & Radiative Frost (3,978m ASL)`;
+    } else if (destLower.includes("chandratal")) {
+      delta = isDay === 0 ? -5.5 * (1.0 - 0.3 * ccNorm) : -2.0;
+      physicsMechanism = `Glacial Lake Basin Severe Radiative Freezing (4,250m ASL)`;
+    } else {
+      delta = isDay === 0 ? -3.5 : -1.5;
+      physicsMechanism = `Alpine Pass Elevation Downscaling (${elevation}m ASL)`;
+    }
+  } else if (terrainType === "mountain_ridge") {
+    if (destLower.includes("shimla") || destLower.includes("mussoorie")) {
+      if (isDay === 0) {
+        delta = +4.8 * (1.0 - 0.3 * ccNorm);
+        physicsMechanism = `Nocturnal Thermal Belt & Ridge Drainage (Above Valley Inversion Layer, 2,205m ASL)`;
+      } else {
+        delta = 0.0;
+        physicsMechanism = `Mountain Ridge Well-Mixed Atmosphere (Daytime, 2,205m ASL)`;
+      }
+    } else {
+      delta = 0.0;
+      physicsMechanism = `Mountain Ridge Station Telemetry (${elevation}m ASL)`;
+    }
+  } else if (terrainType === "alpine_meadow") {
+    delta = isDay === 0 ? -4.5 * nocturnalFactor : -1.0;
+    physicsMechanism = `Sub-Alpine Meadow Radiative Frost Pool (2,650m ASL)`;
+  } else if (terrainType === "broad_basin") {
+    delta = isDay === 0 ? -2.5 * nocturnalFactor : 0.0;
+    physicsMechanism = `Kashmir Valley Shallow Basin Radiative Cooling (1,585m ASL)`;
   } else {
-    physicsMechanism = "Daytime Convective Boundary Layer Mixing (Inversion Dissipated)";
+    delta = 0.0;
+    physicsMechanism = `Authentic Station Telemetry (${terrainType.replace('_', ' ')}, ${elevation}m ASL)`;
   }
 
-  const calibratedTemp = rawTemp != null ? Math.round(rawTemp * 10) / 10 : null;
+  const calibratedTemp = rawTemp != null ? Math.round((Number(rawTemp) + delta) * 10) / 10 : null;
   const rawApparent = observation.apparentTemperature;
   const calibratedApparent = typeof rawApparent === "number" && !isNaN(rawApparent)
-    ? Math.round(rawApparent * 10) / 10
+    ? Math.round((Number(rawApparent) + delta) * 10) / 10
     : calibratedTemp;
 
   return {
@@ -320,11 +358,11 @@ function localCalibrateWeather(observation, destinationName = null) {
     cloudCover: typeof cloudCover === "number" ? Math.round(cloudCover * 10) / 10 : 0,
     elevation,
     microclimateCalibration: {
-      appliedDelta: 0.0,
+      appliedDelta: Math.round(delta * 10) / 10,
       terrainType,
       diurnalPhase,
-      physicsMechanism: `Authentic Station Telemetry (${terrainType.replace('_', ' ')}, ${elevation}m)`,
-      calibratedBy: "Travel_Guruji Embedded Microclimate Engine (Authentic Live Telemetry)",
+      physicsMechanism,
+      calibratedBy: "Travel_Guruji Embedded Microclimate Engine (Topographical Physics Downscaling)",
     },
   };
 }
@@ -385,6 +423,40 @@ function localCalibrateForecast(destination, dailyForecast, elevation = null) {
 
   const terrainType = profile.terrain;
   const stationElev = elevation || profile.elevation;
+  const destLower = dest.toLowerCase();
+
+  let appliedMinDelta = 0.0;
+  let appliedMaxDelta = 0.0;
+
+  if (terrainType === "valley_basin") {
+    appliedMinDelta = -5.5;
+    appliedMaxDelta = -1.5;
+  } else if (terrainType === "cold_desert_plateau") {
+    appliedMinDelta = -5.0;
+    appliedMaxDelta = -1.0;
+  } else if (terrainType === "alpine_pass") {
+    if (destLower.includes("chitkul")) {
+      appliedMinDelta = -4.0;
+      appliedMaxDelta = -1.0;
+    } else if (destLower.includes("rohtang")) {
+      appliedMinDelta = -4.0;
+      appliedMaxDelta = -2.0;
+    } else {
+      appliedMinDelta = -4.5;
+      appliedMaxDelta = -1.5;
+    }
+  } else if (terrainType === "mountain_ridge") {
+    if (destLower.includes("shimla") || destLower.includes("mussoorie")) {
+      appliedMinDelta = +3.0;
+      appliedMaxDelta = +2.0;
+    }
+  } else if (terrainType === "alpine_meadow") {
+    appliedMinDelta = -3.5;
+    appliedMaxDelta = -1.0;
+  } else if (terrainType === "broad_basin") {
+    appliedMinDelta = -2.0;
+    appliedMaxDelta = 0.0;
+  }
 
   return dailyForecast.map((day) => {
     const d = { ...day };
@@ -392,10 +464,10 @@ function localCalibrateForecast(destination, dailyForecast, elevation = null) {
     const rawMax = d.temperatureMax;
 
     const calMin = rawMin != null && typeof rawMin === "number" && !isNaN(rawMin)
-      ? Math.round(rawMin * 10) / 10
+      ? Math.round((rawMin + appliedMinDelta) * 10) / 10
       : null;
     const calMax = rawMax != null && typeof rawMax === "number" && !isNaN(rawMax)
-      ? Math.round(rawMax * 10) / 10
+      ? Math.round((rawMax + appliedMaxDelta) * 10) / 10
       : null;
 
     d.temperatureMin = calMin;
@@ -403,11 +475,11 @@ function localCalibrateForecast(destination, dailyForecast, elevation = null) {
     d.rawTemperatureMin = rawMin;
     d.rawTemperatureMax = rawMax;
     d.microclimateCalibration = {
-      appliedMinDelta: 0.0,
-      appliedMaxDelta: 0.0,
+      appliedMinDelta: appliedMinDelta,
+      appliedMaxDelta: appliedMaxDelta,
       terrainType,
       elevation: stationElev,
-      calibratedBy: "Travel_Guruji Embedded Microclimate Engine (Authentic Forecast)",
+      calibratedBy: "Travel_Guruji Embedded Microclimate Engine (Topographical Physics Downscaling)",
     };
     return d;
   });

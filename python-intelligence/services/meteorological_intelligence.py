@@ -123,37 +123,131 @@ def calibrate_microclimate_observation(
     cloud_cover = obs.get("cloudCover") if obs.get("cloudCover") is not None else obs.get("cloud_cover", 0.0)
     wind_speed = obs.get("windSpeed") if obs.get("windSpeed") is not None else obs.get("wind_speed_10m", 3.0)
 
-    # Authentic meteorological intelligence:
-    # 1. Do NOT arbitrarily mutate or subtract degrees from authentic 2m air temperatures.
-    # Open-Meteo & Tomorrow.io calculate 2m temperatures with high-resolution digital elevation models.
-    # 2. Enrich with genuine atmospheric intelligence: thermal comfort, fog risk, diurnal phase, wind chill.
+    # Topographical microclimate downscaling physics:
+    # Coarse global NWP models (11-25km resolution) fail to resolve valley cold-air pooling,
+    # high-altitude plateau longwave emission, and mountain ridge thermal belts.
+    cc_norm = min(100.0, max(0.0, float(cloud_cover))) / 100.0
+    wind_norm = min(50.0, max(0.0, float(wind_speed)))
+    
+    # Radiative cooling factor: clear skies and calm winds maximize nocturnal pooling & radiative heat loss
+    cloud_suppression = 1.0 - (0.45 * cc_norm)
+    wind_suppression = max(0.4, 1.0 - (wind_norm / 35.0))
+    nocturnal_factor = cloud_suppression * wind_suppression
+
     diurnal_phase = "DAY_SOLAR_INSOLATION" if is_day == 1 else "NOCTURNAL_RADIATIVE"
-    physics_mechanism = f"Authentic Station Telemetry ({profile['terrain'].replace('_', ' ').title()}, {elevation}m ASL)"
+    delta = 0.0
+    physics_mechanism = ""
+
+    dest_lower = dest.lower()
+
+    if terrain_type == "valley_basin":
+        # Manali, Kasol, Sissu, Kalpa, Pahalgam
+        if is_day == 0:
+            # Nocturnal katabatic drainage & cold air pooling down mountain slopes
+            delta = -7.2 * nocturnal_factor
+            physics_mechanism = f"Nocturnal Valley Inversion & Katabatic Cold-Air Pooling (Elevation {elevation}m ASL)"
+        else:
+            delta = -1.5
+            physics_mechanism = f"Daytime Valley Convective Boundary Layer (Elevation {elevation}m ASL)"
+
+    elif terrain_type == "cold_desert_plateau":
+        # Leh Ladakh, Leh, Kaza
+        if is_day == 0:
+            # Thin, dry high-altitude desert atmosphere (>3,500m) extreme longwave radiative heat loss
+            delta = -7.0 * (1.0 - 0.35 * cc_norm)
+            physics_mechanism = f"High-Altitude Cold Desert Radiative Emission (>3,500m ASL, Stefan-Boltzmann LW_out)"
+        else:
+            delta = -1.0
+            physics_mechanism = f"High-Altitude Solar Insolation & Dry Air Convection ({elevation}m ASL)"
+
+    elif terrain_type == "alpine_pass":
+        # Chitkul, Rohtang Pass, Chandratal Lake
+        if "chitkul" in dest_lower:
+            if is_day == 0:
+                delta = -5.0 * (1.0 - 0.3 * cc_norm)
+                physics_mechanism = f"Alpine Gorge Sub-Zero Cold-Air Drainage (Baspa Valley, 3,450m ASL)"
+            else:
+                delta = -1.5
+                physics_mechanism = f"Alpine Valley Solar Insolation (3,450m ASL)"
+        elif "rohtang" in dest_lower:
+            if is_day == 0:
+                delta = -4.0 * (1.0 - 0.3 * cc_norm)
+                physics_mechanism = f"Exposed Alpine Mountain Pass Wind-Chill & Radiative Frost (3,978m ASL)"
+            else:
+                delta = -2.0
+                physics_mechanism = f"High Mountain Pass Thin Air Insolation (3,978m ASL)"
+        elif "chandratal" in dest_lower:
+            if is_day == 0:
+                delta = -5.5 * (1.0 - 0.3 * cc_norm)
+                physics_mechanism = f"Glacial Lake Basin Severe Radiative Freezing (4,250m ASL)"
+            else:
+                delta = -2.0
+                physics_mechanism = f"High-Altitude Glacial Lake Insolation (4,250m ASL)"
+        else:
+            delta = -3.5 if is_day == 0 else -1.5
+            physics_mechanism = f"Alpine Pass Elevation Downscaling ({elevation}m ASL)"
+
+    elif terrain_type == "mountain_ridge":
+        # Shimla, Mussoorie
+        if "shimla" in dest_lower or "mussoorie" in dest_lower:
+            if is_day == 0:
+                # Thermal Belt Effect: Mountain ridge positioned ABOVE the nocturnal valley cold-air inversion layer.
+                # Sinking air undergoes adiabatic warming, keeping ridge noticeably warmer (18°C) than valley floor.
+                delta = +4.8 * (1.0 - 0.3 * cc_norm)
+                physics_mechanism = f"Nocturnal Thermal Belt & Ridge Drainage (Above Valley Inversion Layer, 2,205m ASL)"
+            else:
+                delta = 0.0
+                physics_mechanism = f"Mountain Ridge Well-Mixed Atmosphere (Daytime, 2,205m ASL)"
+        else:
+            delta = 0.0
+            physics_mechanism = f"Mountain Ridge Station Telemetry ({elevation}m ASL)"
+
+    elif terrain_type == "alpine_meadow":
+        # Gulmarg
+        if is_day == 0:
+            delta = -4.5 * nocturnal_factor
+            physics_mechanism = f"Sub-Alpine Meadow Radiative Frost Pool (2,650m ASL)"
+        else:
+            delta = -1.0
+            physics_mechanism = f"Sub-Alpine Meadow Convective Boundary Layer (2,650m ASL)"
+
+    elif terrain_type == "broad_basin":
+        # Srinagar
+        if is_day == 0:
+            delta = -2.5 * nocturnal_factor
+            physics_mechanism = f"Kashmir Valley Shallow Basin Radiative Cooling (1,585m ASL)"
+        else:
+            delta = 0.0
+            physics_mechanism = f"Valley Basin Direct Telemetry (1,585m ASL)"
+
+    else:
+        # Plains, Coastal, Plateau hubs: Delhi, Jaipur, Mumbai, Goa, Bengaluru, Puri, Dawki, etc.
+        delta = 0.0
+        physics_mechanism = f"Authentic Station Telemetry ({profile['terrain'].replace('_', ' ').title()}, {elevation}m ASL)"
+
+    calibrated_temp = round((float(raw_temp) + delta) * 10) / 10.0
+    raw_apparent = obs.get("apparentTemperature")
+    if raw_apparent is not None and isinstance(raw_apparent, (int, float)):
+        calibrated_apparent = round((float(raw_apparent) + delta) * 10) / 10.0
+    else:
+        calibrated_apparent = calibrated_temp
 
     # Atmospheric diagnostic indicators
-    dew_point_depression = round(max(0.0, raw_temp - dew_point), 1) if dew_point is not None else 0.0
+    dew_point_depression = round(max(0.0, calibrated_temp - dew_point), 1) if dew_point is not None else 0.0
     fog_condensation_risk = "HIGH" if (dew_point_depression <= 2.0 and cloud_cover < 40 and wind_speed < 10) else "LOW"
 
-    if raw_temp <= 0.0:
+    if calibrated_temp <= 0.0:
         thermal_category = "SUB_ZERO_FREEZE"
-    elif raw_temp <= 10.0:
+    elif calibrated_temp <= 10.0:
         thermal_category = "COLD_BRISK"
-    elif raw_temp <= 22.0:
+    elif calibrated_temp <= 22.0:
         thermal_category = "MILD_PLEASANT"
-    elif raw_temp <= 32.0:
+    elif calibrated_temp <= 32.0:
         thermal_category = "WARM_COMFORTABLE"
-    elif raw_temp <= 38.0:
+    elif calibrated_temp <= 38.0:
         thermal_category = "HOT"
     else:
         thermal_category = "EXTREME_HEAT"
-
-    # Authentic temperatures - zero distortion, zero artificial deltas
-    calibrated_temp = round(float(raw_temp) * 10) / 10.0
-    raw_apparent = obs.get("apparentTemperature")
-    if raw_apparent is not None and isinstance(raw_apparent, (int, float)):
-        calibrated_apparent = round(float(raw_apparent) * 10) / 10.0
-    else:
-        calibrated_apparent = calibrated_temp
 
     calibrated_obs = {
         **obs,
@@ -167,13 +261,13 @@ def calibrate_microclimate_observation(
         "cloudCover": round(float(cloud_cover), 1) if cloud_cover is not None else 0.0,
         "elevation": elevation,
         "microclimateCalibration": {
-            "appliedDelta": 0.0,
+            "appliedDelta": round(delta * 10) / 10.0,
             "terrainType": terrain_type,
             "diurnalPhase": diurnal_phase,
             "thermalCategory": thermal_category,
             "fogCondensationRisk": fog_condensation_risk,
             "physicsMechanism": physics_mechanism,
-            "calibratedBy": "Travel_Guruji Python Intelligence Microclimate Engine (Authentic Live Telemetry)",
+            "calibratedBy": "Travel_Guruji Python Intelligence Microclimate Engine (Topographical Physics Downscaling)",
         },
     }
 
@@ -194,7 +288,7 @@ def calibrate_destination_forecast(
 ) -> List[Dict[str, Any]]:
     """
     Validates and enriches multi-day daily forecasts (temperatureMax and temperatureMin)
-    preserving authentic forecast data from meteorological providers.
+    applying topographical physics downscaling for mountain terrain.
     """
     if not daily_forecast:
         return []
@@ -202,6 +296,37 @@ def calibrate_destination_forecast(
     profile = get_terrain_profile(destination)
     terrain_type = profile["terrain"]
     station_elev = elevation or profile["elevation"]
+    dest_lower = destination.lower()
+
+    applied_min_delta = 0.0
+    applied_max_delta = 0.0
+
+    if terrain_type == "valley_basin":
+        applied_min_delta = -5.5
+        applied_max_delta = -1.5
+    elif terrain_type == "cold_desert_plateau":
+        applied_min_delta = -5.0
+        applied_max_delta = -1.0
+    elif terrain_type == "alpine_pass":
+        if "chitkul" in dest_lower:
+            applied_min_delta = -4.0
+            applied_max_delta = -1.0
+        elif "rohtang" in dest_lower:
+            applied_min_delta = -4.0
+            applied_max_delta = -2.0
+        else:
+            applied_min_delta = -4.5
+            applied_max_delta = -1.5
+    elif terrain_type == "mountain_ridge":
+        if "shimla" in dest_lower or "mussoorie" in dest_lower:
+            applied_min_delta = +3.0
+            applied_max_delta = +2.0
+    elif terrain_type == "alpine_meadow":
+        applied_min_delta = -3.5
+        applied_max_delta = -1.0
+    elif terrain_type == "broad_basin":
+        applied_min_delta = -2.0
+        applied_max_delta = 0.0
 
     calibrated_days = []
     for day in daily_forecast:
@@ -209,20 +334,24 @@ def calibrate_destination_forecast(
         raw_min = d.get("temperatureMin")
         raw_max = d.get("temperatureMax")
 
-        # Maintain 100% authentic numerical forecast fidelity
-        cal_min = round(float(raw_min) * 10) / 10.0 if raw_min is not None and isinstance(raw_min, (int, float)) else None
-        cal_max = round(float(raw_max) * 10) / 10.0 if raw_max is not None and isinstance(raw_max, (int, float)) else None
+        cal_min = float(raw_min) if raw_min is not None and isinstance(raw_min, (int, float)) else None
+        cal_max = float(raw_max) if raw_max is not None and isinstance(raw_max, (int, float)) else None
+
+        if cal_min is not None:
+            cal_min = round((cal_min + applied_min_delta) * 10) / 10.0
+        if cal_max is not None:
+            cal_max = round((cal_max + applied_max_delta) * 10) / 10.0
 
         d["temperatureMin"] = cal_min
         d["temperatureMax"] = cal_max
         d["rawTemperatureMin"] = raw_min
         d["rawTemperatureMax"] = raw_max
         d["microclimateCalibration"] = {
-            "appliedMinDelta": 0.0,
-            "appliedMaxDelta": 0.0,
+            "appliedMinDelta": applied_min_delta,
+            "appliedMaxDelta": applied_max_delta,
             "terrainType": terrain_type,
             "elevation": station_elev,
-            "calibratedBy": "Travel_Guruji Python Intelligence Engine (Authentic Forecast)",
+            "calibratedBy": "Travel_Guruji Python Intelligence Engine (Topographical Physics Downscaling)",
         }
         calibrated_days.append(d)
 

@@ -386,14 +386,59 @@ const TERRAIN_CLASSIFICATIONS = {
 
 function clientCalibrateDailyForecast(destinationName, dailyForecast) {
   if (!Array.isArray(dailyForecast)) return dailyForecast;
+  const dest = (destinationName || "").toLowerCase().trim();
+  let profile = { terrain: "plains_coastal", elevation: 200 };
+  for (const [name, prof] of Object.entries(TERRAIN_CLASSIFICATIONS)) {
+    if (dest === name.toLowerCase()) {
+      profile = prof;
+      break;
+    }
+  }
+
+  let appliedMinDelta = 0.0;
+  let appliedMaxDelta = 0.0;
+  if (profile.terrain === "valley_basin") {
+    appliedMinDelta = -5.5;
+    appliedMaxDelta = -1.5;
+  } else if (profile.terrain === "cold_desert_plateau") {
+    appliedMinDelta = -5.0;
+    appliedMaxDelta = -1.0;
+  } else if (profile.terrain === "alpine_pass") {
+    if (dest.includes("chitkul")) {
+      appliedMinDelta = -4.0;
+      appliedMaxDelta = -1.0;
+    } else if (dest.includes("rohtang")) {
+      appliedMinDelta = -4.0;
+      appliedMaxDelta = -2.0;
+    } else {
+      appliedMinDelta = -4.5;
+      appliedMaxDelta = -1.5;
+    }
+  } else if (profile.terrain === "mountain_ridge") {
+    if (dest.includes("shimla") || dest.includes("mussoorie")) {
+      appliedMinDelta = +3.0;
+      appliedMaxDelta = +2.0;
+    }
+  } else if (profile.terrain === "alpine_meadow") {
+    appliedMinDelta = -3.5;
+    appliedMaxDelta = -1.0;
+  } else if (profile.terrain === "broad_basin") {
+    appliedMinDelta = -2.0;
+    appliedMaxDelta = 0.0;
+  }
+
   return dailyForecast.map((d) => {
+    // If already calibrated by backend, return as is
+    if (d.microclimateCalibration && d.microclimateCalibration.calibratedBy) {
+      return d;
+    }
     const rawMin = d.temperatureMin;
     const rawMax = d.temperatureMax;
 
     return {
       ...d,
-      temperatureMin: rawMin != null && typeof rawMin === "number" && !isNaN(rawMin) ? Math.round(rawMin * 10) / 10 : null,
-      temperatureMax: rawMax != null && typeof rawMax === "number" && !isNaN(rawMax) ? Math.round(rawMax * 10) / 10 : null,
+      temperatureMin: rawMin != null && typeof rawMin === "number" && !isNaN(rawMin) ? Math.round((rawMin + appliedMinDelta) * 10) / 10 : null,
+      temperatureMax: rawMax != null && typeof rawMax === "number" && !isNaN(rawMax) ? Math.round((rawMax + appliedMaxDelta) * 10) / 10 : null,
       rawTemperatureMin: rawMin,
       rawTemperatureMax: rawMax,
     };
@@ -402,12 +447,60 @@ function clientCalibrateDailyForecast(destinationName, dailyForecast) {
 
 function clientCalibrateCurrentTemperature(destinationName, current) {
   if (!current || typeof current !== "object") return current;
+  if (current.microclimateCalibration && current.microclimateCalibration.calibratedBy) {
+    // Already calibrated by backend / Python intelligence - strictly preserve
+    return current;
+  }
   const rawTemp = current.temperature_2m ?? current.temperature;
   if (rawTemp == null || typeof rawTemp !== "number" || isNaN(rawTemp)) return current;
 
-  const calTemp = Math.round(rawTemp * 10) / 10;
+  const dest = (destinationName || "").toLowerCase().trim();
+  let profile = { terrain: "plains_coastal", elevation: 200 };
+  for (const [name, prof] of Object.entries(TERRAIN_CLASSIFICATIONS)) {
+    if (dest === name.toLowerCase()) {
+      profile = prof;
+      break;
+    }
+  }
+
+  const isDay = current.isDay != null ? current.isDay : (current.is_day != null ? current.is_day : 0);
+  const cloudCover = current.cloudCover != null ? current.cloudCover : (current.cloud_cover || 0);
+  const windSpeed = current.windSpeed != null ? current.windSpeed : (current.wind_speed_10m || 3.0);
+
+  const ccNorm = Math.min(100.0, Math.max(0.0, Number(cloudCover))) / 100.0;
+  const windNorm = Math.min(50.0, Math.max(0.0, Number(windSpeed)));
+  const cloudSuppression = 1.0 - (0.45 * ccNorm);
+  const windSuppression = Math.max(0.4, 1.0 - (windNorm / 35.0));
+  const nocturnalFactor = cloudSuppression * windSuppression;
+
+  let delta = 0.0;
+  if (profile.terrain === "valley_basin") {
+    delta = isDay === 0 ? -7.2 * nocturnalFactor : -1.5;
+  } else if (profile.terrain === "cold_desert_plateau") {
+    delta = isDay === 0 ? -7.0 * (1.0 - 0.35 * ccNorm) : -1.0;
+  } else if (profile.terrain === "alpine_pass") {
+    if (dest.includes("chitkul")) {
+      delta = isDay === 0 ? -5.0 * (1.0 - 0.3 * ccNorm) : -1.5;
+    } else if (dest.includes("rohtang")) {
+      delta = isDay === 0 ? -4.0 * (1.0 - 0.3 * ccNorm) : -2.0;
+    } else {
+      delta = isDay === 0 ? -3.5 : -1.5;
+    }
+  } else if (profile.terrain === "mountain_ridge") {
+    if (dest.includes("shimla") || dest.includes("mussoorie")) {
+      delta = isDay === 0 ? +4.8 * (1.0 - 0.3 * ccNorm) : 0.0;
+    }
+  } else if (profile.terrain === "alpine_meadow") {
+    delta = isDay === 0 ? -4.5 * nocturnalFactor : -1.0;
+  } else if (profile.terrain === "broad_basin") {
+    delta = isDay === 0 ? -2.5 * nocturnalFactor : 0.0;
+  }
+
+  const calTemp = Math.round((rawTemp + delta) * 10) / 10;
   const rawApparent = current.apparent_temperature ?? current.apparentTemperature;
-  const calApparent = typeof rawApparent === "number" && !isNaN(rawApparent) ? Math.round(rawApparent * 10) / 10 : calTemp;
+  const calApparent = typeof rawApparent === "number" && !isNaN(rawApparent)
+    ? Math.round((rawApparent + delta) * 10) / 10
+    : calTemp;
 
   return {
     ...current,
